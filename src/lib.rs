@@ -6,12 +6,12 @@ pub mod prelude;
 pub mod ui;
 pub mod utils;
 
+use crate::core::states::LaunchpadStates;
 use bevy::prelude::*;
-use bevy::state::state::FreelyMutableState;
 use std::marker::PhantomData;
 
 /// Main plugin that combines all features.
-pub struct LaunchpadPlugin<S: States + FreelyMutableState> {
+pub struct LaunchpadPlugin<S: LaunchpadStates> {
     _marker: PhantomData<S>,
     pub metadata: crate::prelude::AppMetadata,
     pub cli_args: crate::prelude::CliArgs,
@@ -20,7 +20,7 @@ pub struct LaunchpadPlugin<S: States + FreelyMutableState> {
     pub theme: Option<crate::ui::theme::ThemeConfig>,
 }
 
-impl<S: States + FreelyMutableState> Default for LaunchpadPlugin<S> {
+impl<S: LaunchpadStates> Default for LaunchpadPlugin<S> {
     fn default() -> Self {
         Self {
             _marker: PhantomData,
@@ -33,7 +33,7 @@ impl<S: States + FreelyMutableState> Default for LaunchpadPlugin<S> {
     }
 }
 
-impl<S: States + FreelyMutableState> Plugin for LaunchpadPlugin<S> {
+impl<S: LaunchpadStates> Plugin for LaunchpadPlugin<S> {
     fn build(&self, app: &mut App) {
         // 1. Setup paths based on metadata
         let paths = crate::prelude::AppPaths::new(&self.metadata.name);
@@ -70,7 +70,7 @@ impl<S: States + FreelyMutableState> Plugin for LaunchpadPlugin<S> {
 
         #[cfg(feature = "ui")]
         {
-            app.add_plugins(crate::ui::plugin::LaunchpadUiPlugin);
+            app.add_plugins(crate::ui::plugin::LaunchpadUiPlugin::<S>::default());
             if let Some(theme) = &self.theme {
                 app.insert_resource(theme.clone());
             }
@@ -81,7 +81,7 @@ impl<S: States + FreelyMutableState> Plugin for LaunchpadPlugin<S> {
     }
 }
 
-impl<S: States + FreelyMutableState> LaunchpadPlugin<S> {
+impl<S: LaunchpadStates> LaunchpadPlugin<S> {
     pub fn builder() -> LaunchpadPluginBuilder<S> {
         LaunchpadPluginBuilder {
             plugin: Self::default(),
@@ -89,11 +89,11 @@ impl<S: States + FreelyMutableState> LaunchpadPlugin<S> {
     }
 }
 
-pub struct LaunchpadPluginBuilder<S: States + FreelyMutableState> {
+pub struct LaunchpadPluginBuilder<S: LaunchpadStates> {
     plugin: LaunchpadPlugin<S>,
 }
 
-impl<S: States + FreelyMutableState> LaunchpadPluginBuilder<S> {
+impl<S: LaunchpadStates> LaunchpadPluginBuilder<S> {
     pub fn with_metadata(mut self, metadata: crate::prelude::AppMetadata) -> Self {
         self.plugin.metadata = metadata;
         self

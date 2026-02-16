@@ -1,8 +1,9 @@
+use crate::core::boot::sequence::BootSequence;
+use crate::core::states::mapping::LaunchpadStates;
 use bevy::ecs::message::MessageReader;
 use bevy::log::info;
-use bevy::prelude::{App, Plugin, ResMut, Resource, Update};
+use bevy::prelude::{App, Plugin, Res, ResMut, Resource, Update};
 use bevy::state::prelude::{NextState, States};
-use bevy::state::state::FreelyMutableState;
 
 /// Configuration for state transitions.
 #[derive(Resource, Debug, Clone, Default)]
@@ -17,11 +18,11 @@ pub struct TransitionStateEvent<S: States> {
     pub next: S,
 }
 
-pub struct StateTransitionPlugin<S: States + FreelyMutableState> {
+pub struct StateTransitionPlugin<S: LaunchpadStates> {
     _phantom: std::marker::PhantomData<S>,
 }
 
-impl<S: States + FreelyMutableState> Default for StateTransitionPlugin<S> {
+impl<S: LaunchpadStates> Default for StateTransitionPlugin<S> {
     fn default() -> Self {
         Self {
             _phantom: std::marker::PhantomData,
@@ -29,14 +30,14 @@ impl<S: States + FreelyMutableState> Default for StateTransitionPlugin<S> {
     }
 }
 
-impl<S: States + FreelyMutableState> Plugin for StateTransitionPlugin<S> {
+impl<S: LaunchpadStates> Plugin for StateTransitionPlugin<S> {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, handle_state_transitions::<S>);
     }
 }
 
 /// System that listens for `TransitionStateEvent` and updates the state.
-pub fn handle_state_transitions<S: States + FreelyMutableState>(
+pub fn handle_state_transitions<S: LaunchpadStates>(
     mut message_reader: MessageReader<TransitionStateEvent<S>>,
     mut next_state: ResMut<NextState<S>>,
 ) {
@@ -44,4 +45,21 @@ pub fn handle_state_transitions<S: States + FreelyMutableState>(
         info!("Transitioning to state: {:?}", event.next);
         next_state.set(event.next.clone());
     }
+}
+
+/// Automatically transitions from Booting to Loading when boot sequence completes.
+pub fn auto_transition_booting<S: LaunchpadStates>(
+    boot: Res<BootSequence>,
+    mut next_state: ResMut<NextState<S>>,
+) {
+    if boot.is_finished {
+        next_state.set(S::loading());
+    }
+}
+
+/// Automatically transitions from Loading to Splash.
+/// NOTE: In a real app, this would wait for assets to load.
+pub fn auto_transition_loading<S: LaunchpadStates>(mut next_state: ResMut<NextState<S>>) {
+    // Placeholder logic: immediately move to splash
+    next_state.set(S::splash());
 }

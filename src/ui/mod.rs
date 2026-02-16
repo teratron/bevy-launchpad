@@ -1,5 +1,6 @@
 //! UI components and systems for Bevy Launchpad.
 
+pub mod common;
 pub mod menu;
 pub mod modal;
 pub mod plugin;

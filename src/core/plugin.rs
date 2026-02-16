@@ -1,15 +1,18 @@
 use crate::core::boot::sequence::update_boot_progress;
-use crate::core::states::transitions::{TransitionStateEvent, handle_state_transitions};
+use crate::core::states::mapping::LaunchpadStates;
+use crate::core::states::transitions::{
+    TransitionStateEvent, auto_transition_booting, auto_transition_loading,
+    handle_state_transitions,
+};
 use bevy::prelude::*;
-use bevy::state::state::FreelyMutableState;
 use std::marker::PhantomData;
 
 /// Core framework plugin.
-pub struct LaunchpadCorePlugin<S: States + FreelyMutableState> {
+pub struct LaunchpadCorePlugin<S: LaunchpadStates> {
     _state: PhantomData<S>,
 }
 
-impl<S: States + FreelyMutableState> Default for LaunchpadCorePlugin<S> {
+impl<S: LaunchpadStates> Default for LaunchpadCorePlugin<S> {
     fn default() -> Self {
         Self {
             _state: PhantomData,
@@ -17,7 +20,7 @@ impl<S: States + FreelyMutableState> Default for LaunchpadCorePlugin<S> {
     }
 }
 
-impl<S: States + FreelyMutableState> Plugin for LaunchpadCorePlugin<S> {
+impl<S: LaunchpadStates> Plugin for LaunchpadCorePlugin<S> {
     fn build(&self, app: &mut App) {
         // Resources like AppMetadata and AppPaths are already inserted by LaunchpadPlugin::build
 
@@ -31,5 +34,14 @@ impl<S: States + FreelyMutableState> Plugin for LaunchpadCorePlugin<S> {
 
         app.add_systems(Update, update_boot_progress);
         app.add_systems(Update, handle_state_transitions::<S>);
+
+        // Automatic flow
+        app.add_systems(
+            Update,
+            (
+                auto_transition_booting::<S>.run_if(in_state(S::booting())),
+                auto_transition_loading::<S>.run_if(in_state(S::loading())),
+            ),
+        );
     }
 }

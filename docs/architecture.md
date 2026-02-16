@@ -1,5 +1,14 @@
 # Architecture
 
+## Modules
+
+- core/     → Логика фреймворка (boot, states, loading, splash)
+- ui/       → Визуальные компоненты (menu, widgets, theme, transitions)
+- locale/   → Локализация (пока заглушки)
+- utils/    → Утилиты (single_instance отлично сделан!)
+
+## File structure
+
 ```plaintext
 src/
 ├── lib.rs                        # Главная точка входа

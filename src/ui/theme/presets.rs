@@ -19,6 +19,7 @@ impl ThemeConfig {
                 secondary: Color::srgb(0.3, 0.5, 0.8),
                 background: Color::WHITE,
                 text: Color::BLACK,
+                accent: Color::srgb(0.0, 0.5, 1.0), // Blue accent for light theme
             },
         }
     }

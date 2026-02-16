@@ -25,8 +25,8 @@ pub use crate::locale::{Language, LocalePlugin};
 
 // Utils
 pub use crate::utils::{
-    Persistence, SingleInstance, SingleInstanceError, SingleInstanceLock,
-    acquire_single_instance_lock,
+    Persistable, SingleInstance, SingleInstanceError, SingleInstanceLock,
+    acquire_single_instance_lock, load_ron, save_ron,
 };
 
 // Main Plugin

@@ -5,8 +5,32 @@ use bevy_launchpad::prelude::*;
 enum GameState {
     #[default]
     Booting,
+    Loading, // Added missing required state
+    Splash,  // Added missing required state
     Menu,
     Playing,
+    Paused, // Added missing required state
+}
+
+impl LaunchpadStates for GameState {
+    fn booting() -> Self {
+        GameState::Booting
+    }
+    fn loading() -> Self {
+        GameState::Loading
+    }
+    fn splash() -> Self {
+        GameState::Splash
+    }
+    fn menu() -> Self {
+        GameState::Menu
+    }
+    fn playing() -> Self {
+        GameState::Playing
+    }
+    fn paused() -> Self {
+        GameState::Paused
+    }
 }
 
 fn main() {
