@@ -1,0 +1,33 @@
+use bevy::prelude::*;
+use bevy_launchpad::prelude::*;
+
+#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
+enum GameState {
+    #[default]
+    Booting,
+    Menu,
+    Playing,
+}
+
+fn main() {
+    App::new()
+        .add_plugins(DefaultPlugins)
+        // Add the LaunchpadPlugin generic over our GameState
+        .add_plugins(LaunchpadPlugin::<GameState>::default())
+        .add_systems(OnEnter(GameState::Playing), setup_game)
+        .run();
+}
+
+fn setup_game(mut commands: Commands) {
+    // Spawn 2D camera
+    commands.spawn(Camera2d);
+
+    // Simple placeholder for the game
+    commands.spawn(Sprite {
+        color: Color::srgb(0.0, 1.0, 0.0),
+        custom_size: Some(Vec2::new(100.0, 100.0)),
+        ..default()
+    });
+
+    info!("Minimal 2D Game Started!");
+}

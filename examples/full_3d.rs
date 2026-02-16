@@ -1,0 +1,58 @@
+use bevy::prelude::*;
+use bevy_launchpad::prelude::*;
+
+#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
+enum GameState {
+    #[default]
+    Booting,
+    Menu,
+    Playing,
+    Paused,
+}
+
+fn main() {
+    App::new()
+        .add_plugins(DefaultPlugins)
+        .add_plugins(LaunchpadPlugin::<GameState>::default())
+        .add_systems(OnEnter(GameState::Playing), setup_level)
+        .add_systems(Update, rotate_cube.run_if(in_state(GameState::Playing)))
+        .run();
+}
+
+#[derive(Component)]
+struct RotatingCube;
+
+fn setup_level(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
+) {
+    commands.spawn((
+        Camera3d::default(),
+        Transform::from_xyz(0.0, 5.0, 10.0).looking_at(Vec3::ZERO, Vec3::Y),
+    ));
+
+    commands.spawn((
+        Mesh3d(meshes.add(Cuboid::new(2.0, 2.0, 2.0))),
+        MeshMaterial3d(materials.add(Color::srgb(0.2, 0.8, 0.2))),
+        Transform::from_xyz(0.0, 1.0, 0.0),
+        RotatingCube,
+    ));
+
+    commands.spawn((
+        PointLight {
+            intensity: 1500.0,
+            shadows_enabled: true,
+            ..default()
+        },
+        Transform::from_xyz(4.0, 8.0, 4.0),
+    ));
+
+    info!("Full 3D Game Level Started");
+}
+
+fn rotate_cube(mut query: Query<&mut Transform, With<RotatingCube>>, time: Res<Time>) {
+    for mut transform in &mut query {
+        transform.rotate_y(time.delta_secs());
+    }
+}

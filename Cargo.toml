@@ -1,16 +1,42 @@
 [package]
-name = "bevy-launchpad"
+name = "bevy_launchpad"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.93"
 authors = ["Oleg Alexandrov <alexandrovoleg.ru@gmail.com>"]
 readme = "README.md"
-description = "A launchpad for Bevy game engine."
+description = "A production-ready launcher framework for Bevy games."
 license = "MIT"
 homepage = "https://teratron.github.io/bevy-launchpad"
 documentation = "https://teratron.github.io/bevy-launchpad/docs"
 repository = "https://github.com/teratron/bevy-launchpad"
-keywords = ["rust", "bevy", "game"]
+keywords = ["bevy", "game", "launcher", "framework", "ui"]
+categories = ["game-development", "gui"]
 
 [dependencies]
-bevy = { version = "0.18.0", default-features = true }
+bevy = { version = "0.18", default-features = true, features = [
+    "bevy_winit",
+    "bevy_gilrs",
+    "x11",
+    "png",
+] }
+serde = { version = "1.0", features = ["derive"] }
+ron = "0.12.0"
+
+[features]
+default = ["ui", "locale", "2d", "3d"]
+
+# Modules
+ui = []
+locale = []
+
+# Dimensions
+2d = ["bevy/bevy_sprite", "bevy/bevy_gizmos"]
+3d = ["bevy/bevy_pbr", "bevy/bevy_gizmos"]
+
+# Optional
+diagnostics = ["bevy/bevy_dev_tools"]
+audio = ["bevy/bevy_audio", "bevy/vorbis"]
+embedded_assets = []
+
+full = ["default", "diagnostics", "audio", "embedded_assets"]
