@@ -1,0 +1,16 @@
+[package]
+name = "bevy-launchpad"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.93"
+authors = ["Oleg Alexandrov <alexandrovoleg.ru@gmail.com>"]
+readme = "README.md"
+description = "A launchpad for Bevy game engine."
+license = "MIT"
+homepage = "https://teratron.github.io/bevy-launchpad"
+documentation = "https://teratron.github.io/bevy-launchpad/docs"
+repository = "https://github.com/teratron/bevy-launchpad"
+keywords = ["rust", "bevy", "game"]
+
+[dependencies]
+bevy = { version = "0.18.0", default-features = true }
