@@ -6,4 +6,4 @@ publish = false
 
 [dependencies]
 bevy = { version = "0.18", default-features = true }
-bevy_launchpad = { path = "../.." }
+bevy_launchpad = { path = "../..", features = ["3d"] }

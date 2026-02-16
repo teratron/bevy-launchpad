@@ -27,3 +27,6 @@ __pycache__/
 # Misc
 *.txt
 *.log
+
+# Old game project
+old_game_project/

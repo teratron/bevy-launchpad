@@ -2,7 +2,7 @@
 
 // Core types
 pub use crate::core::{
-    boot::{BootConfig, BootPaths, BootSequence},
+    boot::{AppMetadata, AppPaths, BootConfig, BootSequence, CliArgs},
     loading::{AssetManifest, AssetTracker, LoadingState},
     plugin::LaunchpadCorePlugin,
     splash::{SplashConfig, SplashScreenConfig, SplashTimer},
@@ -24,7 +24,10 @@ pub use crate::ui::{
 pub use crate::locale::{Language, LocalePlugin};
 
 // Utils
-pub use crate::utils::{Persistence, SingleInstance};
+pub use crate::utils::{
+    Persistence, SingleInstance, SingleInstanceError, SingleInstanceLock,
+    acquire_single_instance_lock,
+};
 
 // Main Plugin
 pub use crate::LaunchpadPlugin;

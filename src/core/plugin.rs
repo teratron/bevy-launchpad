@@ -19,6 +19,8 @@ impl<S: States + FreelyMutableState> Default for LaunchpadCorePlugin<S> {
 
 impl<S: States + FreelyMutableState> Plugin for LaunchpadCorePlugin<S> {
     fn build(&self, app: &mut App) {
+        // Resources like AppMetadata and AppPaths are already inserted by LaunchpadPlugin::build
+
         app.init_resource::<crate::core::boot::BootSequence>();
         app.init_resource::<crate::core::states::TransitionConfig>();
         app.init_resource::<crate::core::splash::SplashConfig>();

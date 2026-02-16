@@ -12,7 +12,15 @@ enum GameState {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugins(LaunchpadPlugin::<GameState>::default())
+        .add_plugins(
+            LaunchpadPlugin::<GameState>::builder()
+                .with_metadata(AppMetadata {
+                    name: "minimal_3d_example".to_string(),
+                    title: "Minimal 3D Example".to_string(),
+                    ..default()
+                })
+                .build(),
+        )
         .add_systems(OnEnter(GameState::Playing), setup_game)
         .run();
 }

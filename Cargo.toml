@@ -1,6 +1,6 @@
 [package]
 name = "bevy_launchpad"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 rust-version = "1.93"
 authors = ["Oleg Alexandrov <alexandrovoleg.ru@gmail.com>"]
@@ -45,6 +45,8 @@ bevy = { version = "0.18", default-features = true, features = [
 ] }
 serde = { version = "1.0", features = ["derive"] }
 ron = "0.12.0"
+thiserror = "2.0.18"
+clap = { version = "4.5", features = ["derive"] }
 
 [features]
 default = ["ui", "locale", "2d", "3d"]
