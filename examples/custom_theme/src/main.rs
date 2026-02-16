@@ -5,8 +5,32 @@ use bevy_launchpad::prelude::*;
 enum GameState {
     #[default]
     Booting,
+    Loading,
+    Splash,
     Menu,
     Playing,
+    Paused,
+}
+
+impl LaunchpadStates for GameState {
+    fn booting() -> Self {
+        GameState::Booting
+    }
+    fn loading() -> Self {
+        GameState::Loading
+    }
+    fn splash() -> Self {
+        GameState::Splash
+    }
+    fn menu() -> Self {
+        GameState::Menu
+    }
+    fn playing() -> Self {
+        GameState::Playing
+    }
+    fn paused() -> Self {
+        GameState::Paused
+    }
 }
 
 fn main() {
@@ -17,6 +41,7 @@ fn main() {
             secondary: Color::srgb(0.6, 0.1, 0.3),
             background: Color::srgb(0.1, 0.05, 0.1), // Dark purple bg
             text: Color::srgb(0.9, 0.8, 0.8),
+            accent: Color::srgb(1.0, 0.6, 0.2),
         },
         // ... use default fonts/spacing
     };

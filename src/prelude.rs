@@ -6,7 +6,7 @@ pub use crate::core::{
     loading::{AssetManifest, AssetTracker, LoadingState},
     plugin::LaunchpadCorePlugin,
     splash::{SplashConfig, SplashScreenConfig, SplashTimer},
-    states::{StateMachine, TransitionConfig, TransitionStateEvent},
+    states::{LaunchpadStates, StateMachine, TransitionConfig, TransitionStateEvent},
 };
 
 // UI types
