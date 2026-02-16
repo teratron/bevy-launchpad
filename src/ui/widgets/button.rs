@@ -1,8 +1,8 @@
 use crate::ui::theme::ThemeConfig;
-pub use bevy::prelude::Button;
-use bevy::ecs::system::EntityCommands;
-use bevy::ecs::relationship::RelatedSpawnerCommands;
 use bevy::ecs::hierarchy::ChildOf;
+use bevy::ecs::relationship::RelatedSpawnerCommands;
+use bevy::ecs::system::EntityCommands;
+pub use bevy::prelude::Button;
 use bevy::prelude::*;
 
 /// Type alias for child spawner commands used in UI hierarchy.
@@ -29,10 +29,7 @@ pub fn spawn_button<'a, 'w>(
     ));
 
     cmd.with_children(|p: &mut ChildSpawnerCommands| {
-        p.spawn((
-            Text::new(text_content),
-            TextColor(theme.colors.text),
-        ));
+        p.spawn((Text::new(text_content), TextColor(theme.colors.text)));
     });
 
     cmd

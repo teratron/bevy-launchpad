@@ -1,5 +1,5 @@
 use crate::core::boot::sequence::update_boot_progress;
-use crate::core::states::transitions::{handle_state_transitions, TransitionStateEvent};
+use crate::core::states::transitions::{TransitionStateEvent, handle_state_transitions};
 use bevy::prelude::*;
 use bevy::state::state::FreelyMutableState;
 use std::marker::PhantomData;
@@ -23,7 +23,9 @@ impl<S: States + FreelyMutableState> Plugin for LaunchpadCorePlugin<S> {
         app.init_resource::<crate::core::states::TransitionConfig>();
         app.init_resource::<crate::core::splash::SplashConfig>();
 
-        bevy::ecs::message::MessageRegistry::register_message::<TransitionStateEvent<S>>(app.world_mut());
+        bevy::ecs::message::MessageRegistry::register_message::<TransitionStateEvent<S>>(
+            app.world_mut(),
+        );
 
         app.add_systems(Update, update_boot_progress);
         app.add_systems(Update, handle_state_transitions::<S>);

@@ -63,10 +63,7 @@ pub type InteractionQuery<'w, 's> = Query<
     (Changed<Interaction>, With<Button>),
 >;
 
-pub fn handle_menu_interactions(
-    mut interaction_query: InteractionQuery,
-    theme: Res<ThemeConfig>,
-) {
+pub fn handle_menu_interactions(mut interaction_query: InteractionQuery, theme: Res<ThemeConfig>) {
     for (interaction, mut color) in &mut interaction_query {
         match *interaction {
             Interaction::Pressed => {

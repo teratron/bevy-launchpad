@@ -1,5 +1,5 @@
-use bevy::ecs::relationship::RelatedSpawnerCommands;
 use bevy::ecs::hierarchy::ChildOf;
+use bevy::ecs::relationship::RelatedSpawnerCommands;
 use bevy::prelude::*;
 
 /// Type alias for child spawner commands used in UI hierarchy.
