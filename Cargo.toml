@@ -10,8 +10,31 @@ license = "MIT"
 homepage = "https://teratron.github.io/bevy-launchpad"
 documentation = "https://teratron.github.io/bevy-launchpad/docs"
 repository = "https://github.com/teratron/bevy-launchpad"
-keywords = ["bevy", "game", "launcher", "framework", "ui"]
+keywords = ["rust", "bevy", "game", "launcher", "framework", "ui"]
 categories = ["game-development", "gui"]
+
+[workspace]
+members = [".", "examples/*"]
+
+[[example]]
+name = "custom_theme"
+path = "examples/custom_theme/src/main.rs"
+
+[[example]]
+name = "full_2d"
+path = "examples/full_2d/src/main.rs"
+
+[[example]]
+name = "full_3d"
+path = "examples/full_3d/src/main.rs"
+
+[[example]]
+name = "minimal_2d"
+path = "examples/minimal_2d/src/main.rs"
+
+[[example]]
+name = "minimal_3d"
+path = "examples/minimal_3d/src/main.rs"
 
 [dependencies]
 bevy = { version = "0.18", default-features = true, features = [
