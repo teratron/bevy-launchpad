@@ -9,7 +9,10 @@ fn main() {
                 // Noto Sans required for Cyrillic characters
                 .with_fonts(ThemeFonts::noto_sans())
                 .with_locale("en-US")
-                .with_splash(SplashConfig { skip_all: true, ..default() })
+                .with_splash(SplashConfig {
+                    skip_all: true,
+                    ..default()
+                })
                 .build(),
         )
         .add_systems(OnEnter(AppState::Playing), setup)
@@ -24,10 +27,7 @@ fn setup(mut commands: Commands) {
 
 /// Switch language by pressing 1 / 2 / 3.
 /// bevy_launchpad detects the Language change and reloads the Fluent bundle.
-fn switch_locale(
-    keys: Res<ButtonInput<KeyCode>>,
-    mut lang: ResMut<Language>,
-) {
+fn switch_locale(keys: Res<ButtonInput<KeyCode>>, mut lang: ResMut<Language>) {
     if keys.just_pressed(KeyCode::Digit1) {
         *lang = Language::En;
         info!("Switched to English");

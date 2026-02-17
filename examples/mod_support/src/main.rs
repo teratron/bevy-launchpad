@@ -7,14 +7,14 @@ fn main() {
         .add_plugins(
             LaunchpadPlugin::<AppState>::builder()
                 .with_metadata(AppMetadata {
-                    name:  "mod_support_demo".into(),
+                    name: "mod_support_demo".into(),
                     title: "Mod Support Demo".into(),
                     ..default()
                 })
                 // SearchPaths: base game → DLC pack → user mods
                 // First directory that contains the requested file wins.
                 .with_assets_root(AssetsRootStrategy::SearchPaths(vec![
-                    "assets/".into(),               // base game (always present)
+                    "assets/".into(),                // base game (always present)
                     "dlc/space_pack/assets/".into(), // DLC (optional)
                     "mods/".into(),                  // user mods (optional)
                 ]))

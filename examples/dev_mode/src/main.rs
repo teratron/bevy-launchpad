@@ -24,18 +24,15 @@ fn main() {
         .add_plugins(
             LaunchpadPlugin::<AppState>::builder()
                 .with_metadata(AppMetadata {
-                    name:  "dev_mode_demo".into(),
+                    name: "dev_mode_demo".into(),
                     title: "Dev Mode Demo".into(),
                     ..default()
                 })
                 .with_splash(SplashConfig {
-                    screens: vec![
-                        SplashScreenConfig::studio("branding/studio.png"),
-                    ],
+                    screens: vec![SplashScreenConfig::studio("branding/studio.png")],
                     show_default_branding: true,
-                    ..default()
-                    // Note: CliArgs.skip_splash = true → SplashConfig.skip_all
-                    //       is set automatically by LaunchpadPlugin
+                    ..default() // Note: CliArgs.skip_splash = true → SplashConfig.skip_all
+                                //       is set automatically by LaunchpadPlugin
                 })
                 .build(),
         )

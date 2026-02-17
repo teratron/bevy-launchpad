@@ -1,15 +1,18 @@
 use bevy::prelude::*;
 use bevy_launchpad::prelude::*;
 
-#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
-#[derive(LaunchpadStates)]
+#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash, LaunchpadStates)]
 enum GameState {
     #[default]
-    Booting, Loading, Splash, Menu,
+    Booting,
+    Loading,
+    Splash,
+    Menu,
     // Developer-specific states
     LevelSelect,
     Credits,
-    Playing, Paused,
+    Playing,
+    Paused,
 }
 
 fn main() {
@@ -17,17 +20,20 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugins(
             LaunchpadPlugin::<GameState>::builder()
-                .with_splash(SplashConfig { skip_all: true, ..default() })
+                .with_splash(SplashConfig {
+                    skip_all: true,
+                    ..default()
+                })
                 .with_main_menu(MainMenuConfig {
                     title: "Epic Quest".into(),
                     buttons: vec![
                         MenuButton::Play,
                         MenuButton::Custom {
-                            label:             "Level Select".into(),
+                            label: "Level Select".into(),
                             target_state_name: "LevelSelect".into(),
                         },
                         MenuButton::Custom {
-                            label:             "Credits".into(),
+                            label: "Credits".into(),
                             target_state_name: "Credits".into(),
                         },
                         MenuButton::Settings,
@@ -36,9 +42,9 @@ fn main() {
                 })
                 .build(),
         )
-        .add_systems(OnEnter(GameState::Playing),     setup_game)
+        .add_systems(OnEnter(GameState::Playing), setup_game)
         .add_systems(OnEnter(GameState::LevelSelect), setup_level_select)
-        .add_systems(OnEnter(GameState::Credits),     setup_credits)
+        .add_systems(OnEnter(GameState::Credits), setup_credits)
         .run();
 }
 

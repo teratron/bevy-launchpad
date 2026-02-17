@@ -7,9 +7,9 @@ fn main() {
         .add_plugins(
             LaunchpadPlugin::<AppState>::builder()
                 .with_splash(SplashConfig {
-                    screens:               vec![],   // no custom screens
-                    show_default_branding: false,    // no library branding
-                    skip_all:              false,    // skip_all not needed when both above are off
+                    screens: vec![],              // no custom screens
+                    show_default_branding: false, // no library branding
+                    skip_all: false,              // skip_all not needed when both above are off
                 })
                 .build(),
         )

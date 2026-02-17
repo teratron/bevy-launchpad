@@ -5,10 +5,7 @@
 use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
-use syn::{
-    parse_macro_input, Data, DeriveInput, Error, Fields,
-    Result,
-};
+use syn::{Data, DeriveInput, Error, Fields, Result, parse_macro_input};
 
 // ── Naming convention ─────────────────────────────────────────────────────────
 
@@ -18,15 +15,14 @@ use syn::{
 const CONVENTION: &[(&str, &str)] = &[
     ("Booting", "booting"),
     ("Loading", "loading"),
-    ("Splash",  "splash"),
-    ("Menu",    "menu"),
+    ("Splash", "splash"),
+    ("Menu", "menu"),
     ("Playing", "playing"),
-    ("Paused",  "paused"),
+    ("Paused", "paused"),
 ];
 
 /// All methods that MUST be mapped for a valid impl.
-const REQUIRED_METHODS: &[&str] =
-    &["booting", "loading", "splash", "menu", "playing", "paused"];
+const REQUIRED_METHODS: &[&str] = &["booting", "loading", "splash", "menu", "playing", "paused"];
 
 // ── Entry point ───────────────────────────────────────────────────────────────
 
@@ -71,8 +67,8 @@ const REQUIRED_METHODS: &[&str] =
 pub fn derive_launchpad_states(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
     match impl_launchpad_states(&input) {
-        Ok(ts)  => ts.into(),
-        Err(e)  => e.to_compile_error().into(),
+        Ok(ts) => ts.into(),
+        Err(e) => e.to_compile_error().into(),
     }
 }
 
@@ -84,10 +80,12 @@ fn impl_launchpad_states(input: &DeriveInput) -> Result<TokenStream2> {
     // Only enums are supported
     let data_enum = match &input.data {
         Data::Enum(e) => e,
-        _ => return Err(Error::new_spanned(
-            enum_name,
-            "#[derive(LaunchpadStates)] can only be applied to enums",
-        )),
+        _ => {
+            return Err(Error::new_spanned(
+                enum_name,
+                "#[derive(LaunchpadStates)] can only be applied to enums",
+            ));
+        }
     };
 
     // Collect mapping: method_name → variant TokenStream
@@ -95,8 +93,7 @@ fn impl_launchpad_states(input: &DeriveInput) -> Result<TokenStream2> {
     let mut resolved: Vec<(&str, TokenStream2)> = Vec::new();
 
     // Track which methods have been explicitly attributed (for duplicate detection)
-    let mut attributed: std::collections::HashSet<String> =
-        std::collections::HashSet::new();
+    let mut attributed: std::collections::HashSet<String> = std::collections::HashSet::new();
 
     for variant in &data_enum.variants {
         // Only unit variants are valid (no tuple/struct variants)
@@ -108,7 +105,7 @@ fn impl_launchpad_states(input: &DeriveInput) -> Result<TokenStream2> {
         }
 
         let variant_ident = &variant.ident;
-        let variant_name  = variant_ident.to_string();
+        let variant_name = variant_ident.to_string();
 
         // --- Pass 1: explicit #[launchpad(<method>)] attribute ---
         for attr in &variant.attrs {
@@ -199,7 +196,8 @@ fn impl_launchpad_states(input: &DeriveInput) -> Result<TokenStream2> {
 
     // --- Generate impl ---
     let get = |method: &str| -> TokenStream2 {
-        resolved.iter()
+        resolved
+            .iter()
             .find(|(m, _)| *m == method)
             .map(|(_, ts)| ts.clone())
             .unwrap()
@@ -207,10 +205,10 @@ fn impl_launchpad_states(input: &DeriveInput) -> Result<TokenStream2> {
 
     let m_booting = get("booting");
     let m_loading = get("loading");
-    let m_splash  = get("splash");
-    let m_menu    = get("menu");
+    let m_splash = get("splash");
+    let m_menu = get("menu");
     let m_playing = get("playing");
-    let m_paused  = get("paused");
+    let m_paused = get("paused");
 
     Ok(quote! {
         impl ::bevy_launchpad::core::states::mapping::LaunchpadStates
@@ -240,10 +238,10 @@ fn convention_variant_name(method: &str) -> String {
     match method {
         "booting" => "Booting".to_string(),
         "loading" => "Loading".to_string(),
-        "splash"  => "Splash".to_string(),
-        "menu"    => "Menu".to_string(),
+        "splash" => "Splash".to_string(),
+        "menu" => "Menu".to_string(),
         "playing" => "Playing".to_string(),
-        "paused"  => "Paused".to_string(),
-        _         => method.to_string(),
+        "paused" => "Paused".to_string(),
+        _ => method.to_string(),
     }
 }

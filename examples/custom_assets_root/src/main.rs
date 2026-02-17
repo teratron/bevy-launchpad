@@ -8,7 +8,7 @@ fn main() {
             LaunchpadPlugin::<AppState>::builder()
                 // Option A: explicit folder name
                 .with_assets_root(AssetsRootStrategy::Explicit(
-                    "game_data/".into()  // instead of default "assets/"
+                    "game_data/".into(), // instead of default "assets/"
                 ))
                 // Option B: env-var override (highest priority, no rebuild needed)
                 // BEVY_LAUNCHPAD_ASSETS_ROOT=/opt/mygame/data cargo run

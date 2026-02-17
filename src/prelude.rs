@@ -6,8 +6,8 @@ pub use crate::core::{
     boot::{AppMetadata, AppPaths, BootConfig, BootSequence, CliArgs},
     loading::{AssetManifest, AssetTracker, LoadingState},
     plugin::LaunchpadCorePlugin,
-    splash::{SplashConfig, SplashScreenConfig, SplashSource, SplashTimer, SkipTrigger},
-    states::{LaunchpadStates, StateMachine, TransitionConfig, TransitionStateEvent, AppState},
+    splash::{SkipTrigger, SplashConfig, SplashScreenConfig, SplashSource, SplashTimer},
+    states::{AppState, LaunchpadStates, StateMachine, TransitionConfig, TransitionStateEvent},
 };
 
 pub use bevy_launchpad_derive::LaunchpadStates;

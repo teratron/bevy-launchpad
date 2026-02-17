@@ -1,5 +1,5 @@
-use bevy::prelude::*;
 use crate::core::states::mapping::LaunchpadStates;
+use bevy::prelude::*;
 // use bevy::state::state::FreelyMutableState;
 
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
@@ -14,10 +14,22 @@ pub enum AppState {
 }
 
 impl LaunchpadStates for AppState {
-    fn booting()  -> Self { Self::Booting  }
-    fn loading()  -> Self { Self::Loading  }
-    fn splash()   -> Self { Self::Splash   }
-    fn menu()     -> Self { Self::Menu     }
-    fn playing()  -> Self { Self::Playing  }
-    fn paused()   -> Self { Self::Paused   }
+    fn booting() -> Self {
+        Self::Booting
+    }
+    fn loading() -> Self {
+        Self::Loading
+    }
+    fn splash() -> Self {
+        Self::Splash
+    }
+    fn menu() -> Self {
+        Self::Menu
+    }
+    fn playing() -> Self {
+        Self::Playing
+    }
+    fn paused() -> Self {
+        Self::Paused
+    }
 }

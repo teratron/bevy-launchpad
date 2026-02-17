@@ -8,7 +8,10 @@ fn main() {
             LaunchpadPlugin::<AppState>::builder()
                 // Disable single-instance protection
                 .allow_multiple_instances(true)
-                .with_splash(SplashConfig { skip_all: true, ..default() })
+                .with_splash(SplashConfig {
+                    skip_all: true,
+                    ..default()
+                })
                 .build(),
         )
         .add_systems(OnEnter(AppState::Playing), setup)

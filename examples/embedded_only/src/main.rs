@@ -8,17 +8,15 @@ fn main() {
             LaunchpadPlugin::<AppState>::builder()
                 // Library embedded splash is used (no File source)
                 .with_splash(SplashConfig {
-                    screens: vec![
-                        SplashScreenConfig {
-                            source:       SplashSource::Embedded, // embedded PNG
-                            min_duration: 1.5,
-                            max_duration: Some(2.5),
-                            skip:         SkipTrigger::AnyInput,
-                            fade_in:      0.3,
-                            fade_out:     0.3,
-                            background:   Color::BLACK,
-                        },
-                    ],
+                    screens: vec![SplashScreenConfig {
+                        source: SplashSource::Embedded, // embedded PNG
+                        min_duration: 1.5,
+                        max_duration: Some(2.5),
+                        skip: SkipTrigger::AnyInput,
+                        fade_in: 0.3,
+                        fade_out: 0.3,
+                        background: Color::BLACK,
+                    }],
                     show_default_branding: false,
                     ..default()
                 })

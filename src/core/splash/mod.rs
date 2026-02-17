@@ -3,5 +3,5 @@
 pub mod sequence;
 pub mod timer;
 
-pub use sequence::{SplashConfig, SplashScreenConfig, SplashSource, SkipTrigger};
+pub use sequence::{SkipTrigger, SplashConfig, SplashScreenConfig, SplashSource};
 pub use timer::{SplashState, SplashTimer};

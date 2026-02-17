@@ -9,8 +9,8 @@ fn main() {
         .add_plugins(
             LaunchpadPlugin::<AppState>::builder()
                 .with_metadata(AppMetadata {
-                    name:    "minimal_3d".into(),   // data dir: ~/.local/share/minimal_3d/
-                    title:   "Minimal 3D Demo".into(), // window title
+                    name: "minimal_3d".into(),       // data dir: ~/.local/share/minimal_3d/
+                    title: "Minimal 3D Demo".into(), // window title
                     version: "0.1.0".into(),
                     ..default()
                 })
@@ -21,8 +21,8 @@ fn main() {
 }
 
 fn setup(
-    mut commands:  Commands,
-    mut meshes:    ResMut<Assets<Mesh>>,
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     commands.spawn((
@@ -35,7 +35,10 @@ fn setup(
         Transform::from_xyz(0.0, 0.5, 0.0),
     ));
     commands.spawn((
-        PointLight { shadows_enabled: true, ..default() },
+        PointLight {
+            shadows_enabled: true,
+            ..default()
+        },
         Transform::from_xyz(4.0, 8.0, 4.0),
     ));
     info!("Minimal 3D started");

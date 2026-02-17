@@ -1,11 +1,15 @@
 use bevy::prelude::*;
 use bevy_launchpad::prelude::*;
 
-#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
-#[derive(LaunchpadStates)]
+#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash, LaunchpadStates)]
 enum GameState {
     #[default]
-    Booting, Loading, Splash, Menu, Playing, Paused,
+    Booting,
+    Loading,
+    Splash,
+    Menu,
+    Playing,
+    Paused,
     // Custom
     Credits,
 }
@@ -16,9 +20,9 @@ fn main() {
         .add_plugins(
             LaunchpadPlugin::<GameState>::builder()
                 .with_metadata(AppMetadata {
-                    name:        "full_2d_game".into(),
-                    title:       "My 2D Adventure".into(),
-                    version:     "0.1.0".into(),
+                    name: "full_2d_game".into(),
+                    title: "My 2D Adventure".into(),
+                    version: "0.1.0".into(),
                     description: "A 2D platformer built with bevy_launchpad".into(),
                 })
                 .with_splash(SplashConfig {
@@ -42,22 +46,22 @@ fn main() {
                     buttons: vec![
                         MenuButton::Play,
                         MenuButton::Custom {
-                            label:             "Credits".into(),
+                            label: "Credits".into(),
                             target_state_name: "Credits".into(),
                         },
                         MenuButton::Settings,
                         MenuButton::Exit,
                     ],
                 })
-                .with_locale("en-US")   // default locale; player can switch in settings
+                .with_locale("en-US") // default locale; player can switch in settings
                 .build(),
         )
         .add_systems(OnEnter(GameState::Playing), setup_level)
         .add_systems(OnEnter(GameState::Credits), setup_credits)
-        .add_systems(Update, (
-            move_player,
-            check_pause,
-        ).run_if(in_state(GameState::Playing)))
+        .add_systems(
+            Update,
+            (move_player, check_pause).run_if(in_state(GameState::Playing)),
+        )
         .run();
 }
 
@@ -68,7 +72,7 @@ fn setup_level(mut commands: Commands) {
     commands.spawn(Camera2d);
     commands.spawn((
         Sprite {
-            color:       Color::srgb(0.2, 0.6, 1.0),
+            color: Color::srgb(0.2, 0.6, 1.0),
             custom_size: Some(Vec2::new(48.0, 48.0)),
             ..default()
         },
@@ -90,18 +94,26 @@ fn move_player(
     let speed = 200.0;
     for mut t in &mut q {
         let mut dir = Vec2::ZERO;
-        if keys.pressed(KeyCode::ArrowRight) { dir.x += 1.0; }
-        if keys.pressed(KeyCode::ArrowLeft)  { dir.x -= 1.0; }
-        if keys.pressed(KeyCode::ArrowUp)    { dir.y += 1.0; }
-        if keys.pressed(KeyCode::ArrowDown)  { dir.y -= 1.0; }
+        if keys.pressed(KeyCode::ArrowRight) {
+            dir.x += 1.0;
+        }
+        if keys.pressed(KeyCode::ArrowLeft) {
+            dir.x -= 1.0;
+        }
+        if keys.pressed(KeyCode::ArrowUp) {
+            dir.y += 1.0;
+        }
+        if keys.pressed(KeyCode::ArrowDown) {
+            dir.y -= 1.0;
+        }
         t.translation += dir.extend(0.0) * speed * time.delta_secs();
     }
 }
 
 fn check_pause(
-    keys:       Res<ButtonInput<KeyCode>>,
-    state:      Res<State<GameState>>,
-    mut next:   ResMut<NextState<GameState>>,
+    keys: Res<ButtonInput<KeyCode>>,
+    state: Res<State<GameState>>,
+    mut next: ResMut<NextState<GameState>>,
 ) {
     if keys.just_pressed(KeyCode::Escape) {
         if *state.get() == GameState::Playing {

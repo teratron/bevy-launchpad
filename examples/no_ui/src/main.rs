@@ -1,17 +1,20 @@
 use bevy::prelude::*;
-use bevy_launchpad::prelude::*;  // only core types exported without "ui" feature
+use bevy_launchpad::prelude::*; // only core types exported without "ui" feature
 
 fn main() {
     App::new()
-        .add_plugins(MinimalPlugins)  // no window, no renderer
+        .add_plugins(MinimalPlugins) // no window, no renderer
         .add_plugins(
             LaunchpadPlugin::<AppState>::builder()
                 .with_metadata(AppMetadata {
-                    name:  "game_server".into(),
+                    name: "game_server".into(),
                     title: "Game Server".into(),
                     ..default()
                 })
-                .with_splash(SplashConfig { skip_all: true, ..default() })
+                .with_splash(SplashConfig {
+                    skip_all: true,
+                    ..default()
+                })
                 .allow_multiple_instances(true)
                 .build(),
         )

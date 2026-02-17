@@ -12,13 +12,13 @@ fn main() {
                     screens: vec![
                         // Color-only splash — white fade-in, no image needed
                         SplashScreenConfig {
-                            source:       SplashSource::ColorOnly,
+                            source: SplashSource::ColorOnly,
                             min_duration: 0.5,
                             max_duration: Some(1.0),
-                            skip:         SkipTrigger::AnyInput,
-                            fade_in:      0.3,
-                            fade_out:     0.3,
-                            background:   Color::srgb(0.95, 0.95, 0.95),
+                            skip: SkipTrigger::AnyInput,
+                            fade_in: 0.3,
+                            fade_out: 0.3,
+                            background: Color::srgb(0.95, 0.95, 0.95),
                         },
                     ],
                     show_default_branding: false,
