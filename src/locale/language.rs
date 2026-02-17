@@ -22,3 +22,18 @@ impl Language {
         }
     }
 }
+
+impl std::str::FromStr for Language {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "en" | "en-us" | "en-gb" => Ok(Self::En),
+            "ru" | "ru-ru" => Ok(Self::Ru),
+            "de" => Ok(Self::De),
+            "fr" => Ok(Self::Fr),
+            "es" => Ok(Self::Es),
+            _ => Err(format!("Unsupported language: {}", s)),
+        }
+    }
+}

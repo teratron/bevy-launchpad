@@ -37,8 +37,6 @@ impl LaunchpadStates for GameState {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        // Required for embedded assets (fonts/branding)
-        .add_plugins(register_embedded_assets)
         // Add the LaunchpadPlugin generic over our GameState
         .add_plugins(
             LaunchpadPlugin::<GameState>::builder()

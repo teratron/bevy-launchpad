@@ -1,3 +1,4 @@
+use crate::core::assets::AssetsRootStrategy;
 use crate::utils::platform::get_data_dir;
 use bevy::prelude::*;
 use std::path::PathBuf;
@@ -19,11 +20,11 @@ pub struct AppPaths {
 
 impl AppPaths {
     /// Resolves paths based on the application name and environment.
-    pub fn new(app_name: &str) -> Self {
+    pub fn new(app_name: &str, strategy: &AssetsRootStrategy) -> Self {
         let data_dir = get_data_dir(app_name);
 
-        // Asset directory resolution logic (similar to old project)
-        let assets_dir = resolve_assets_dir();
+        // Asset directory resolution logic
+        let assets_dir = resolve_assets_dir(strategy);
 
         Self {
             settings_file: data_dir.join("settings.ron"),
@@ -43,31 +44,44 @@ impl AppPaths {
     }
 }
 
-fn resolve_assets_dir() -> PathBuf {
-    let mut assets_dir = PathBuf::from("assets");
+fn resolve_assets_dir(strategy: &AssetsRootStrategy) -> PathBuf {
+    match strategy {
+        AssetsRootStrategy::BevyDefault => {
+            let mut assets_dir = PathBuf::from("assets");
 
-    if !assets_dir.exists()
-        && let Some(exe_dir) = std::env::current_exe()
-            .ok()
-            .and_then(|p| p.parent().map(|p| p.to_path_buf()))
-    {
-        let local_assets = exe_dir.join("assets");
-        if local_assets.exists() {
-            return local_assets;
-        }
+            if !assets_dir.exists()
+                && let Some(exe_dir) = std::env::current_exe()
+                    .ok()
+                    .and_then(|p| p.parent().map(|p| p.to_path_buf()))
+            {
+                let local_assets = exe_dir.join("assets");
+                if local_assets.exists() {
+                    return local_assets;
+                }
 
-        // Try parent of exe (e.g. from target/debug/ up to project root)
-        if let Some(parent) = exe_dir.parent() {
-            let parent_assets = parent.join("assets");
-            if parent_assets.exists() {
-                assets_dir = parent_assets;
+                // Try parent of exe (e.g. from target/debug/ up to project root)
+                if let Some(parent) = exe_dir.parent() {
+                    let parent_assets = parent.join("assets");
+                    if parent_assets.exists() {
+                        assets_dir = parent_assets;
+                    }
+                }
+            }
+
+            if assets_dir.exists() {
+                assets_dir.canonicalize().unwrap_or(assets_dir)
+            } else {
+                assets_dir
             }
         }
-    }
-
-    if assets_dir.exists() {
-        assets_dir.canonicalize().unwrap_or(assets_dir)
-    } else {
-        assets_dir
+        AssetsRootStrategy::Explicit(path) => path.clone(),
+        AssetsRootStrategy::SearchPaths(paths) => {
+            for path in paths {
+                if path.exists() {
+                    return path.clone();
+                }
+            }
+            PathBuf::from("assets") // Fallback
+        }
     }
 }

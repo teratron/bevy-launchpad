@@ -38,7 +38,6 @@ use bevy_launchpad::core::boot::metadata::AppMetadata;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugins(register_embedded_assets)
         .add_plugins(
             LaunchpadPlugin::<GameState>::builder()
                 .with_metadata(AppMetadata {

@@ -50,7 +50,6 @@ fn main() {
 
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugins(register_embedded_assets)
         // Use builder to inject theme
         .add_plugins(
             LaunchpadPlugin::<GameState>::builder()
