@@ -14,7 +14,7 @@ categories = ["game-development"]
 readme = "README.md"
 
 [workspace]
-members = [".", "examples/*"]
+members = [".", "crates/*", "examples/*"]
 
 [dependencies]
 bevy = { version = "0.18", default-features = false, features = [
@@ -35,6 +35,7 @@ serde = { version = "1.0", features = ["derive"] }
 ron = "0.12"
 thiserror = "2.0"
 clap = { version = "4.5.59", features = ["derive"] }
+bevy_launchpad_derive = { version = "0.1", path = "./crates/bevy_launchpad_derive" }
 
 [features]
 # ── default: everything a typical indie game needs ──────────────────────────

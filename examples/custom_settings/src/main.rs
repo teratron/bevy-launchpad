@@ -2,21 +2,6 @@ use bevy::prelude::*;
 use bevy_launchpad::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
-enum GameState {
-    #[default]
-    Booting, Loading, Splash, Menu, Playing, Paused,
-}
-
-impl LaunchpadStates for GameState {
-    fn booting()  -> Self { Self::Booting  }
-    fn loading()  -> Self { Self::Loading  }
-    fn splash()   -> Self { Self::Splash   }
-    fn menu()     -> Self { Self::Menu     }
-    fn playing()  -> Self { Self::Playing  }
-    fn paused()   -> Self { Self::Paused   }
-}
-
 /// Developer-defined gameplay settings (fully serializable → auto-saved).
 #[derive(Resource, Debug, Clone, Serialize, Deserialize)]
 pub struct GameplaySettings {
@@ -44,13 +29,13 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugins(
-            LaunchpadPlugin::<GameState>::builder()
+            LaunchpadPlugin::<AppState>::builder()
                 .with_splash(SplashConfig { skip_all: true, ..default() })
                 .build(),
         )
         // Register the custom resource — library will persist it alongside GameSettings
         .insert_resource(GameplaySettings::default())
-        .add_systems(OnEnter(GameState::Playing), setup)
+        .add_systems(OnEnter(AppState::Playing), setup)
         // Save gameplay settings when they change
         .add_systems(Update,
             save_gameplay_settings.run_if(resource_changed::<GameplaySettings>),

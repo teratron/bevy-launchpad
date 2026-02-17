@@ -1,21 +1,6 @@
 use bevy::prelude::*;
 use bevy_launchpad::prelude::*;
 
-#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
-enum GameState {
-    #[default]
-    Booting, Loading, Splash, Menu, Playing, Paused,
-}
-
-impl LaunchpadStates for GameState {
-    fn booting()  -> Self { Self::Booting  }
-    fn loading()  -> Self { Self::Loading  }
-    fn splash()   -> Self { Self::Splash   }
-    fn menu()     -> Self { Self::Menu     }
-    fn playing()  -> Self { Self::Playing  }
-    fn paused()   -> Self { Self::Paused   }
-}
-
 #[derive(Component)]
 struct Ball {
     velocity: Vec2,
@@ -25,17 +10,17 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugins(
-            LaunchpadPlugin::<GameState>::builder()
+            LaunchpadPlugin::<AppState>::builder()
                 .with_splash(SplashConfig { skip_all: true, ..default() })
                 .build(),
         )
-        .add_systems(OnEnter(GameState::Playing), spawn_ball)
+        .add_systems(OnEnter(AppState::Playing), spawn_ball)
         .add_systems(Update, (
-            move_ball.run_if(in_state(GameState::Playing)),
+            move_ball.run_if(in_state(AppState::Playing)),
             toggle_pause,
         ))
-        .add_systems(OnEnter(GameState::Paused),  on_pause)
-        .add_systems(OnExit(GameState::Paused),   on_resume)
+        .add_systems(OnEnter(AppState::Paused),  on_pause)
+        .add_systems(OnExit(AppState::Paused),   on_resume)
         .run();
 }
 
@@ -70,13 +55,13 @@ fn move_ball(
 
 fn toggle_pause(
     keys:    Res<ButtonInput<KeyCode>>,
-    state:   Res<State<GameState>>,
-    mut nxt: ResMut<NextState<GameState>>,
+    state:   Res<State<AppState>>,
+    mut nxt: ResMut<NextState<AppState>>,
 ) {
     if keys.just_pressed(KeyCode::Escape) {
         match state.get() {
-            GameState::Playing => nxt.set(GameState::Paused),
-            GameState::Paused  => nxt.set(GameState::Playing),
+            AppState::Playing => nxt.set(AppState::Paused),
+            AppState::Paused  => nxt.set(AppState::Playing),
             _ => {}
         }
     }

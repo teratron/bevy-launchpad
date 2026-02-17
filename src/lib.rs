@@ -12,12 +12,15 @@ use crate::core::boot::metadata::AppMetadata;
 use crate::core::boot::paths::AppPaths;
 use crate::core::splash::sequence::SplashConfig;
 use crate::core::states::LaunchpadStates;
+use crate::core::states::app_state::AppState;
 use crate::utils::single_instance::acquire_single_instance_lock;
 use bevy::prelude::*;
 use std::marker::PhantomData;
 
+pub use bevy_launchpad_derive::LaunchpadStates;
+
 /// Main plugin that coordinates the Bevy Launchpad framework.
-pub struct LaunchpadPlugin<S: LaunchpadStates> {
+pub struct LaunchpadPlugin<S: LaunchpadStates = AppState> {
     _marker: PhantomData<S>,
     pub metadata: AppMetadata,
     pub cli_args: CliArgs,

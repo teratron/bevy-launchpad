@@ -1,45 +1,13 @@
 use bevy::prelude::*;
 use bevy_launchpad::prelude::*;
 
-#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
-enum GameState {
-    #[default]
-    Booting,
-    Loading,
-    Splash,
-    Menu,
-    Playing,
-    Paused,
-}
-
-impl LaunchpadStates for GameState {
-    fn booting() -> Self {
-        GameState::Booting
-    }
-    fn loading() -> Self {
-        GameState::Loading
-    }
-    fn splash() -> Self {
-        GameState::Splash
-    }
-    fn menu() -> Self {
-        GameState::Menu
-    }
-    fn playing() -> Self {
-        GameState::Playing
-    }
-    fn paused() -> Self {
-        GameState::Paused
-    }
-}
-
 use bevy_launchpad::core::boot::metadata::AppMetadata;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugins(
-            LaunchpadPlugin::<GameState>::builder()
+            LaunchpadPlugin::<AppState>::builder()
                 .with_metadata(AppMetadata {
                     name:    "minimal_3d".into(),   // data dir: ~/.local/share/minimal_3d/
                     title:   "Minimal 3D Demo".into(), // window title
@@ -48,7 +16,7 @@ fn main() {
                 })
                 .build(),
         )
-        .add_systems(OnEnter(GameState::Playing), setup)
+        .add_systems(OnEnter(AppState::Playing), setup)
         .run();
 }
 

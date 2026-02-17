@@ -1,21 +1,6 @@
 use bevy::prelude::*;
 use bevy_launchpad::prelude::*;
 
-#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
-enum GameState {
-    #[default]
-    Booting, Loading, Splash, Menu, Playing, Paused,
-}
-
-impl LaunchpadStates for GameState {
-    fn booting()  -> Self { Self::Booting  }
-    fn loading()  -> Self { Self::Loading  }
-    fn splash()   -> Self { Self::Splash   }
-    fn menu()     -> Self { Self::Menu     }
-    fn playing()  -> Self { Self::Playing  }
-    fn paused()   -> Self { Self::Paused   }
-}
-
 #[derive(Component)]
 struct RotatingCube;
 
@@ -23,7 +8,7 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugins(
-            LaunchpadPlugin::<GameState>::builder()
+            LaunchpadPlugin::<AppState>::builder()
                 .with_metadata(AppMetadata {
                     name:    "galaxy_quest".into(),
                     title:   "Galaxy Quest 3D".into(),
@@ -77,11 +62,11 @@ fn main() {
                 .with_locale("en-US")
                 .build(),
         )
-        .add_systems(OnEnter(GameState::Playing), setup_3d)
+        .add_systems(OnEnter(AppState::Playing), setup_3d)
         .add_systems(Update, (
             rotate_cube,
             check_pause,
-        ).run_if(in_state(GameState::Playing)))
+        ).run_if(in_state(AppState::Playing)))
         .run();
 }
 
@@ -136,12 +121,12 @@ fn rotate_cube(
 
 fn check_pause(
     keys:    Res<ButtonInput<KeyCode>>,
-    state:   Res<State<GameState>>,
-    mut nxt: ResMut<NextState<GameState>>,
+    state:   Res<State<AppState>>,
+    mut nxt: ResMut<NextState<AppState>>,
 ) {
     if keys.just_pressed(KeyCode::Escape) {
-        if *state.get() == GameState::Playing {
-            nxt.set(GameState::Paused);
+        if *state.get() == AppState::Playing {
+            nxt.set(AppState::Paused);
         }
     }
 }

@@ -7,8 +7,10 @@ pub use crate::core::{
     loading::{AssetManifest, AssetTracker, LoadingState},
     plugin::LaunchpadCorePlugin,
     splash::{SplashConfig, SplashScreenConfig, SplashSource, SplashTimer, SkipTrigger},
-    states::{LaunchpadStates, StateMachine, TransitionConfig, TransitionStateEvent},
+    states::{LaunchpadStates, StateMachine, TransitionConfig, TransitionStateEvent, AppState},
 };
+
+pub use bevy_launchpad_derive::LaunchpadStates;
 
 // UI types
 #[cfg(feature = "ui")]

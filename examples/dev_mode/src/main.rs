@@ -1,21 +1,6 @@
 use bevy::prelude::*;
 use bevy_launchpad::prelude::*;
 
-#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
-enum GameState {
-    #[default]
-    Booting, Loading, Splash, Menu, Playing, Paused,
-}
-
-impl LaunchpadStates for GameState {
-    fn booting()  -> Self { Self::Booting  }
-    fn loading()  -> Self { Self::Loading  }
-    fn splash()   -> Self { Self::Splash   }
-    fn menu()     -> Self { Self::Menu     }
-    fn playing()  -> Self { Self::Playing  }
-    fn paused()   -> Self { Self::Paused   }
-}
-
 fn main() {
     // Run any of these in terminal to test different modes:
     //
@@ -37,7 +22,7 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugins(
-            LaunchpadPlugin::<GameState>::builder()
+            LaunchpadPlugin::<AppState>::builder()
                 .with_metadata(AppMetadata {
                     name:  "dev_mode_demo".into(),
                     title: "Dev Mode Demo".into(),
@@ -54,7 +39,7 @@ fn main() {
                 })
                 .build(),
         )
-        .add_systems(OnEnter(GameState::Playing), setup)
+        .add_systems(OnEnter(AppState::Playing), setup)
         .run();
 }
 

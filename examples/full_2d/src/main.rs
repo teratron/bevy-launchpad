@@ -2,18 +2,12 @@ use bevy::prelude::*;
 use bevy_launchpad::prelude::*;
 
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(LaunchpadStates)]
 enum GameState {
     #[default]
     Booting, Loading, Splash, Menu, Playing, Paused,
-}
-
-impl LaunchpadStates for GameState {
-    fn booting()  -> Self { Self::Booting  }
-    fn loading()  -> Self { Self::Loading  }
-    fn splash()   -> Self { Self::Splash   }
-    fn menu()     -> Self { Self::Menu     }
-    fn playing()  -> Self { Self::Playing  }
-    fn paused()   -> Self { Self::Paused   }
+    // Custom
+    Credits,
 }
 
 fn main() {
@@ -59,6 +53,7 @@ fn main() {
                 .build(),
         )
         .add_systems(OnEnter(GameState::Playing), setup_level)
+        .add_systems(OnEnter(GameState::Credits), setup_credits)
         .add_systems(Update, (
             move_player,
             check_pause,
@@ -80,6 +75,11 @@ fn setup_level(mut commands: Commands) {
         Player,
     ));
     info!("Full 2D level loaded");
+}
+
+fn setup_credits(mut commands: Commands) {
+    commands.spawn(Camera2d);
+    info!("Credits screen loaded");
 }
 
 fn move_player(

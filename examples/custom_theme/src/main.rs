@@ -3,38 +3,6 @@ use bevy_launchpad::core::boot::metadata::AppMetadata;
 use bevy_launchpad::prelude::*;
 use bevy_launchpad::ui::theme::fonts::ThemeFonts;
 
-#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
-enum GameState {
-    #[default]
-    Booting,
-    Loading,
-    Splash,
-    Menu,
-    Playing,
-    Paused,
-}
-
-impl LaunchpadStates for GameState {
-    fn booting() -> Self {
-        GameState::Booting
-    }
-    fn loading() -> Self {
-        GameState::Loading
-    }
-    fn splash() -> Self {
-        GameState::Splash
-    }
-    fn menu() -> Self {
-        GameState::Menu
-    }
-    fn playing() -> Self {
-        GameState::Playing
-    }
-    fn paused() -> Self {
-        GameState::Paused
-    }
-}
-
 fn main() {
     // Define a custom theme
     let my_theme = ThemeConfig {
@@ -52,7 +20,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         // Use builder to inject theme
         .add_plugins(
-            LaunchpadPlugin::<GameState>::builder()
+            LaunchpadPlugin::<AppState>::builder()
                 .with_metadata(AppMetadata {
                     name: "custom_theme_example".into(),
                     title: "Custom Theme Example".into(),
@@ -61,7 +29,7 @@ fn main() {
                 .with_theme(my_theme)
                 .build(),
         )
-        .add_systems(OnEnter(GameState::Playing), setup_game)
+        .add_systems(OnEnter(AppState::Playing), setup_game)
         .run();
 }
 
