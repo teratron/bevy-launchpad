@@ -3,7 +3,7 @@
 > **Stack:** Rust 1.93 · Bevy 0.18 · bevy_launchpad 0.1  
 > **Scope:** This document specifies the complete design of the `LaunchpadStates`
 > trait, the `#[derive(LaunchpadStates)]` proc-macro, the built-in `AppState`
-> enum, and how all three levels of the API fit together.
+> enum, and how all four levels of the API fit together.
 
 ---
 
@@ -12,58 +12,55 @@
 1. [Problem Statement](#1-problem-statement)
 2. [Solution Overview](#2-solution-overview)
 3. [Repository Layout Changes](#3-repository-layout-changes)
-4. [Level 1 — Built-in AppState](#4-level-1--built-in-appstate)
-5. [Level 2 — derive + naming convention](#5-level-2--derive--naming-convention)
-6. [Level 3 — derive + explicit attributes](#6-level-3--derive--explicit-attributes)
-7. [LaunchpadStates Trait](#7-launchpadstates-trait)
-8. [bevy_launchpad_derive crate](#8-bevy_launchpad_derive-crate)
-9. [Cargo.toml changes](#9-cargotoml-changes)
-10. [prelude.rs changes](#10-preluders-changes)
-11. [Error messages](#11-error-messages)
-12. [Full usage examples](#12-full-usage-examples)
-13. [Decision log](#13-decision-log)
+4. [Level 1: Standard (Built-in AppState)](#4-level-1-standard-built-in-appstate)
+5. [Level 2: Sub-States (Recommended)](#5-level-2-sub-states-recommended)
+6. [Level 3: Monolithic (Convention-based)](#6-level-3-monolithic-convention-based)
+7. [Level 4: Attributes (Explicit Mapping)](#7-level-4-attributes-explicit-mapping)
+8. [LaunchpadStates Trait](#8-launchpadstates-trait)
+9. [bevy_launchpad_derive crate](#9-bevy_launchpad_derive-crate)
+10. [Cargo.toml changes](#10-cargotoml-changes)
+11. [prelude.rs changes](#11-preluders-changes)
+12. [Error messages](#12-error-messages)
+13. [Full usage examples](#13-full-usage-examples)
+14. [Decision log](#14-decision-log)
 
 ---
 
 ## 1. Problem Statement
 
-The original API forces the developer to write ~20 lines of identical boilerplate
-every time they create a game:
+State management in Bevy applications often suffers from two extremes:
 
-```rust
-// CURRENT — repetitive, noise, easy to get wrong
-impl LaunchpadStates for GameState {
-    fn booting()  -> Self { Self::Booting  }
-    fn loading()  -> Self { Self::Loading  }
-    fn splash()   -> Self { Self::Splash   }
-    fn menu()     -> Self { Self::Menu     }
-    fn playing()  -> Self { Self::Playing  }
-    fn paused()   -> Self { Self::Paused   }
-}
-```
+1. **Boilerplate:** Developers copy-paste the same ~20 lines of `LaunchpadStates` impl for every prototype.
+2. **Coupling:** Framework states (`Booting`, `Splash`) are mixed with game-specific states (`Combat`, `Inventory`), forcing the game logic to depend on framework details.
 
 **Goals:**
 
-- Level 1: zero lines for simple games (use a built-in enum).
-- Level 2: one line (`#[derive(LaunchpadStates)]`) when variant names follow
-  the library convention.
-- Level 3: one line + per-variant attributes when names differ from convention.
-- Clear, actionable compile-time errors when the mapping is incomplete.
-- All three levels must coexist — a developer can start at Level 1 and migrate
-  to Level 2 without changing any other code.
+- **Zero Boilerplate:** Use a built-in enum for simple apps.
+- **Separation of Concerns:** Allow game logic to exist in its own enum (`GameState`), completely decoupled from framework lifecycle (`AppState`).
+- **Developer Experience:** Auto-generated helper methods (`is_playing()`) and support for variants with data (`Playing(LevelId)`).
+- **Flexibility:** Four distinct levels of integration, from "just works" to "fully custom".
 
 ---
 
 ## 2. Solution Overview
 
-| Level | What developer writes | Use case |
-|---|---|---|
-| 1 | Nothing — use `AppState` directly | prototypes, game jams, testing |
-| 2 | `#[derive(LaunchpadStates)]` + conventional variant names | most indie games |
-| 3 | `#[derive(LaunchpadStates)]` + `#[launchpad(...)]` attributes | legacy naming, personal style |
+We introduce a 4-level hierarchy to cover all use cases:
 
-All three levels produce the same runtime behavior. They differ only in the
-amount of code the developer writes.
+| Level | Name | Use Case | What developer writes |
+|---|---|---|---|
+| **1** | **Standard** | Prototypes, Jams | `LaunchpadPlugin::default()` (uses `AppState`) |
+| **2** | **Sub-States** | Most Games | `AppState` (lifecycle) + `MyGameMode` (gameplay) |
+| **3** | **Monolithic** | Framework Forks | Single Enum with `#[derive(LaunchpadStates)]` |
+| **4** | **Attributes** | Legacy/Custom | Single Enum with manual `#[launchpad(...)]` mapping |
+
+### Feature Matrix
+
+| Feature | Level 1 | Level 2 | Level 3 | Level 4 |
+|---|---|---|---|---|
+| Framework States | Built-in | Built-in | Custom | Custom |
+| Gameplay States | None | Isolated | Mixed | Mixed |
+| Helper Methods | Yes | Yes | Yes | Yes |
+| Data Variants | N/A | Supported | Supported | Supported |
 
 ---
 
@@ -83,18 +80,19 @@ bevy-launchpad/
 │           ├── machine.rs
 │           └── transitions.rs
 │
-└── bevy_launchpad_derive/               ← NEW: proc-macro crate
-    ├── Cargo.toml
-    └── src/
-        └── lib.rs
+└── crates/                              ← NEW: workspace folder
+    └── bevy_launchpad_derive/           ← NEW: proc-macro crate
+        ├── Cargo.toml
+        └── src/
+            └── lib.rs
 ```
 
 ---
 
-## 4. Level 1 — Built-in AppState
+## 4. Level 1: Standard (Built-in AppState)
 
-The library ships a ready-to-use state enum. The developer imports it and passes
-it to `LaunchpadPlugin`. No trait impl required.
+The library ships a ready-to-use `AppState` enum. This is the entry point for all new projects.
+The developer imports it and passes it to `LaunchpadPlugin`. No trait impl required.
 
 ### `src/core/states/app_state.rs`
 
@@ -103,39 +101,14 @@ use bevy::prelude::*;
 use crate::core::states::mapping::LaunchpadStates;
 use bevy::state::state::FreelyMutableState;
 
-/// Built-in application state enum provided by bevy_launchpad.
-///
-/// Use this when you do not need custom states beyond the standard
-/// boot → loading → splash → menu → playing → paused flow.
-///
-/// # Example
-///
-/// ```rust
-/// use bevy::prelude::*;
-/// use bevy_launchpad::prelude::*;
-///
-/// fn main() {
-///     App::new()
-///         .add_plugins(DefaultPlugins)
-///         .add_plugins(LaunchpadPlugin::default())   // uses AppState internally
-///         .add_systems(OnEnter(AppState::Playing), setup)
-///         .run();
-/// }
-/// ```
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
 pub enum AppState {
-    /// Framework initialises here (paths, lock, CLI args).
     #[default]
     Booting,
-    /// Asset manifests are being loaded.
     Loading,
-    /// Splash screen sequence is playing.
     Splash,
-    /// Main menu is active.
     Menu,
-    /// Gameplay is running.
     Playing,
-    /// Gameplay is paused.
     Paused,
 }
 
@@ -149,24 +122,6 @@ impl LaunchpadStates for AppState {
 }
 ```
 
-### `LaunchpadPlugin` — default type parameter
-
-```rust
-// src/lib.rs
-
-/// LaunchpadPlugin defaults to AppState when no type parameter is given.
-/// Both forms below are equivalent for simple games:
-///
-///   LaunchpadPlugin::default()
-///   LaunchpadPlugin::<AppState>::default()
-pub struct LaunchpadPlugin<S: LaunchpadStates = AppState> { ... }
-
-impl LaunchpadPlugin<AppState> {
-    /// Convenience constructor — no type annotation needed.
-    pub fn default() -> Self { ... }
-}
-```
-
 ### Developer code (Level 1)
 
 ```rust
@@ -176,32 +131,24 @@ use bevy_launchpad::prelude::*;
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugins(LaunchpadPlugin::default())        // AppState implied
-        .add_systems(OnEnter(AppState::Playing), setup) // use AppState variants directly
+        .add_plugins(LaunchpadPlugin::default()) // Uses AppState by default
+        .add_systems(OnEnter(AppState::Playing), setup_game)
         .run();
 }
 ```
 
 ---
 
-## 5. Level 2 — derive + naming convention
+## 5. Level 2: Sub-States (Recommended)
 
-The developer declares their own enum. The `#[derive(LaunchpadStates)]` macro
-inspects variant names and generates the `impl LaunchpadStates` automatically.
+**This is the preferred architecture for production games.**
 
-### Naming convention
+Instead of merging framework lifecycle states (`Splash`, `Loading`) with game modes (`Combat`, `Inventory`), we separate them.
 
-| Variant name (exact, case-sensitive) | Generated method |
-|---|---|
-| `Booting` | `fn booting()` |
-| `Loading` | `fn loading()` |
-| `Splash`  | `fn splash()`  |
-| `Menu`    | `fn menu()`    |
-| `Playing` | `fn playing()` |
-| `Paused`  | `fn paused()`  |
+- `AppState` (built-in): Handles system lifecycle.
+- `MyGameMode` (user-defined): Handles gameplay logic.
 
-Any variant whose name is **not** in this table is silently ignored — it becomes
-a developer-owned state that the library never touches.
+The user's `MyGameMode` starts running **only when** `AppState` enters `Playing`.
 
 ### Developer code (Level 2)
 
@@ -209,104 +156,125 @@ a developer-owned state that the library never touches.
 use bevy::prelude::*;
 use bevy_launchpad::prelude::*;
 
+// 1. Define ONLY your game-specific states
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
-#[derive(LaunchpadStates)]   // single line replaces the 20-line manual impl
+enum MyGameMode {
+    #[default]
+    Exploration,
+    Combat,
+    Inventory,
+    Dialogue,
+}
+
+fn main() {
+    App::new()
+        .add_plugins(DefaultPlugins)
+        .add_plugins(LaunchpadPlugin::default()) // Use standard AppState
+
+        // 2. Register your state as a Sub-State of AppState::Playing
+        .add_sub_state::<MyGameMode>(AppState::Playing) 
+
+        // 3. Systems react to YOUR state
+        .add_systems(OnEnter(MyGameMode::Combat), start_combat)
+        .run();
+}
+```
+
+**Benefits:**
+
+- **Zero Boilerplate:** No need to define `Booting` or `Splash` in your code.
+- **Clean Architecture:** Game logic is decoupled from framework states.
+- **Bevy Native:** Uses Bevy's built-in Sub-States / Computed States mechanism.
+
+---
+
+## 6. Level 3: Monolithic (Convention-based)
+
+This level is for developers who want full control over the entire lifecycle (e.g., removing the Splash screen entirely) but want to keep boilerplate low.
+
+The developer declares one "God Enum" containing both lifecycle and gameplay states. The `#[derive(LaunchpadStates)]` macro inspects variant names.
+
+### 6.1. Helper Methods (New!)
+
+The macro now automatically generates inherent methods for the enum (`is_playing()`, `is_menu()`, etc.).
+
+### 6.2. Data Variants (New!)
+
+Variants can now carry data. The macro must know how to construct them using the `#[launchpad(..., default = ...)]` attribute or `Default` trait.
+
+```rust
+#[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(LaunchpadStates)]
 enum GameState {
     #[default]
     Booting,
     Loading,
     Splash,
     Menu,
-    Playing,
+    
+    // Variant with data!
+    // The macro will use LevelId::default() when transitioning to this state.
+    #[launchpad(playing, default)] 
+    Playing(LevelId),
+    
     Paused,
-    // Custom states — the macro ignores these completely
-    Credits,
-    LevelSelect,
-    GameOver,
-    Cutscene,
 }
 
+// Generated Helpers
+impl GameState {
+    pub fn is_playing(&self) -> bool { matches!(self, Self::Playing(_)) }
+    pub fn is_menu(&self) -> bool { matches!(self, Self::Menu) }
+    // ...
+}
+```
+
+### Developer code (Level 3)
+
+```rust
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        // We pass OUR custom type, replacing the built-in AppState entirely
         .add_plugins(LaunchpadPlugin::<GameState>::default())
-        .add_systems(OnEnter(GameState::Playing),     setup_game)
-        .add_systems(OnEnter(GameState::Credits),     setup_credits)
-        .add_systems(OnEnter(GameState::LevelSelect), setup_level_select)
         .run();
 }
 ```
 
 ---
 
-## 6. Level 3 — derive + explicit attributes
+## 7. Level 4: Attributes (Explicit Mapping)
 
-When the developer's variant names do not match the convention, they use
-per-variant `#[launchpad(<method>)]` attributes to declare the mapping.
+Rename of the previous Level 3. Use this when you have legacy naming schemes or complex data requirements that conventions can't handle.
 
-### Attribute syntax
+### Attribute syntax enhancements
 
 ```rust
-#[launchpad(booting)]   // maps this variant to fn booting()
-#[launchpad(loading)]   // maps this variant to fn loading()
-#[launchpad(splash)]    // maps this variant to fn splash()
-#[launchpad(menu)]      // maps this variant to fn menu()
-#[launchpad(playing)]   // maps this variant to fn playing()
-#[launchpad(paused)]    // maps this variant to fn paused()
+// Simple mapping
+#[launchpad(booting)]
+
+// Mapping with default constructor for data
+#[launchpad(playing, default)] // uses Default::default()
+
+// Mapping with explicit constructor expression
+#[launchpad(playing, default = "LevelId::Tutorial")]
 ```
 
-Each attribute maps **exactly one variant** to **exactly one method**.
-Duplicate mappings (two variants mapped to the same method) are a compile error.
-
-### Resolution priority
-
-For each required method, the macro resolves in this order:
-
-1. Explicit `#[launchpad(<method>)]` attribute on a variant.
-2. Variant name matches the naming convention exactly.
-3. → compile error with a helpful message.
-
-### Developer code (Level 3)
+### Developer code (Level 4)
 
 ```rust
-use bevy::prelude::*;
-use bevy_launchpad::prelude::*;
-
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
 #[derive(LaunchpadStates)]
 enum MyState {
     #[default]
-    #[launchpad(booting)]   // "Init" does not match convention → explicit attr
+    #[launchpad(booting)]
     Init,
 
-    #[launchpad(loading)]
-    AssetsLoading,
+    // ...
 
-    #[launchpad(splash)]
-    Intro,
-
-    #[launchpad(menu)]
-    MainMenu,
-
-    #[launchpad(playing)]
-    InGame,
-
-    #[launchpad(paused)]
-    Pause,
-
-    // Custom states — no attribute, ignored by the macro
-    Cutscene,
-    BossDefeated,
-    GameOver,
-}
-
-fn main() {
-    App::new()
-        .add_plugins(DefaultPlugins)
-        .add_plugins(LaunchpadPlugin::<MyState>::default())
-        .add_systems(OnEnter(MyState::InGame),   setup_game)
-        .add_systems(OnEnter(MyState::Cutscene), play_cutscene)
-        .run();
+    #[launchpad(playing, default = "LevelId::Tutorial")]
+    InGame(LevelId),
+    
+    // ...
 }
 ```
 
@@ -338,7 +306,7 @@ enum HybridState {
 
 ---
 
-## 7. LaunchpadStates Trait
+## 8. LaunchpadStates Trait
 
 This is the existing trait in `src/core/states/mapping.rs`. **No changes required.**
 Documented here for completeness.
@@ -372,18 +340,18 @@ pub trait LaunchpadStates: States + FreelyMutableState + Default {
 
 ---
 
-## 8. bevy_launchpad_derive crate
+## 9. bevy_launchpad_derive crate
 
 ### Directory structure
 
 ```
-bevy_launchpad_derive/
+crates/bevy_launchpad_derive/
 ├── Cargo.toml
 └── src/
     └── lib.rs
 ```
 
-### `bevy_launchpad_derive/Cargo.toml`
+### `crates/bevy_launchpad_derive/Cargo.toml`
 
 ```toml
 [package]
@@ -405,7 +373,7 @@ quote       = "1.0"
 proc-macro2 = "1.0"
 ```
 
-### `bevy_launchpad_derive/src/lib.rs` — complete implementation
+### `crates/bevy_launchpad_derive/src/lib.rs` — complete implementation
 
 ```rust
 //! Procedural macros for bevy_launchpad.
@@ -659,26 +627,26 @@ fn convention_variant_name(method: &str) -> &'static str {
 
 ---
 
-## 9. Cargo.toml changes
+## 10. Cargo.toml changes
 
 ### `bevy-launchpad/Cargo.toml` additions
 
 ```toml
 [dependencies]
 # ... existing deps ...
-bevy_launchpad_derive = { version = "0.1", path = "./bevy_launchpad_derive" }
+bevy_launchpad_derive = { version = "0.1", path = "./crates/bevy_launchpad_derive" }
 
 [workspace]
 members = [
     ".",
-    "bevy_launchpad_derive",  # add to workspace
+    "crates/*",               # wildcard for all crates
     "examples/*",
 ]
 ```
 
 ---
 
-## 10. prelude.rs changes
+## 11. prelude.rs changes
 
 ```rust
 // src/prelude.rs — add these two lines to existing re-exports:
@@ -686,7 +654,7 @@ members = [
 // Built-in state enum (Level 1)
 pub use crate::core::states::app_state::AppState;
 
-// Derive macro (Level 2 & 3)
+// Derive macro (Level 3 & 4)
 pub use bevy_launchpad_derive::LaunchpadStates;
 ```
 
@@ -706,7 +674,7 @@ pub use transitions::{TransitionConfig, TransitionStateEvent, handle_state_trans
 
 ---
 
-## 11. Error messages
+## 12. Error messages
 
 The macro produces targeted, actionable errors. Examples:
 
@@ -767,7 +735,7 @@ error: #[derive(LaunchpadStates)] can only be applied to enums
 
 ---
 
-## 12. Full usage examples
+## 13. Full usage examples
 
 ### Level 1 — zero boilerplate
 
@@ -792,7 +760,7 @@ fn setup(mut commands: Commands) {
 
 ---
 
-### Level 2 — conventional names, 2D game
+### Level 3 — Monolithic (Convention-based)
 
 ```rust
 use bevy::prelude::*;
@@ -1093,3 +1061,11 @@ fn open_inventory()              { info!("Inventory opened"); }
 ---
 
 *End of specification* — bevy_launchpad state integration v0.1
+
+---
+
+## 14. Decision log
+
+- **2025-01-15:** Initial design with 3 levels (Built-in, Convention, Attributes).
+- **2025-02-17:** Introduced Level 2 (Sub-States) to separate framework lifecycle from game logic.
+- **2025-02-17:** Added requirement for auto-generated helper methods (`is_playing()`) and support for data variants (`Playing(LevelId)`).
