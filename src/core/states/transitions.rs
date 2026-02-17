@@ -1,8 +1,7 @@
 use crate::core::boot::sequence::BootSequence;
 use crate::core::states::mapping::LaunchpadStates;
-use bevy::ecs::message::MessageReader;
-use bevy::log::info;
-use bevy::prelude::{App, Plugin, Res, ResMut, Resource, Update};
+use bevy::ecs::message::{Message, MessageReader};
+use bevy::prelude::*;
 use bevy::state::prelude::{NextState, States};
 
 /// Configuration for state transitions.
@@ -13,7 +12,7 @@ pub struct TransitionConfig {
 }
 
 /// Event sent to trigger a state transition.
-#[derive(bevy::ecs::message::Message, Debug, Clone, PartialEq)]
+#[derive(Message, Debug, Clone, PartialEq)]
 pub struct TransitionStateEvent<S: States> {
     pub next: S,
 }
@@ -32,6 +31,7 @@ impl<S: LaunchpadStates> Default for StateTransitionPlugin<S> {
 
 impl<S: LaunchpadStates> Plugin for StateTransitionPlugin<S> {
     fn build(&self, app: &mut App) {
+        app.add_message::<TransitionStateEvent<S>>();
         app.add_systems(Update, handle_state_transitions::<S>);
     }
 }

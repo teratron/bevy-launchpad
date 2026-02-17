@@ -1,10 +1,13 @@
+use crate::locale::language::Language;
 use bevy::prelude::*;
 
-#[derive(Resource, Default)]
-pub struct LocalePlugin;
+/// Plugin for handling localization.
+pub struct LocalizationPlugin;
 
-impl Plugin for LocalePlugin {
+impl Plugin for LocalizationPlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<crate::locale::language::Language>();
+        if !app.world().contains_resource::<Language>() {
+            app.init_resource::<Language>();
+        }
     }
 }

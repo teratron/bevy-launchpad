@@ -1,102 +1,83 @@
 [package]
 name = "bevy_launchpad"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 rust-version = "1.93"
 authors = ["Oleg Alexandrov <alexandrovoleg.ru@gmail.com>"]
-readme = "README.md"
 description = "A production-ready launcher framework for Bevy games."
-license = "MIT"
-homepage = "https://teratron.github.io/bevy-launchpad"
-documentation = "https://teratron.github.io/bevy-launchpad/docs"
+license = "MIT or Apache-2.0"
 repository = "https://github.com/teratron/bevy-launchpad"
-keywords = ["rust", "bevy", "game", "launcher", "framework", "ui"]
-categories = ["game-development", "gui"]
+homepage = "https://teratron.github.io/bevy-launchpad"
+documentation = "https://docs.rs/bevy_launchpad"
+keywords = ["bevy", "game", "launcher", "framework"]
+categories = ["game-development"]
+readme = "README.md"
 
 [workspace]
 members = [".", "examples/*"]
 
-[[example]]
-name = "custom_theme"
-path = "examples/custom_theme/src/main.rs"
-doc-scrape-examples = false
-
-[package.metadata.example.custom_theme]
-name = "Custom Theme Example"
-description = "Custom theme example demonstrating the basic features."
-category = "Examples"
-wasm = false
-
-[[example]]
-name = "full_2d"
-path = "examples/full_2d/src/main.rs"
-doc-scrape-examples = false
-
-[package.metadata.example.full_2d]
-name = "Full 2D Example"
-description = "Full 2D example demonstrating the basic features."
-category = "Examples"
-wasm = false
-
-[[example]]
-name = "full_3d"
-path = "examples/full_3d/src/main.rs"
-doc-scrape-examples = false
-
-[package.metadata.example.full_3d]
-name = "Full 3D Example"
-description = "Full 3D example demonstrating the basic features."
-category = "Examples"
-wasm = false
-
-[[example]]
-name = "minimal_2d"
-path = "examples/minimal_2d/src/main.rs"
-doc-scrape-examples = false
-
-[package.metadata.example.minimal_2d]
-name = "Minimal 2D Example"
-description = "Minimal 2D example demonstrating the basic features."
-category = "Examples"
-wasm = false
-
-[[example]]
-name = "minimal_3d"
-path = "examples/minimal_3d/src/main.rs"
-doc-scrape-examples = false
-
-[package.metadata.example.minimal_3d]
-name = "Minimal 3D Example"
-description = "Minimal 3D example demonstrating the basic features."
-category = "Examples"
-wasm = false
-
 [dependencies]
-bevy = { version = "0.18", default-features = true, features = [
+bevy = { version = "0.18", default-features = false, features = [
     "bevy_winit",
     "bevy_gilrs",
+    "bevy_ui",
+    "bevy_text",
+    "bevy_asset",
+    "bevy_render",
+    "bevy_core_pipeline",
+    "bevy_state",
+    "bevy_color",
+    "bevy_log",
     "x11",
     "png",
 ] }
 serde = { version = "1.0", features = ["derive"] }
-ron = "0.12.0"
-thiserror = "2.0.18"
-clap = { version = "4.5", features = ["derive"] }
+ron = "0.12"
+thiserror = "2.0"
+clap = { version = "4.5.59", features = ["derive"] }
 
 [features]
+# ── default: everything a typical indie game needs ──────────────────────────
 default = ["ui", "locale", "2d", "3d"]
 
-# Modules
-ui = []
-locale = []
-
-# Dimensions
+# ── dimension features ──────────────────────────────────────────────────────
 2d = ["bevy/bevy_sprite", "bevy/bevy_gizmos"]
 3d = ["bevy/bevy_pbr", "bevy/bevy_gizmos"]
 
-# Optional
+# ── optional modules ────────────────────────────────────────────────────────
+ui = []     # theme, widgets, menus, modals, transitions
+locale = [] # Fluent localization
+
+# ── optional extras ─────────────────────────────────────────────────────────
 diagnostics = ["bevy/bevy_dev_tools"]
 audio = ["bevy/bevy_audio", "bevy/vorbis"]
 embedded_assets = []
 
+# ── convenience bundles ─────────────────────────────────────────────────────
 full = ["default", "diagnostics", "audio", "embedded_assets"]
+minimal = [] # core only — no UI, no locale
+
+[[example]]
+name = "minimal_2d"
+path = "examples/minimal_2d/src/main.rs"
+required-features = ["2d"]
+
+[[example]]
+name = "minimal_3d"
+path = "examples/minimal_3d/src/main.rs"
+required-features = ["3d"]
+
+[[example]]
+name = "full_2d"
+path = "examples/full_2d/src/main.rs"
+required-features = ["ui", "locale", "2d"]
+
+[[example]]
+name = "full_3d"
+path = "examples/full_3d/src/main.rs"
+required-features = ["ui", "locale", "3d"]
+
+[[example]]
+name = "custom_theme"
+path = "examples/custom_theme/src/main.rs"
+required-features = ["ui"]

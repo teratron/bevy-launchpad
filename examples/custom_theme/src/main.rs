@@ -1,5 +1,7 @@
 use bevy::prelude::*;
+use bevy_launchpad::core::boot::metadata::AppMetadata;
 use bevy_launchpad::prelude::*;
+use bevy_launchpad::ui::theme::fonts::ThemeFonts;
 
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
 enum GameState {
@@ -41,16 +43,22 @@ fn main() {
             secondary: Color::srgb(0.6, 0.1, 0.3),
             background: Color::srgb(0.1, 0.05, 0.1), // Dark purple bg
             text: Color::srgb(0.9, 0.8, 0.8),
-            accent: Color::srgb(1.0, 0.6, 0.2),
         },
-        // ... use default fonts/spacing
+        fonts: ThemeFonts::noto_sans(),
+        ..default()
     };
 
     App::new()
         .add_plugins(DefaultPlugins)
-        // Use builder to inject theme (or resource insertion)
+        .add_plugins(register_embedded_assets)
+        // Use builder to inject theme
         .add_plugins(
             LaunchpadPlugin::<GameState>::builder()
+                .with_metadata(AppMetadata {
+                    name: "custom_theme_example".into(),
+                    title: "Custom Theme Example".into(),
+                    ..default()
+                })
                 .with_theme(my_theme)
                 .build(),
         )

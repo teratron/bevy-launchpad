@@ -1,10 +1,13 @@
 use super::colors::ThemeColors;
+use super::fonts::ThemeFonts;
+use super::spacing::ThemeSpacing;
 use bevy::prelude::*;
 
-/// Predefined theme presets.
 #[derive(Resource, Debug, Clone, Default)]
 pub struct ThemeConfig {
     pub colors: ThemeColors,
+    pub fonts: ThemeFonts,
+    pub spacing: ThemeSpacing,
 }
 
 impl ThemeConfig {
@@ -19,8 +22,16 @@ impl ThemeConfig {
                 secondary: Color::srgb(0.3, 0.5, 0.8),
                 background: Color::WHITE,
                 text: Color::BLACK,
-                accent: Color::srgb(0.0, 0.5, 1.0), // Blue accent for light theme
             },
+            ..default()
+        }
+    }
+
+    /// Dark theme with Noto Sans (use when Cyrillic / full Unicode needed).
+    pub fn dark_with_noto() -> Self {
+        Self {
+            fonts: ThemeFonts::noto_sans(),
+            ..Self::dark()
         }
     }
 }

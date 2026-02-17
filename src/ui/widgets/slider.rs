@@ -45,7 +45,7 @@ pub fn spawn_slider(
                         height: Val::Percent(100.0),
                         ..default()
                     },
-                    BackgroundColor(theme.colors.accent),
+                    BackgroundColor(theme.colors.secondary),
                 ));
             });
 
@@ -59,7 +59,7 @@ pub fn spawn_slider(
                     border_radius: BorderRadius::all(Val::Px(8.0)),
                     ..default()
                 },
-                BackgroundColor(theme.colors.accent),
+                BackgroundColor(theme.colors.secondary),
                 BorderColor::all(theme.colors.text),
             ));
         })

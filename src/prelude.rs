@@ -21,16 +21,18 @@ pub use crate::ui::{
 
 // Locale types
 #[cfg(feature = "locale")]
-pub use crate::locale::{Language, LocalePlugin};
+pub use crate::locale::{Language, LocalizationPlugin};
 
 // Utils
 pub use crate::utils::{
-    Persistable, SingleInstance, SingleInstanceError, SingleInstanceLock,
-    acquire_single_instance_lock, load_ron, save_ron,
+    persistence::{Persistable, load_ron, save_ron},
+    single_instance::{
+        InstanceLockGuard, SingleInstanceError, SingleInstanceLock, acquire_single_instance_lock,
+    },
 };
 
 // Main Plugin
-pub use crate::LaunchpadPlugin;
+pub use crate::{LaunchpadPlugin, register_embedded_assets};
 
 // Re-export Bevy prelude
 pub use bevy::prelude::*;

@@ -1,4 +1,3 @@
-use bevy::log::info;
 use bevy::prelude::*;
 
 /// Represents the current progress of the boot sequence.

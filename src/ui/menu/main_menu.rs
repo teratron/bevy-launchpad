@@ -1,10 +1,33 @@
 use crate::ui::widgets::button::{Button, spawn_button};
 use bevy::prelude::*;
 
-#[derive(Resource, Default)]
+#[derive(Resource, Debug, Clone)]
 pub struct MainMenuConfig {
     pub title: String,
+    pub buttons: Vec<MenuButton>,
 }
+
+#[derive(Debug, Clone)]
+pub enum MenuButton {
+    Play,
+    Settings,
+    Exit,
+    Custom {
+        label: String,
+        target_state_name: String,
+    },
+}
+
+impl Default for MainMenuConfig {
+    fn default() -> Self {
+        Self {
+            title: String::new(),
+            buttons: vec![MenuButton::Play, MenuButton::Settings, MenuButton::Exit],
+        }
+    }
+}
+
+use crate::ui::theme::ThemeConfig;
 
 #[derive(Component)]
 pub struct MainMenuRoot;
@@ -16,8 +39,6 @@ pub struct PlayButton;
 /// Marker for the Exit button.
 #[derive(Component)]
 pub struct ExitButton;
-
-use crate::ui::theme::ThemeConfig;
 
 pub fn setup_main_menu(
     mut commands: Commands,
@@ -40,19 +61,34 @@ pub fn setup_main_menu(
         ))
         .with_children(|parent| {
             // Title
-            parent.spawn((
-                Text::new(&config.title),
-                TextFont {
-                    font_size: 60.0,
-                    ..default()
-                },
-                TextColor(theme.colors.text),
-            ));
+            if !config.title.is_empty() {
+                parent.spawn((
+                    Text::new(&config.title),
+                    TextFont {
+                        font_size: 60.0,
+                        ..default()
+                    },
+                    TextColor(theme.colors.text),
+                ));
+            }
 
             // Buttons
-            spawn_button(parent, "Play", &theme).insert(PlayButton);
-            spawn_button(parent, "Settings", &theme);
-            spawn_button(parent, "Exit", &theme).insert(ExitButton);
+            for button in &config.buttons {
+                match button {
+                    MenuButton::Play => {
+                        spawn_button(parent, "Play", &theme).insert(PlayButton);
+                    }
+                    MenuButton::Settings => {
+                        spawn_button(parent, "Settings", &theme);
+                    }
+                    MenuButton::Exit => {
+                        spawn_button(parent, "Exit", &theme).insert(ExitButton);
+                    }
+                    MenuButton::Custom { label, .. } => {
+                        spawn_button(parent, label, &theme);
+                    }
+                }
+            }
         });
 }
 

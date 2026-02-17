@@ -1,16 +1,17 @@
 use crate::core::states::LaunchpadStates;
 use bevy::prelude::*;
+use bevy::state::prelude::in_state;
 use std::marker::PhantomData;
 
 #[derive(Resource)]
 pub struct LaunchpadUiPlugin<S: LaunchpadStates> {
-    _state: PhantomData<S>,
+    _marker: PhantomData<S>,
 }
 
 impl<S: LaunchpadStates> Default for LaunchpadUiPlugin<S> {
     fn default() -> Self {
         Self {
-            _state: PhantomData,
+            _marker: PhantomData,
         }
     }
 }

@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_launchpad::core::boot::metadata::AppMetadata;
 use bevy_launchpad::prelude::*;
 
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
@@ -36,8 +37,18 @@ impl LaunchpadStates for GameState {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        // Required for embedded assets (fonts/branding)
+        .add_plugins(register_embedded_assets)
         // Add the LaunchpadPlugin generic over our GameState
-        .add_plugins(LaunchpadPlugin::<GameState>::default())
+        .add_plugins(
+            LaunchpadPlugin::<GameState>::builder()
+                .with_metadata(AppMetadata {
+                    name: "minimal_2d".into(),
+                    title: "Minimal 2D Game".into(),
+                    ..default()
+                })
+                .build(),
+        )
         .add_systems(OnEnter(GameState::Playing), setup_game)
         .run();
 }

@@ -1,47 +1,63 @@
+use crate::core::assets::AssetsRootStrategy;
+use crate::core::boot::metadata::AppMetadata;
 use crate::core::boot::sequence::update_boot_progress;
+use crate::core::splash::sequence::SplashConfig;
 use crate::core::states::mapping::LaunchpadStates;
 use crate::core::states::transitions::{
-    TransitionStateEvent, auto_transition_booting, auto_transition_loading,
+    TransitionConfig, TransitionStateEvent, auto_transition_booting, auto_transition_loading,
     handle_state_transitions,
 };
 use bevy::prelude::*;
+use bevy::state::prelude::in_state;
 use std::marker::PhantomData;
 
-/// Core framework plugin.
+/// Core logic plugin for Launchpad.
+/// Handles boot sequence, state management, and asset loading logic.
 pub struct LaunchpadCorePlugin<S: LaunchpadStates> {
-    _state: PhantomData<S>,
+    _marker: PhantomData<S>,
 }
 
 impl<S: LaunchpadStates> Default for LaunchpadCorePlugin<S> {
     fn default() -> Self {
         Self {
-            _state: PhantomData,
+            _marker: PhantomData,
         }
     }
 }
 
 impl<S: LaunchpadStates> Plugin for LaunchpadCorePlugin<S> {
     fn build(&self, app: &mut App) {
-        // Resources like AppMetadata and AppPaths are already inserted by LaunchpadPlugin::build
+        // Init resources if not already present (builder usually inserts them)
+        if !app.world().contains_resource::<AppMetadata>() {
+            app.init_resource::<AppMetadata>();
+        }
+        if !app.world().contains_resource::<SplashConfig>() {
+            app.init_resource::<SplashConfig>();
+        }
+        if !app.world().contains_resource::<TransitionConfig>() {
+            app.init_resource::<TransitionConfig>();
+        }
+        if !app.world().contains_resource::<AssetsRootStrategy>() {
+            app.init_resource::<AssetsRootStrategy>();
+        }
 
         app.init_resource::<crate::core::boot::BootSequence>();
-        app.init_resource::<crate::core::states::TransitionConfig>();
-        app.init_resource::<crate::core::splash::SplashConfig>();
+        app.init_resource::<crate::core::boot::BootConfig>();
+        app.init_resource::<crate::core::assets::resolver::AssetsRootStrategy>();
 
-        bevy::ecs::message::MessageRegistry::register_message::<TransitionStateEvent<S>>(
-            app.world_mut(),
-        );
+        // Messages
+        app.add_message::<TransitionStateEvent<S>>();
 
-        app.add_systems(Update, update_boot_progress);
-        app.add_systems(Update, handle_state_transitions::<S>);
-
-        // Automatic flow
+        // Systems
         app.add_systems(
             Update,
             (
+                update_boot_progress.run_if(in_state(S::booting())),
+                handle_state_transitions::<S>,
                 auto_transition_booting::<S>.run_if(in_state(S::booting())),
                 auto_transition_loading::<S>.run_if(in_state(S::loading())),
-            ),
+            )
+                .chain(),
         );
     }
 }

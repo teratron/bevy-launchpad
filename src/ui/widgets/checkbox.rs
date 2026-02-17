@@ -37,7 +37,7 @@ pub fn spawn_checkbox(
                 },
                 BorderColor::all(theme.colors.primary),
                 BackgroundColor(if checked {
-                    theme.colors.accent
+                    theme.colors.secondary
                 } else {
                     Color::NONE
                 }),

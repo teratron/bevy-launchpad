@@ -7,7 +7,6 @@ pub struct ThemeColors {
     pub secondary: Color,
     pub background: Color,
     pub text: Color,
-    pub accent: Color,
 }
 
 impl Default for ThemeColors {
@@ -17,7 +16,6 @@ impl Default for ThemeColors {
             secondary: Color::srgb(0.4, 0.6, 0.9),
             background: Color::srgb(0.05, 0.05, 0.05),
             text: Color::WHITE,
-            accent: Color::srgb(1.0, 0.4, 0.0), // Orange accent
         }
     }
 }

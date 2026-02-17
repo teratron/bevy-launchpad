@@ -6,16 +6,22 @@ use std::path::{Path, PathBuf};
 
 /// Lifetime guard that holds the OS file lock for the current process.
 #[derive(Debug)]
-pub struct SingleInstanceLock {
+pub struct InstanceLockGuard {
     file: File,
     lock_file: PathBuf,
 }
 
-impl Drop for SingleInstanceLock {
+impl Drop for InstanceLockGuard {
     fn drop(&mut self) {
         let _ = self.file.sync_all();
         let _ = std::fs::remove_file(&self.lock_file);
     }
+}
+
+/// Resource that stores the instance lock guard.
+#[derive(bevy::prelude::Resource, Debug)]
+pub struct SingleInstanceLock {
+    pub guard: Option<InstanceLockGuard>,
 }
 
 /// Startup error for single-instance protection.
@@ -29,12 +35,12 @@ pub enum SingleInstanceError {
 
 /// Acquire a global lock for the process.
 ///
-/// Returns `Ok(Some(lock))` if the lock was acquired, or `Ok(None)` if `allow_multiple` is true.
+/// Returns `Ok(Some(guard))` if the lock was acquired, or `Ok(None)` if `allow_multiple` is true.
 /// Returns `Err(SingleInstanceError::AlreadyRunning)` if another instance is already holding the lock.
 pub fn acquire_single_instance_lock(
     lock_file_path: &Path,
     allow_multiple: bool,
-) -> Result<Option<SingleInstanceLock>, SingleInstanceError> {
+) -> Result<Option<InstanceLockGuard>, SingleInstanceError> {
     if allow_multiple {
         return Ok(None);
     }
@@ -128,11 +134,11 @@ fn is_process_alive(pid: u32) -> bool {
 fn write_lock_metadata(
     mut file: File,
     lock_file: &Path,
-) -> Result<SingleInstanceLock, SingleInstanceError> {
+) -> Result<InstanceLockGuard, SingleInstanceError> {
     let pid = std::process::id();
     writeln!(&mut file, "pid={pid}").map_err(SingleInstanceError::Io)?;
     file.flush().map_err(SingleInstanceError::Io)?;
-    Ok(SingleInstanceLock {
+    Ok(InstanceLockGuard {
         file,
         lock_file: lock_file.to_path_buf(),
     })

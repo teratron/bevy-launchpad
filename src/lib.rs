@@ -6,67 +6,71 @@ pub mod prelude;
 pub mod ui;
 pub mod utils;
 
+use crate::core::boot::cli::CliArgs;
+use crate::core::boot::metadata::AppMetadata;
+use crate::core::boot::paths::AppPaths;
+use crate::core::splash::sequence::SplashConfig;
 use crate::core::states::LaunchpadStates;
+use crate::utils::single_instance::acquire_single_instance_lock;
 use bevy::prelude::*;
 use std::marker::PhantomData;
 
-/// Main plugin that combines all features.
+/// Main plugin that coordinates the Bevy Launchpad framework.
 pub struct LaunchpadPlugin<S: LaunchpadStates> {
-    _marker: PhantomData<S>,
-    pub metadata: crate::prelude::AppMetadata,
-    pub cli_args: crate::prelude::CliArgs,
-    pub allow_multiple_instances: bool,
+    pub metadata: AppMetadata,
+    pub cli: CliArgs,
+    pub splash: SplashConfig,
+    pub states: PhantomData<S>,
     #[cfg(feature = "ui")]
     pub theme: Option<crate::ui::theme::ThemeConfig>,
+    pub allow_multiple_instances: bool,
 }
 
 impl<S: LaunchpadStates> Default for LaunchpadPlugin<S> {
     fn default() -> Self {
         Self {
-            _marker: PhantomData,
-            metadata: crate::prelude::AppMetadata::default(),
-            cli_args: crate::prelude::CliArgs::parse_args(),
-            allow_multiple_instances: false,
+            metadata: AppMetadata::default(),
+            cli: CliArgs::parse_args(),
+            splash: SplashConfig::default(),
+            states: PhantomData,
             #[cfg(feature = "ui")]
             theme: None,
+            allow_multiple_instances: false,
         }
     }
 }
 
 impl<S: LaunchpadStates> Plugin for LaunchpadPlugin<S> {
     fn build(&self, app: &mut App) {
-        // 1. Setup paths based on metadata
-        let paths = crate::prelude::AppPaths::new(&self.metadata.name);
+        // 1. Path Resolution
+        let paths = AppPaths::new(&self.metadata.name);
         if let Err(e) = paths.ensure_dirs() {
-            error!("Failed to create data directory: {}", e);
+            error!("Failed to initialize application directories: {}", e);
         }
 
-        // 2. Protect against multiple instances
-        let lock = match crate::utils::single_instance::acquire_single_instance_lock(
-            &paths.instance_lock_file,
-            self.allow_multiple_instances,
-        ) {
-            Ok(lock) => lock,
-            Err(e) => {
-                // If it's already running, we might want to panic or handle it gracefully.
-                // For a framework, panicking with a clear message is often the safest startup path
-                // unless the user provided an error handler.
-                panic!("Single instance protection: {}", e);
+        // 2. Single Instance Protection
+        match acquire_single_instance_lock(&paths.instance_lock_file, self.allow_multiple_instances)
+        {
+            Ok(Some(guard)) => {
+                app.insert_non_send_resource(guard);
             }
-        };
-
-        if let Some(guard) = lock {
-            // Holds the lock alive for the app's lifetime.
-            app.insert_non_send_resource(guard);
+            Ok(None) => {}
+            Err(e) => {
+                error!("Could not acquire instance lock: {}", e);
+                // In production, we typically want to exit here.
+                #[cfg(not(test))]
+                std::process::exit(1);
+            }
         }
 
-        // 3. Register resources
+        // 3. Register Core Resources
         app.insert_resource(self.metadata.clone());
+        app.insert_resource(self.cli.clone());
+        app.insert_resource(self.splash.clone());
         app.insert_resource(paths);
-        app.insert_resource(self.cli_args.clone());
 
-        // 4. Core is mandatory
-        app.add_plugins(crate::core::LaunchpadCorePlugin::<S>::default());
+        // 4. Add Sub-Plugins
+        app.add_plugins(crate::core::plugin::LaunchpadCorePlugin::<S>::default());
 
         #[cfg(feature = "ui")]
         {
@@ -77,35 +81,47 @@ impl<S: LaunchpadStates> Plugin for LaunchpadPlugin<S> {
         }
 
         #[cfg(feature = "locale")]
-        app.add_plugins(crate::locale::LocalePlugin);
+        app.add_plugins(crate::locale::LocalizationPlugin);
     }
 }
 
 impl<S: LaunchpadStates> LaunchpadPlugin<S> {
     pub fn builder() -> LaunchpadPluginBuilder<S> {
-        LaunchpadPluginBuilder {
-            plugin: Self::default(),
-        }
+        LaunchpadPluginBuilder::new()
     }
 }
 
+/// Fluent builder for `LaunchpadPlugin`.
 pub struct LaunchpadPluginBuilder<S: LaunchpadStates> {
     plugin: LaunchpadPlugin<S>,
 }
 
+impl<S: LaunchpadStates> Default for LaunchpadPluginBuilder<S> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<S: LaunchpadStates> LaunchpadPluginBuilder<S> {
-    pub fn with_metadata(mut self, metadata: crate::prelude::AppMetadata) -> Self {
+    /// Creates a new builder with default configuration.
+    pub fn new() -> Self {
+        Self {
+            plugin: LaunchpadPlugin::default(),
+        }
+    }
+
+    pub fn with_metadata(mut self, metadata: AppMetadata) -> Self {
         self.plugin.metadata = metadata;
         self
     }
 
-    pub fn with_cli_args(mut self, args: crate::prelude::CliArgs) -> Self {
-        self.plugin.cli_args = args;
+    pub fn with_cli(mut self, cli: CliArgs) -> Self {
+        self.plugin.cli = cli;
         self
     }
 
-    pub fn allow_multiple_instances(mut self, allow: bool) -> Self {
-        self.plugin.allow_multiple_instances = allow;
+    pub fn with_splash(mut self, splash: SplashConfig) -> Self {
+        self.plugin.splash = splash;
         self
     }
 
@@ -115,7 +131,20 @@ impl<S: LaunchpadStates> LaunchpadPluginBuilder<S> {
         self
     }
 
+    pub fn allow_multiple_instances(mut self, allow: bool) -> Self {
+        self.plugin.allow_multiple_instances = allow;
+        self
+    }
+
     pub fn build(self) -> LaunchpadPlugin<S> {
         self.plugin
     }
+}
+
+/// Registers the library's internal assets (fonts/branding) into the Bevy app.
+/// This must be called if the `embedded_assets` feature is enabled.
+pub fn register_embedded_assets(app: &mut App) {
+    bevy::asset::embedded_asset!(app, "assets/fonts/NotoSans-Regular.ttf");
+    bevy::asset::embedded_asset!(app, "assets/fonts/NotoSans-Bold.ttf");
+    bevy::asset::embedded_asset!(app, "assets/branding/default_splash.png");
 }

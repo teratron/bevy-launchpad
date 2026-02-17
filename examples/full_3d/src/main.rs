@@ -33,10 +33,29 @@ impl LaunchpadStates for GameState {
     }
 }
 
+use bevy_launchpad::core::boot::metadata::AppMetadata;
+use bevy_launchpad::core::splash::sequence::{SplashConfig, SplashScreenConfig};
+
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugins(LaunchpadPlugin::<GameState>::default())
+        .add_plugins(register_embedded_assets)
+        .add_plugins(
+            LaunchpadPlugin::<GameState>::builder()
+                .with_metadata(AppMetadata {
+                    name: "full_3d_game".into(),
+                    title: "Full 3D Game".into(),
+                    ..default()
+                })
+                .with_splash(SplashConfig {
+                    screens: vec![
+                        SplashScreenConfig::default_branding(),
+                        SplashScreenConfig::studio("branding/studio_logo.png"),
+                    ],
+                    ..default()
+                })
+                .build(),
+        )
         .add_systems(OnEnter(GameState::Playing), setup_level)
         .add_systems(Update, rotate_cube.run_if(in_state(GameState::Playing)))
         .run();
