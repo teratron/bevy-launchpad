@@ -8,4 +8,4 @@ pub mod validation;
 
 pub use persistence::{Persistable, load_ron, save_ron};
 pub use single_instance::{SingleInstanceError, SingleInstanceLock, acquire_single_instance_lock};
-pub use singleton::SingleInstance;
+// pub use singleton::SingleInstance; // Removed in dead code cleanup

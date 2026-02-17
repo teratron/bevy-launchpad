@@ -9,6 +9,7 @@ pub enum Language {
     De,
     Fr,
     Es,
+    Ja,
 }
 
 impl Language {
@@ -19,6 +20,7 @@ impl Language {
             Self::De => "de",
             Self::Fr => "fr",
             Self::Es => "es",
+            Self::Ja => "ja",
         }
     }
 }
@@ -33,6 +35,7 @@ impl std::str::FromStr for Language {
             "de" => Ok(Self::De),
             "fr" => Ok(Self::Fr),
             "es" => Ok(Self::Es),
+            "ja" | "ja-jp" => Ok(Self::Ja),
             _ => Err(format!("Unsupported language: {}", s)),
         }
     }

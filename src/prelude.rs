@@ -15,7 +15,7 @@ pub use bevy_launchpad_derive::LaunchpadStates;
 // UI types
 #[cfg(feature = "ui")]
 pub use crate::ui::{
-    menu::main_menu::{MainMenuConfig, MainMenuRoot, MenuButton},
+    menu::main_menu::{CustomMenuButtonPressed, MainMenuConfig, MainMenuRoot, MenuButton},
     plugin::LaunchpadUiPlugin,
     splash::renderer::SplashScreen,
     theme::{ThemeColors, ThemeConfig, ThemeFonts, ThemeSpacing},

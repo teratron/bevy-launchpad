@@ -126,9 +126,17 @@ fn is_process_alive(pid: u32) -> bool {
     ok != 0 && exit_code == STILL_ACTIVE
 }
 
-#[cfg(not(windows))]
+#[cfg(all(unix, not(target_os = "macos")))]
 fn is_process_alive(pid: u32) -> bool {
     std::path::Path::new("/proc").join(pid.to_string()).exists()
+}
+
+#[cfg(target_os = "macos")]
+fn is_process_alive(pid: u32) -> bool {
+    unsafe {
+        // signal 0 checks if process exists and we have permission
+        libc::kill(pid as i32, 0) == 0 || std::io::Error::last_os_error().raw_os_error() != Some(libc::ESRCH)
+    }
 }
 
 fn write_lock_metadata(

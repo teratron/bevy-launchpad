@@ -12,7 +12,7 @@ pub struct TransitionConfig {
 }
 
 /// Event sent to trigger a state transition.
-#[derive(Message, Debug, Clone, PartialEq)]
+#[derive(Message, Event, Debug, Clone, PartialEq)]
 pub struct TransitionStateEvent<S: States> {
     pub next: S,
 }
@@ -57,9 +57,15 @@ pub fn auto_transition_booting<S: LaunchpadStates>(
     }
 }
 
-/// Automatically transitions from Loading to Splash.
-/// NOTE: In a real app, this would wait for assets to load.
-pub fn auto_transition_loading<S: LaunchpadStates>(mut next_state: ResMut<NextState<S>>) {
-    // Placeholder logic: immediately move to splash
-    next_state.set(S::splash());
+/// Automatically transitions from Loading to Splash when all assets are loaded.
+pub fn auto_transition_loading<S: LaunchpadStates>(
+    tracker: Res<crate::core::loading::tracker::AssetTracker>,
+    mut next_state: ResMut<NextState<S>>,
+    mut done: Local<bool>,
+) {
+    if !*done && tracker.is_ready() {
+        info!("Assets loaded, transitioning to splash");
+        next_state.set(S::splash());
+        *done = true;
+    }
 }

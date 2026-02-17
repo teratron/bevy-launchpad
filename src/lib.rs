@@ -59,6 +59,7 @@ impl<S: LaunchpadStates> Default for LaunchpadPlugin<S> {
 impl<S: LaunchpadStates> Plugin for LaunchpadPlugin<S> {
     fn build(&self, app: &mut App) {
         // 0. Register Embedded Assets
+        #[cfg(feature = "embedded_assets")]
         register_embedded_assets(app);
 
         // 1. Path Resolution

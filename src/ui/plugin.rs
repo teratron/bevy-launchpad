@@ -21,13 +21,24 @@ impl<S: LaunchpadStates> Plugin for LaunchpadUiPlugin<S> {
         app.init_resource::<crate::ui::menu::main_menu::MainMenuConfig>();
         app.init_resource::<crate::ui::menu::settings::SettingsConfig>();
 
+        // app.add_event::<crate::ui::menu::main_menu::CustomMenuButtonPressed>();
+
         app.add_systems(
             Update,
-            crate::ui::menu::main_menu::handle_menu_interactions.run_if(in_state(S::menu())),
+            crate::ui::menu::main_menu::handle_menu_interactions::<S>.run_if(in_state(S::menu())),
         );
         app.add_systems(
             Update,
-            crate::ui::splash::renderer::update_splash_renderer.run_if(in_state(S::splash())),
+            crate::ui::splash::renderer::update_splash_renderer::<S>.run_if(in_state(S::splash())),
+        );
+
+        app.add_systems(
+            OnEnter(S::splash()),
+            crate::ui::splash::renderer::setup_splash_renderer,
+        );
+        app.add_systems(
+            OnExit(S::splash()),
+            crate::ui::splash::renderer::cleanup_splash_renderer,
         );
 
         // Bind UI setup/cleanup to state transitions

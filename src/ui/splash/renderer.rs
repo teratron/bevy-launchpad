@@ -1,4 +1,6 @@
 use crate::core::splash::{SplashConfig, SplashState, SplashTimer};
+use crate::core::states::transitions::TransitionStateEvent;
+use crate::core::states::LaunchpadStates;
 use bevy::prelude::*;
 
 /// Component representing a splash screen element.
@@ -28,7 +30,7 @@ pub fn setup_splash_renderer(mut commands: Commands, config: Res<SplashConfig>) 
 }
 
 /// System to update splash screen rendering and transitions.
-pub fn update_splash_renderer(
+pub fn update_splash_renderer<S: LaunchpadStates>(
     mut commands: Commands,
     time: Res<Time>,
     timer: Option<ResMut<SplashTimer>>,
@@ -74,7 +76,7 @@ pub fn update_splash_renderer(
                         .set_duration(std::time::Duration::from_secs_f32(next_screen.fade_in));
                     timer.timer.reset();
                 } else {
-                    commands.insert_resource(crate::core::splash::sequence::SplashDone);
+                    commands.trigger(TransitionStateEvent { next: S::menu() });
                 }
             }
         }
@@ -95,4 +97,14 @@ pub fn update_splash_renderer(
         // Image rendering logic would go here, ensuring the image is spawned/updated
         // when the screen index changes.
     }
+}
+
+/// Cleans up splash screen entities and resources.
+pub fn cleanup_splash_renderer(mut commands: Commands, query: Query<Entity, With<SplashScreen>>) {
+    // Despawn all splash entities
+    for entity in &query {
+        commands.entity(entity).despawn();
+    }
+    // Remove the timer resource
+    commands.remove_resource::<SplashTimer>();
 }

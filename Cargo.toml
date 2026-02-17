@@ -79,6 +79,11 @@ path = "examples/full_3d/src/main.rs"
 required-features = ["ui", "locale", "3d"]
 
 [[example]]
+name = "custom_theme"
+path = "examples/custom_theme/src/main.rs"
+required-features = ["ui"]
+
+[[example]]
 name = "custom_theme_dark"
 path = "examples/custom_theme_dark/src/main.rs"
 required-features = ["ui"]

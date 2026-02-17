@@ -1,4 +1,5 @@
 use crate::ui::widgets::button::{Button, spawn_button};
+use crate::core::states::LaunchpadStates; // Fix: Import LaunchpadStates
 use bevy::prelude::*;
 
 #[derive(Resource, Debug, Clone)]
@@ -16,6 +17,11 @@ pub enum MenuButton {
         label: String,
         target_state_name: String,
     },
+}
+
+#[derive(Event, Debug, Clone)]
+pub struct CustomMenuButtonPressed {
+    pub state_name: String,
 }
 
 impl Default for MainMenuConfig {
@@ -39,6 +45,12 @@ pub struct PlayButton;
 /// Marker for the Exit button.
 #[derive(Component)]
 pub struct ExitButton;
+
+/// Marker for Custom buttons, storing their target state name.
+#[derive(Component)]
+pub struct CustomButton {
+    pub target_state_name: String,
+}
 
 pub fn setup_main_menu(
     mut commands: Commands,
@@ -84,8 +96,13 @@ pub fn setup_main_menu(
                     MenuButton::Exit => {
                         spawn_button(parent, "Exit", &theme).insert(ExitButton);
                     }
-                    MenuButton::Custom { label, .. } => {
-                        spawn_button(parent, label, &theme);
+                    MenuButton::Custom {
+                        label,
+                        target_state_name,
+                    } => {
+                        spawn_button(parent, label, &theme).insert(CustomButton {
+                            target_state_name: target_state_name.clone(),
+                        });
                     }
                 }
             }
@@ -95,15 +112,35 @@ pub fn setup_main_menu(
 pub type InteractionQuery<'w, 's> = Query<
     'w,
     's,
-    (&'static Interaction, &'static mut BackgroundColor),
+    (
+        &'static Interaction,
+        &'static mut BackgroundColor,
+        Option<&'static PlayButton>,
+        Option<&'static ExitButton>,
+        Option<&'static CustomButton>,
+    ),
     (Changed<Interaction>, With<Button>),
 >;
 
-pub fn handle_menu_interactions(mut interaction_query: InteractionQuery, theme: Res<ThemeConfig>) {
-    for (interaction, mut color) in &mut interaction_query {
+pub fn handle_menu_interactions<S: LaunchpadStates>(
+    mut commands: Commands,
+    mut interaction_query: InteractionQuery,
+    theme: Res<ThemeConfig>,
+    mut next_state: ResMut<NextState<S>>,
+) {
+    for (interaction, mut color, play, exit, custom) in &mut interaction_query {
         match *interaction {
             Interaction::Pressed => {
                 *color = BackgroundColor(theme.colors.secondary);
+                if play.is_some() {
+                    next_state.set(S::playing());
+                } else if exit.is_some() {
+                    std::process::exit(0);
+                } else if let Some(custom_btn) = custom {
+                    commands.trigger(CustomMenuButtonPressed {
+                        state_name: custom_btn.target_state_name.clone(),
+                    });
+                }
             }
             Interaction::Hovered => {
                 // Slightly lighter than primary
