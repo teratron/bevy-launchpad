@@ -20,6 +20,12 @@ This set of guidelines outlines language preferences for the project, ensuring c
 - Project management communications, feature discussions, and strategic decisions should be conducted in Russian
 - Code review comments and technical discussions during development can be in Russian unless collaborating with English-speaking developers
 
+## Technical Stack
+
+- **Rust**: Version 1.93 or higher.
+- **Bevy**: Version 0.18 or higher.
+- **Dependencies**: Use external dependencies only in exceptional cases. Maximize the use of the Rust standard library and Bevy built-in features before considering third-party crates.
+
 ## Related Documentation
 
 - [Rules](.agent/rules/) - Additional development rules and guidelines

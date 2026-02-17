@@ -11,13 +11,13 @@ This rule defines the mandatory logical sequence of operations the AI agent must
 Before any code generation or modification:
 
 - **Architectural Alignment**: Verify the planned changes adhere to the Bevy ECS paradigm defined in `bevy-ecs-guide.md`.
-- **Context Loading**: Read relevant source files and documentation to fully understand dependencies.
 
 ## 2. Phase: Implementation
 
 During the coding process:
 
 - **Clean Code**: Implement logic following Rust best practices.
+- **Dependency Policy**: Avoid adding third-party dependencies unless strictly necessary. Always check if the functionality can be implemented using Rust's standard library or Bevy's built-in features first.
 - **ECS Patterns**: Use small, reusable components and systems as per Bevy standards.
 - **Error Handling**: Avoid `unwrap()` and `panic!()` in production code. Favor `Result` and `Option` for robust error management.
 - **Test Creation**:
