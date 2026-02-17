@@ -19,22 +19,57 @@ members = [".", "examples/*"]
 [[example]]
 name = "custom_theme"
 path = "examples/custom_theme/src/main.rs"
+doc-scrape-examples = false
+
+[package.metadata.example.custom_theme]
+name = "Custom Theme Example"
+description = "Custom theme example demonstrating the basic features."
+category = "Examples"
+wasm = false
 
 [[example]]
 name = "full_2d"
 path = "examples/full_2d/src/main.rs"
+doc-scrape-examples = false
+
+[package.metadata.example.full_2d]
+name = "Full 2D Example"
+description = "Full 2D example demonstrating the basic features."
+category = "Examples"
+wasm = false
 
 [[example]]
 name = "full_3d"
 path = "examples/full_3d/src/main.rs"
+doc-scrape-examples = false
+
+[package.metadata.example.full_3d]
+name = "Full 3D Example"
+description = "Full 3D example demonstrating the basic features."
+category = "Examples"
+wasm = false
 
 [[example]]
 name = "minimal_2d"
 path = "examples/minimal_2d/src/main.rs"
+doc-scrape-examples = false
+
+[package.metadata.example.minimal_2d]
+name = "Minimal 2D Example"
+description = "Minimal 2D example demonstrating the basic features."
+category = "Examples"
+wasm = false
 
 [[example]]
 name = "minimal_3d"
 path = "examples/minimal_3d/src/main.rs"
+doc-scrape-examples = false
+
+[package.metadata.example.minimal_3d]
+name = "Minimal 3D Example"
+description = "Minimal 3D example demonstrating the basic features."
+category = "Examples"
+wasm = false
 
 [dependencies]
 bevy = { version = "0.18", default-features = true, features = [
