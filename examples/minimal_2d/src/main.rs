@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use bevy_launchpad::core::boot::metadata::AppMetadata;
 use bevy_launchpad::prelude::*;
 
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash)]
@@ -37,30 +36,22 @@ impl LaunchpadStates for GameState {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        // Add the LaunchpadPlugin generic over our GameState
-        .add_plugins(
-            LaunchpadPlugin::<GameState>::builder()
-                .with_metadata(AppMetadata {
-                    name: "minimal_2d".into(),
-                    title: "Minimal 2D Game".into(),
-                    ..default()
-                })
-                .build(),
-        )
-        .add_systems(OnEnter(GameState::Playing), setup_game)
+        // Everything out of the box:
+        //   boot → embedded splash ("Powered by Bevy Launchpad") → menu → Playing
+        //   theme:  dark
+        //   font:   Bevy built-in FiraMono (zero cost)
+        //   locale: en-US
+        .add_plugins(LaunchpadPlugin::<GameState>::default())
+        .add_systems(OnEnter(GameState::Playing), setup)
         .run();
 }
 
-fn setup_game(mut commands: Commands) {
-    // Spawn 2D camera
+fn setup(mut commands: Commands) {
     commands.spawn(Camera2d);
-
-    // Simple placeholder for the game
     commands.spawn(Sprite {
         color: Color::srgb(0.0, 1.0, 0.0),
-        custom_size: Some(Vec2::new(100.0, 100.0)),
+        custom_size: Some(Vec2::splat(100.0)),
         ..default()
     });
-
-    info!("Minimal 2D Game Started!");
+    info!("Minimal 2D started");
 }

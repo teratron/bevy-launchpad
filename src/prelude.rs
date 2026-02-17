@@ -2,17 +2,18 @@
 
 // Core types
 pub use crate::core::{
+    assets::AssetsRootStrategy,
     boot::{AppMetadata, AppPaths, BootConfig, BootSequence, CliArgs},
     loading::{AssetManifest, AssetTracker, LoadingState},
     plugin::LaunchpadCorePlugin,
-    splash::{SplashConfig, SplashScreenConfig, SplashTimer},
+    splash::{SplashConfig, SplashScreenConfig, SplashSource, SplashTimer, SkipTrigger},
     states::{LaunchpadStates, StateMachine, TransitionConfig, TransitionStateEvent},
 };
 
 // UI types
 #[cfg(feature = "ui")]
 pub use crate::ui::{
-    menu::main_menu::{MainMenuConfig, MainMenuRoot},
+    menu::main_menu::{MainMenuConfig, MainMenuRoot, MenuButton},
     plugin::LaunchpadUiPlugin,
     splash::renderer::SplashScreen,
     theme::{ThemeColors, ThemeConfig, ThemeFonts, ThemeSpacing},

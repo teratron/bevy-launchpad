@@ -1509,4 +1509,4 @@ Summary of all files that need to be added manually (✋).
 
 ---
 
-*End of examples reference — bevy_launchpad v0.1*
+*End of examples reference* — bevy_launchpad v0.1

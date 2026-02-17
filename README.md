@@ -2,7 +2,6 @@
 
 [![Crates.io](https://img.shields.io/crates/v/bevy_launchpad.svg)](https://crates.io/crates/bevy_launchpad)
 [![Docs.rs](https://docs.rs/bevy_launchpad/badge.svg)](https://docs.rs/bevy_launchpad)
-[![CI](https://github.com/teratron/bevy-launchpad/workflows/CI/badge.svg)](https://github.com/teratron/bevy-launchpad/actions)
 [![License](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)](LICENSE)
 [![Bevy](https://img.shields.io/badge/Bevy-0.18-blue)](https://bevyengine.org)
 

@@ -55,7 +55,7 @@ embedded_assets = []
 
 # ── convenience bundles ─────────────────────────────────────────────────────
 full = ["default", "diagnostics", "audio", "embedded_assets"]
-minimal = [] # core only — no UI, no locale
+minimal = []                                                  # core only — no UI, no locale
 
 [[example]]
 name = "minimal_2d"
@@ -78,6 +78,71 @@ path = "examples/full_3d/src/main.rs"
 required-features = ["ui", "locale", "3d"]
 
 [[example]]
-name = "custom_theme"
-path = "examples/custom_theme/src/main.rs"
+name = "custom_theme_dark"
+path = "examples/custom_theme_dark/src/main.rs"
+required-features = ["ui"]
+
+[[example]]
+name = "custom_theme_light"
+path = "examples/custom_theme_light/src/main.rs"
+required-features = ["ui"]
+
+[[example]]
+name = "color_splash"
+path = "examples/color_splash/src/main.rs"
+required-features = ["ui"]
+
+[[example]]
+name = "no_splash"
+path = "examples/no_splash/src/main.rs"
+required-features = ["ui"]
+
+[[example]]
+name = "locale_switching"
+path = "examples/locale_switching/src/main.rs"
+required-features = ["ui", "locale"]
+
+[[example]]
+name = "custom_settings"
+path = "examples/custom_settings/src/main.rs"
+required-features = ["ui"]
+
+[[example]]
+name = "pause_menu"
+path = "examples/pause_menu/src/main.rs"
+required-features = ["ui"]
+
+[[example]]
+name = "custom_menu"
+path = "examples/custom_menu/src/main.rs"
+required-features = ["ui"]
+
+[[example]]
+name = "mod_support"
+path = "examples/mod_support/src/main.rs"
+required-features = ["ui"]
+
+[[example]]
+name = "embedded_only"
+path = "examples/embedded_only/src/main.rs"
+required-features = ["ui", "embedded_assets"]
+
+[[example]]
+name = "dev_mode"
+path = "examples/dev_mode/src/main.rs"
+required-features = ["ui"]
+
+[[example]]
+name = "multi_instance"
+path = "examples/multi_instance/src/main.rs"
+required-features = ["ui"]
+
+[[example]]
+name = "no_ui"
+path = "examples/no_ui/src/main.rs"
+required-features = []
+
+[[example]]
+name = "custom_assets_root"
+path = "examples/custom_assets_root/src/main.rs"
 required-features = ["ui"]

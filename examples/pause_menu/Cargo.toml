@@ -1,0 +1,9 @@
+[package]
+name = "example_pause_menu"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+bevy = { version = "0.18" }
+bevy_launchpad = { path = "../..", features = ["ui"] }
