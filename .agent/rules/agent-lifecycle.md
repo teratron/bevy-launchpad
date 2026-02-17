@@ -38,7 +38,7 @@ Immediately after code generation:
   - Run `cargo test` to ensure all tests pass.
   - Run `cargo bench` (if applicable) to verify performance stability.
 - **Asset Integrity**: Verify any new assets are placed in correct `assets/` subfolders and paths match in-game references.
-- **Formatting**: Run `cargo fmt` to maintain consistent style.
+- **Formatting**: Run `cargo fmt --all` to maintain consistent style.
 
 ## 4. Phase: Versioning & SemVer
 

@@ -3,7 +3,6 @@ use bevy::prelude::*;
 use bevy::state::prelude::in_state;
 use std::marker::PhantomData;
 
-#[derive(Resource)]
 pub struct LaunchpadUiPlugin<S: LaunchpadStates> {
     _marker: PhantomData<S>,
 }

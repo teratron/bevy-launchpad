@@ -1,11 +1,11 @@
 use crate::core::assets::AssetsRootStrategy;
 use crate::core::boot::metadata::AppMetadata;
 use crate::core::boot::sequence::update_boot_progress;
+use crate::core::loading::tracker::AssetTracker;
 use crate::core::splash::sequence::SplashConfig;
 use crate::core::states::mapping::LaunchpadStates;
 use crate::core::states::transitions::{
-    TransitionConfig, TransitionStateEvent, auto_transition_booting, auto_transition_loading,
-    handle_state_transitions,
+    TransitionConfig, TransitionStateEvent, auto_transition_booting, handle_state_transitions,
 };
 use bevy::prelude::*;
 use bevy::state::prelude::in_state;
@@ -27,6 +27,9 @@ impl<S: LaunchpadStates> Default for LaunchpadCorePlugin<S> {
 
 impl<S: LaunchpadStates> Plugin for LaunchpadCorePlugin<S> {
     fn build(&self, app: &mut App) {
+        // Init state (BUG-05)
+        app.init_state::<S>();
+
         // Init resources if not already present (builder usually inserts them)
         if !app.world().contains_resource::<AppMetadata>() {
             app.init_resource::<AppMetadata>();
@@ -55,9 +58,35 @@ impl<S: LaunchpadStates> Plugin for LaunchpadCorePlugin<S> {
                 update_boot_progress.run_if(in_state(S::booting())),
                 handle_state_transitions::<S>,
                 auto_transition_booting::<S>.run_if(in_state(S::booting())),
-                auto_transition_loading::<S>.run_if(in_state(S::loading())),
+                loading_to_splash::<S>.run_if(in_state(S::loading())),
+                splash_to_menu::<S>.run_if(in_state(S::splash())),
             )
                 .chain(),
         );
+    }
+}
+
+/// Splash → Menu when BootSequence.is_finished (re-used as splash_done flag)
+/// or SplashConfig.splash_enabled is false.
+pub fn splash_to_menu<S: LaunchpadStates>(
+    config: Res<SplashConfig>,
+    splash_done: Option<Res<crate::core::splash::sequence::SplashDone>>,
+    mut next: ResMut<NextState<S>>,
+) {
+    let no_screens = config.effective_screens().is_empty();
+    let ui_finished = splash_done.is_some();
+
+    if no_screens || ui_finished {
+        next.set(S::menu());
+    }
+}
+
+/// Loading → Splash when AssetTracker reports 100%.
+fn loading_to_splash<S: LaunchpadStates>(
+    tracker: Res<AssetTracker>,
+    mut next: ResMut<NextState<S>>,
+) {
+    if tracker.is_ready() {
+        next.set(S::splash());
     }
 }

@@ -1,5 +1,9 @@
 use bevy::prelude::*;
 
+/// Marker resource indicating the splash sequence has finished.
+#[derive(Resource)]
+pub struct SplashDone;
+
 #[derive(Resource, Debug, Clone)]
 pub struct SplashConfig {
     pub screens: Vec<SplashScreenConfig>,

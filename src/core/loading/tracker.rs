@@ -15,4 +15,10 @@ impl AssetTracker {
             self.loaded_assets as f32 / self.total_assets as f32
         }
     }
+
+    /// Returns true when all registered assets are loaded,
+    /// or when no assets were registered (nothing to load).
+    pub fn is_ready(&self) -> bool {
+        self.total_assets == 0 || self.loaded_assets >= self.total_assets
+    }
 }

@@ -29,11 +29,13 @@ pub fn setup_splash_renderer(mut commands: Commands, config: Res<SplashConfig>) 
 
 /// System to update splash screen rendering and transitions.
 pub fn update_splash_renderer(
+    mut commands: Commands,
     time: Res<Time>,
-    mut timer: ResMut<SplashTimer>,
+    timer: Option<ResMut<SplashTimer>>,
     config: Res<SplashConfig>,
     mut splash_query: Query<(Entity, &mut BackgroundColor, Option<&Children>), With<SplashScreen>>,
 ) {
+    let Some(mut timer) = timer else { return };
     let screens = config.effective_screens();
     if timer.screen_index >= screens.len() {
         // All screens finished — cleanup is handled by state exit in core
@@ -71,6 +73,8 @@ pub fn update_splash_renderer(
                         .timer
                         .set_duration(std::time::Duration::from_secs_f32(next_screen.fade_in));
                     timer.timer.reset();
+                } else {
+                    commands.insert_resource(crate::core::splash::sequence::SplashDone);
                 }
             }
         }
