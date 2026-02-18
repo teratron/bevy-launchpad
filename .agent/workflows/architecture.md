@@ -7,6 +7,7 @@ This workflow is designed for architectural discussion and documentation. It str
 1. **Initial Analysis**:
     - Use the `sequentialthinking` tool to analyze the current project structure and any existing architectural decisions.
     - Check for the existence of `docs/architecture.md`.
+    - **AAA Alignment**: Reference and draw inspiration from established architectural patterns and best practices used in AAA game projects (e.g., modular systems, robust state management, efficient resource handling).
 
 2. **Exploration & Brainstorming**:
     - Use the `brainstorming` skill to explore architectural patterns, component relationships, and system flows.

@@ -28,3 +28,11 @@ bevy = { workspace = true, default-features = true, features = [] }
 serde = { workspace = true }
 ron = { workspace = true }
 clap = { workspace = true }
+
+[features]
+# ── default: everything a typical indie game needs ──────────────────────────
+default = ["2d", "3d"]
+
+# ── dimension features ──────────────────────────────────────────────────────
+2d = []
+3d = []

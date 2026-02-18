@@ -13,5 +13,10 @@ Booting ──(boot done)──► Loading ──(assets ready)──► Splash 
 ## File structure
 
 ```plaintext
-
+bevy-launchpad/
+├── src/
+├── examples/
+├── assets/
+├── Cargo.toml
+└── README.md
 ```
