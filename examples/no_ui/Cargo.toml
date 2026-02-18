@@ -1,9 +1,0 @@
-[package]
-name = "example_no_ui"
-version = "0.1.0"
-edition = "2024"
-publish = false
-
-[dependencies]
-bevy = { workspace = true, default-features = false }
-bevy-launchpad = { workspace = true, default-features = false }

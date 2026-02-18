@@ -1,9 +1,0 @@
-[package]
-name = "example_custom_theme_dark"
-version = "0.1.0"
-edition = "2024"
-publish = false
-
-[dependencies]
-bevy = { workspace = true, default-features = true }
-bevy-launchpad = { workspace = true, features = ["ui"], default-features = true }
