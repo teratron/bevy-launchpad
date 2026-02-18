@@ -2,6 +2,8 @@
 
 pub mod core;
 pub mod locale;
+#[cfg(feature = "log_manager")]
+pub mod logging;
 pub mod prelude;
 pub mod ui;
 pub mod utils;
@@ -35,7 +37,13 @@ pub struct LaunchpadPlugin<S: LaunchpadStates = AppState> {
 
     #[cfg(feature = "locale")]
     pub default_locale: String,
+
+    #[cfg(feature = "log_manager")]
+    pub log_config: crate::logging::config::LogConfig,
 }
+
+#[cfg(feature = "log_manager")]
+pub use paste;
 
 impl<S: LaunchpadStates> Default for LaunchpadPlugin<S> {
     fn default() -> Self {
@@ -52,12 +60,23 @@ impl<S: LaunchpadStates> Default for LaunchpadPlugin<S> {
             main_menu: crate::ui::menu::main_menu::MainMenuConfig::default(),
             #[cfg(feature = "locale")]
             default_locale: "en-US".into(),
+            #[cfg(feature = "log_manager")]
+            log_config: crate::logging::config::LogConfig::default(),
         }
     }
 }
 
 impl<S: LaunchpadStates> Plugin for LaunchpadPlugin<S> {
     fn build(&self, app: &mut App) {
+        // 0. Logging (Must be first to capture startup logs)
+        #[cfg(feature = "log_manager")]
+        {
+            // We clone the config from self.log_manager or directly construct plugin
+            app.add_plugins(crate::logging::LogManagerPlugin {
+                config: self.log_config.clone(),
+            });
+        }
+
         // 0. Register Embedded Assets
         #[cfg(feature = "embedded_assets")]
         register_embedded_assets(app);
@@ -182,6 +201,12 @@ impl<S: LaunchpadStates> LaunchpadPluginBuilder<S> {
     #[cfg(feature = "locale")]
     pub fn with_locale(mut self, default: impl Into<String>) -> Self {
         self.plugin.default_locale = default.into();
+        self
+    }
+
+    #[cfg(feature = "log_manager")]
+    pub fn with_log_config(mut self, config: crate::logging::config::LogConfig) -> Self {
+        self.plugin.log_config = config;
         self
     }
 

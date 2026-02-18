@@ -3,7 +3,10 @@ use bevy_launchpad::prelude::*;
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(bevy::log::LogPlugin {
+            custom_layer: |_| Some(Box::new(bevy_launchpad::logging::layer::AsyncFileLayer)),
+            ..default()
+        }))
         // Everything out of the box:
         //   boot → embedded splash ("Powered by Bevy Launchpad") → menu → Playing
         //   theme:  dark

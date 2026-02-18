@@ -37,5 +37,15 @@ pub use crate::utils::{
 // Main Plugin
 pub use crate::{LaunchpadPlugin, register_embedded_assets};
 
+#[cfg(feature = "log_manager")]
+pub use crate::logging::{
+    config::{LogConfig, LogLevel},
+    layer, // Export layer module for custom_layer usage
+    subsystem::Subsystem,
+};
+
+#[cfg(feature = "log_manager")]
+pub use crate::ltag; // Macro is at crate root
+
 // Re-export Bevy prelude
 pub use bevy::prelude::*;

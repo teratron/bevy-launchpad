@@ -22,6 +22,7 @@ serde = { version = "1.0", features = ["derive"] }
 ron = "0.12"
 thiserror = "2.0"
 clap = { version = "4.5.59", features = ["derive"] }
+paste = "1.0.15"
 
 # ── optional dependencies ───────────────────────────────────────────────────
 fluent-bundle = "0.16.0"
@@ -61,10 +62,15 @@ ron = { workspace = true }
 thiserror = { workspace = true }
 clap = { workspace = true }
 bevy-launchpad-derive = { workspace = true }
+paste = { workspace = true, optional = true }
+tracing = { version = "0.1", default-features = false }
+tracing-subscriber = { version = "0.3", default-features = false, features = [
+    "registry",
+] }
 
 [features]
 # ── default: everything a typical indie game needs ──────────────────────────
-default = ["ui", "locale", "2d", "3d"]
+default = ["ui", "locale", "2d", "3d", "log_manager"]
 
 # ── dimension features ──────────────────────────────────────────────────────
 2d = ["bevy/bevy_sprite", "bevy/bevy_gizmos"]
@@ -77,6 +83,8 @@ locale = [
     "dep:unic-langid",
     "dep:intl-memoizer",
 ] # Fluent localization
+log_manager = ["dep:paste"]
+ring_buffer = []
 
 # ── optional extras ─────────────────────────────────────────────────────────
 diagnostics = ["bevy/bevy_dev_tools"]
@@ -84,5 +92,5 @@ audio = ["bevy/bevy_audio", "bevy/vorbis"]
 embedded_assets = []
 
 # ── convenience bundles ─────────────────────────────────────────────────────
-full = ["default", "diagnostics", "audio", "embedded_assets"]
-minimal = []                                                  # core only — no UI, no locale
+full = ["default", "diagnostics", "audio", "embedded_assets", "log_manager"]
+minimal = ["log_manager"]                                                    # core only — no UI, no locale
