@@ -68,7 +68,7 @@ publish = false
 
 [dependencies]
 bevy          = { version = "0.18" }
-bevy_launchpad = { path = "../..", features = ["2d"] }
+bevy-launchpad = { path = "../..", features = ["2d"] }
 ```
 
 ### `examples/minimal_2d/src/main.rs`
@@ -128,7 +128,7 @@ publish = false
 
 [dependencies]
 bevy          = { version = "0.18" }
-bevy_launchpad = { path = "../..", features = ["3d"] }
+bevy-launchpad = { path = "../..", features = ["3d"] }
 ```
 
 ### `examples/minimal_3d/src/main.rs`
@@ -202,7 +202,7 @@ publish = false
 
 [dependencies]
 bevy          = { version = "0.18" }
-bevy_launchpad = { path = "../..", features = ["ui", "locale", "2d"] }
+bevy-launchpad = { path = "../..", features = ["ui", "locale", "2d"] }
 ```
 
 ### `examples/full_2d/src/main.rs`
@@ -369,7 +369,7 @@ publish = false
 
 [dependencies]
 bevy          = { version = "0.18" }
-bevy_launchpad = { path = "../..", features = ["ui", "locale", "3d"] }
+bevy-launchpad = { path = "../..", features = ["ui", "locale", "3d"] }
 ```
 
 ### `examples/full_3d/src/main.rs`
@@ -1183,7 +1183,7 @@ mods/
 
 ```toml
 # Cargo.toml
-bevy_launchpad = {
+bevy-launchpad = {
     version = "0.1",
     features = ["ui", "locale", "2d", "embedded_assets"]
 }
@@ -1360,7 +1360,7 @@ Ideal for game servers, level editors, or CLI tools built on Bevy.
 
 ```toml
 # Cargo.toml
-bevy_launchpad = { version = "0.1", default-features = false }
+bevy-launchpad = { version = "0.1", default-features = false }
 # No "ui", "locale", "2d", "3d" — only core + utils
 ```
 

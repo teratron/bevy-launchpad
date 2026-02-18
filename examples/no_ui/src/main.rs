@@ -29,7 +29,7 @@ fn server_start() {
 
 fn server_tick(time: Res<Time>) {
     // Runs every frame — no renderer overhead
-    if (time.elapsed_secs() as u32) % 5 == 0 {
+    if (time.elapsed_secs() as u32).is_multiple_of(5) {
         // info!("Server tick: {:.0}s", time.elapsed_secs());
     }
 }

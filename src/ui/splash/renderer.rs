@@ -1,6 +1,6 @@
 use crate::core::splash::{SplashConfig, SplashState, SplashTimer};
-use crate::core::states::transitions::TransitionStateEvent;
 use crate::core::states::LaunchpadStates;
+use crate::core::states::transitions::TransitionStateEvent;
 use bevy::prelude::*;
 
 /// Component representing a splash screen element.

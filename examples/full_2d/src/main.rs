@@ -115,9 +115,7 @@ fn check_pause(
     state: Res<State<GameState>>,
     mut next: ResMut<NextState<GameState>>,
 ) {
-    if keys.just_pressed(KeyCode::Escape) {
-        if *state.get() == GameState::Playing {
-            next.set(GameState::Paused);
-        }
+    if keys.just_pressed(KeyCode::Escape) && *state.get() == GameState::Playing {
+        next.set(GameState::Paused);
     }
 }

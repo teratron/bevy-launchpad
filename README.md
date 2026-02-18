@@ -1,7 +1,7 @@
 # 🚀 Bevy Launchpad
 
-[![Crates.io](https://img.shields.io/crates/v/bevy_launchpad.svg)](https://crates.io/crates/bevy_launchpad)
-[![Docs.rs](https://docs.rs/bevy_launchpad/badge.svg)](https://docs.rs/bevy_launchpad)
+[![Crates.io](https://img.shields.io/crates/v/bevy_launchpad.svg)](https://crates.io/crates/bevy-launchpad)
+[![Docs.rs](https://docs.rs/bevy-launchpad/badge.svg)](https://docs.rs/bevy-launchpad)
 [![License](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)](LICENSE)
 [![Bevy](https://img.shields.io/badge/Bevy-0.18-blue)](https://bevyengine.org)
 
@@ -38,7 +38,7 @@ Add to your `Cargo.toml`:
 ```toml
 [dependencies]
 bevy = { version = "0.18", default-features = false, features = ["bevy_winit", "x11"] } # Adjust features as needed
-bevy_launchpad = { version = "0.1", features = ["ui", "2d"] }
+bevy-launchpad = { version = "0.1", features = ["ui", "2d"] }
 ```
 
 ### Minimal Example (2D)
@@ -216,7 +216,7 @@ app.insert_resource(GameplaySettings::default())
 
 - [Getting Started Guide](https://github.com/teratron/bevy-launchpad/blob/main/docs/getting-started.md)
 - [Architecture Overview](https://github.com/teratron/bevy-launchpad/blob/main/docs/architecture.md)
-- [API Documentation](https://docs.rs/bevy_launchpad)
+- [API Documentation](https://docs.rs/bevy-launchpad)
 - [Theming Guide](https://github.com/teratron/bevy-launchpad/blob/main/docs/theming.md)
 - [Localization Guide](https://github.com/teratron/bevy-launchpad/blob/main/docs/localization.md)
 - [State Management](https://github.com/teratron/bevy-launchpad/blob/main/docs/state-management.md)
@@ -243,7 +243,7 @@ Optimize your build by enabling only what you need in `Cargo.toml`:
 
 ```toml
 [dependencies]
-bevy_launchpad = { 
+bevy-launchpad = { 
     version = "0.1", 
     default-features = false,
     features = [

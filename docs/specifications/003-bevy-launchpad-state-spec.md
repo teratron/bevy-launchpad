@@ -740,7 +740,7 @@ error: #[derive(LaunchpadStates)] can only be applied to enums
 ### Level 1 — zero boilerplate
 
 ```rust
-// Cargo.toml: bevy_launchpad = { version = "0.1" }
+// Cargo.toml: bevy-launchpad = { version = "0.1" }
 
 use bevy::prelude::*;
 use bevy_launchpad::prelude::*;

@@ -1,7 +1,7 @@
 use crate::core::assets::AssetsRootStrategy;
 use crate::core::boot::metadata::AppMetadata;
 use crate::core::boot::sequence::update_boot_progress;
-use crate::core::loading::tracker::AssetTracker;
+
 use crate::core::splash::sequence::SplashConfig;
 use crate::core::states::mapping::LaunchpadStates;
 use crate::core::states::transitions::{
@@ -58,7 +58,8 @@ impl<S: LaunchpadStates> Plugin for LaunchpadCorePlugin<S> {
                 update_boot_progress.run_if(in_state(S::booting())),
                 handle_state_transitions::<S>,
                 auto_transition_booting::<S>.run_if(in_state(S::booting())),
-                crate::core::states::transitions::auto_transition_loading::<S>.run_if(in_state(S::loading())),
+                crate::core::states::transitions::auto_transition_loading::<S>
+                    .run_if(in_state(S::loading())),
                 splash_to_menu::<S>.run_if(in_state(S::splash())),
             )
                 .chain(),
@@ -76,5 +77,3 @@ pub fn splash_to_menu<S: LaunchpadStates>(
         next.set(S::menu());
     }
 }
-
-

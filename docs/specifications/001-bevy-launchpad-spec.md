@@ -233,7 +233,7 @@ description = "A production-ready launcher framework for Bevy games."
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/teratron/bevy-launchpad"
 homepage = "https://teratron.github.io/bevy-launchpad"
-documentation = "https://docs.rs/bevy_launchpad"
+documentation = "https://docs.rs/bevy-launchpad"
 keywords = ["bevy", "game", "launcher", "framework", "ui"]
 categories = ["game-development", "gui"]
 readme = "README.md"
@@ -1350,7 +1350,7 @@ fn main() {
 ```toml
 # Cargo.toml
 [dependencies]
-bevy_launchpad = { version = "0.1", default-features = false }
+bevy-launchpad = { version = "0.1", default-features = false }
 ```
 
 ```rust

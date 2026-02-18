@@ -135,7 +135,8 @@ fn is_process_alive(pid: u32) -> bool {
 fn is_process_alive(pid: u32) -> bool {
     unsafe {
         // signal 0 checks if process exists and we have permission
-        libc::kill(pid as i32, 0) == 0 || std::io::Error::last_os_error().raw_os_error() != Some(libc::ESRCH)
+        libc::kill(pid as i32, 0) == 0
+            || std::io::Error::last_os_error().raw_os_error() != Some(libc::ESRCH)
     }
 }
 

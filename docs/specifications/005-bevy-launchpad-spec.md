@@ -738,7 +738,7 @@ This section consolidates all corrections applied in this specification revision
 ```rust
 // Cargo.toml
 [dependencies]
-bevy_launchpad = "0.2"
+bevy-launchpad = "0.2"
 
 // main.rs
 use bevy::prelude::*;

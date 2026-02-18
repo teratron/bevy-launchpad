@@ -121,9 +121,7 @@ fn check_pause(
     state: Res<State<AppState>>,
     mut nxt: ResMut<NextState<AppState>>,
 ) {
-    if keys.just_pressed(KeyCode::Escape) {
-        if *state.get() == AppState::Playing {
-            nxt.set(AppState::Paused);
-        }
+    if keys.just_pressed(KeyCode::Escape) && *state.get() == AppState::Playing {
+        nxt.set(AppState::Paused);
     }
 }
