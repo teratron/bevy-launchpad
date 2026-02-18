@@ -1,19 +1,5 @@
 # Architecture
 
-## Dependency graph
-
-```plaintext
-utils  ◄──────────────────────────────┐
-  ▲                                   │
-core  (boot, states, loading, splash) │
-  ▲                                   │
-ui    (theme, widgets, menu, modal)   │
-  ▲                                   │
-locale                                │
-  ▲                                   │
-lib.rs  (LaunchpadPlugin) ────────────┘
-```
-
 ## Automatic transition flow
 
 ```plaintext
