@@ -6,4 +6,4 @@ publish = false
 
 [dependencies]
 bevy = { workspace = true, default-features = false }
-bevy_launchpad = { workspace = true, default-features = false }
+bevy-launchpad = { workspace = true, default-features = false }

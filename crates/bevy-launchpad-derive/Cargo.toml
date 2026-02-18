@@ -1,5 +1,5 @@
 [package]
-name = "bevy_launchpad_derive"
+name = "bevy-launchpad-derive"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.93"
