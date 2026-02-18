@@ -5,6 +5,7 @@ pub use bevy::prelude::Button;
 use bevy::prelude::*;
 
 /// Spawns a standard button with text.
+/// If `locale` feature is enabled, the text is treated as a localization key.
 pub fn spawn_button<'a, 'w>(
     parent: &'a mut UiChildSpawner<'w>,
     text: impl Into<String>,
@@ -24,8 +25,12 @@ pub fn spawn_button<'a, 'w>(
         BackgroundColor(theme.colors.primary),
     ));
 
+    let text_key = text_content.clone();
     cmd.with_children(|p| {
-        p.spawn((Text::new(text_content), TextColor(theme.colors.text)));
+        let mut text_cmd = p.spawn((Text::new(text_content), TextColor(theme.colors.text)));
+
+        #[cfg(feature = "locale")]
+        text_cmd.insert(crate::locale::LocalizedText::new(text_key));
     });
 
     cmd

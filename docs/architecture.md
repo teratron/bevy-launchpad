@@ -4,7 +4,7 @@
 
 - core/     → Логика фреймворка (boot, states, loading, splash)
 - ui/       → Визуальные компоненты (menu, widgets, theme, transitions)
-- locale/   → Локализация (пока заглушки)
+- locale/   → Локализация (Fluent integration)
 - utils/    → Утилиты (single_instance отлично сделан!)
 
 ## Dependency graph
@@ -116,10 +116,14 @@ src/
 │
 ├── locale/                       # 🌍 ЛОКАЛИЗАЦИЯ
 │   ├── mod.rs
-│   ├── plugin.rs                 # LocalePlugin
-│   ├── fluent.rs                 # Fluent integration
-│   ├── language.rs               # Enum языков
-│   └── utils.rs                  # Вспомогательные функции
+│   ├── plugin.rs                 # LocalizationPlugin
+│   ├── language.rs               # Language Enum
+│   ├── bundle.rs                 # FluentBundle construction
+│   ├── resource.rs               # Localization resource
+│   ├── cache.rs                  # String cache
+│   ├── component.rs              # LocalizedText
+│   ├── event.rs                  # LanguageChanged event
+│   └── utils.rs                  # File system utils
 │
 └── utils/                        # 🛠️ УТИЛИТЫ
     ├── mod.rs

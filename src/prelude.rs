@@ -24,7 +24,7 @@ pub use crate::ui::{
 
 // Locale types
 #[cfg(feature = "locale")]
-pub use crate::locale::{Language, LocalizationPlugin};
+pub use crate::locale::{Language, LanguageChanged, LocalizationPlugin, LocalizedText};
 
 // Utils
 pub use crate::utils::{

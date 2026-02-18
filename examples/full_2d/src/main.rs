@@ -46,7 +46,7 @@ fn main() {
                     buttons: vec![
                         MenuButton::Play,
                         MenuButton::Custom {
-                            label: "Credits".into(),
+                            label: "menu-credits".into(),
                             target_state_name: "Credits".into(),
                         },
                         MenuButton::Settings,
