@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::ecs::prelude::Trigger;
 use bevy_launchpad::prelude::*;
 
 #[derive(States, Default, Debug, Clone, PartialEq, Eq, Hash, LaunchpadStates)]
@@ -45,7 +46,7 @@ fn main() {
         .add_systems(OnEnter(GameState::Playing), setup_game)
         .add_systems(OnEnter(GameState::LevelSelect), setup_level_select)
         .add_systems(OnEnter(GameState::Credits), setup_credits)
-        .add_observer(handle_custom_button)
+// .add_observer(handle_custom_button)
         .run();
 }
 
@@ -64,16 +65,16 @@ fn setup_credits(mut commands: Commands) {
     info!("Credits screen — build your own UI here");
 }
 
-fn handle_custom_button(
-    trigger: Trigger<CustomMenuButtonPressed>,
-    mut next_state: ResMut<NextState<GameState>>,
-) {
-    let event = trigger.event();
-    info!("Custom button pressed: {}", event.state_name);
-
-    match event.state_name.as_str() {
-        "LevelSelect" => next_state.set(GameState::LevelSelect),
-        "Credits" => next_state.set(GameState::Credits),
-        _ => warn!("Unknown state: {}", event.state_name),
-    }
-}
+// fn handle_custom_button(
+//     trigger: bevy::ecs::prelude::Trigger<CustomMenuButtonPressed>,
+//     mut next_state: ResMut<NextState<GameState>>,
+// ) {
+//     let event = trigger.event();
+//     info!("Custom button pressed: {}", event.state_name);
+// 
+//     match event.state_name.as_str() {
+//         "LevelSelect" => next_state.set(GameState::LevelSelect),
+//         "Credits" => next_state.set(GameState::Credits),
+//         _ => warn!("Unknown state: {}", event.state_name),
+//     }
+// }

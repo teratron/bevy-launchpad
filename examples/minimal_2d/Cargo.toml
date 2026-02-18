@@ -5,5 +5,5 @@ edition = "2024"
 publish = false
 
 [dependencies]
-bevy = { version = "0.18", default-features = true }
-bevy_launchpad = { path = "../..", features = ["2d"] }
+bevy = { workspace = true, default-features = true }
+bevy_launchpad = { workspace = true, features = ["2d"], default-features = true }
