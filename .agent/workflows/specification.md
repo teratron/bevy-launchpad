@@ -6,6 +6,15 @@ description: Workflow for creating and managing project specifications and the s
 
 This workflow defines a universal, technology-agnostic process for creating and managing project specifications in the `docs/specifications/` directory. It is designed to be applicable across any stack (Frontend, Backend, Fullstack, GameDev, etc.).
 
+## Agent Guidelines
+
+**CRITICAL INSTRUCTIONS FOR AI:**
+
+1. **No Code in Specs**: Never generate implementation code (Rust, JS, Python, etc.) inside specification files. Use pseudo-code or logic flows if necessary.
+2. **Structure First**: Always verify `docs/specifications/INDEX.md` and `ROADMAP.md` exist before creating a new spec.
+3. **Universal Applicability**: This workflow is stack-agnostic. Adapt the content (APIs, DBs, UI) to the user's technology, but keep the *structure* rigid.
+4. **Automation**: If system files are missing, offer to run the **Initialization Scripts** immediately.
+
 ## Directory Structure
 
 The specification documentation follows this structure:
@@ -13,33 +22,33 @@ The specification documentation follows this structure:
 ```plaintext
 docs/
 └── specifications/
-    ├── INDEX.md                  # System file: Dispatcher & Registry
-    ├── ROADMAP.md                # System file: Project Roadmap & Prioritization
-    ├── {specification-name}.md   # Content file: Specific logic (e.g., architecture.md)
+    ├── INDEX.md                  # Registry File: Dispatcher & Central Index
+    ├── ROADMAP.md                # Planning File: Project Roadmap & Prioritization
+    ├── {specification-name}.md   # Content File: Specific logic (e.g., architecture.md)
     └── ...
 ```
 
 ## Workflow Steps
 
-1. **Context Analysis**: Determine the domain of the new specification.
-2. **Directory Check**: Ensure `docs/specifications/` exists.
-3. **System Files Verification**:
-    - Check if `INDEX.md` and `ROADMAP.md` exist.
-    - If missing, create them with initial structural content.
+1. **Context Analysis**: Determine the domain of the new specification and the project's tech stack.
+2. **State Check**: Verify if `docs/specifications/` and its core files exist.
+3. **Initialization**:
+    - If `INDEX.md` or `ROADMAP.md` are missing, **STOP** and execute the *Core Files Initialization Script* for the user's OS.
 4. **Content Creation**:
-    - Create the new `{specification-name}.md`.
+    - Create `{specification-name}.md` using the *Specification Template*.
+    - **Remember**: Use `plaintext` for trees and `mermaid` for diagrams.
 5. **Registry Update**:
-    - Add a reference to the new file in `INDEX.md`.
-    - Update `ROADMAP.md` if the new specification introduces new features or milestones.
+    - Register the new file in `INDEX.md`.
+    - Update `ROADMAP.md` if the specificaiton impacts the timeline.
 
 ## Templates
 
 Use these templates to ensure consistency across all specification files.
 
-### 1. INDEX.md (System File)
+### 1. Registry File Template (INDEX.md)
 
-- **Purpose**: Acts as a dispatcher/registry.
-- **Content**: Aggregates information about all `{specification-name}.md` files and defines their logical relationships.
+- **Purpose**: Defines the project's specification registry and document hierarchy.
+- **Role**: CENTRAL DISPATCHER. Every new specification must be linked here.
 
 ```markdown
 # Specifications Registry
@@ -53,7 +62,7 @@ Use these templates to ensure consistency across all specification files.
 
 This index serves as the central registry for all project specifications, detailing their relationships and current status.
 
-## System Files
+## Core Planning Files
 
 - [ROADMAP.md](ROADMAP.md) - Global project roadmap and prioritization strategy.
 
@@ -72,13 +81,10 @@ This index serves as the central registry for all project specifications, detail
 - **Last Updated**: {YYYY-MM-DD}
 ```
 
-### 2. ROADMAP.md (System File)
+### 2. Planning File Template (ROADMAP.md)
 
-- **Purpose**: Defines the development plan and priorities.
-- **Content Examples**:
-  - **Phase 1: Core Foundation (P0)** (e.g. MVP, Basic Infrastructure)
-  - **Phase 2: Resilience & Security (P1)** (e.g. Error Handling, Auth, Validation)
-  - **Phase 3: Visual Polish & UX (P2)** (e.g. Optimizations, Animations)
+- **Purpose**: Defines development timeline and prioritization.
+- **Role**: Strategic alignment. All new specs should map to a roadmap phase.
 
 ```markdown
 # Project Roadmap
@@ -118,6 +124,10 @@ Strategic development plan prioritizing core features, resilience, and user expe
   - `database-schema.md` (Data Layer)
   - `ui-components.md` (Frontend Design)
 - **Purpose**: Detailed specifications for specific logical domains.
+- **Rules**:
+  - **No Implementation Code**: Do not include actual code (Rust, TS, Python, etc.).
+  - **Structure**: Use `plaintext` blocks for directory trees.
+  - **Diagrams**: Use `mermaid` blocks for flows and architecture.
 
 ```markdown
 # {Specification Name}
@@ -138,9 +148,25 @@ Why is this specification needed? What problems does it solve?
 ## 2. Detailed Design
 
 ### 2.1 Component A
-Technical details, diagrams, and logic.
+Technical details, logic, and flows.
+
+**Project Structure:**
+
+```plaintext
+src/
+└── features/
+    └── component_a/
+```
+
+**Flow Diagram:**
+
+```mermaid
+graph TD;
+    A-->B;
+```
 
 ### 2.2 Component B
+
 ...
 
 ## 3. Drawbacks & Alternatives
@@ -154,4 +180,165 @@ Potential issues and alternative approaches considered.
 | Version | Date       | Author | Description       |
 | :---    | :---       | :---   | :---              |
 | 0.1.0   | YYYY-MM-DD | User   | Initial Draft     |
+
+```
+
+## Core Files Initialization Scripts
+
+Use these scripts to automatically generate the initial `INDEX.md` and `ROADMAP.md` if they are missing.
+
+### MacOS / Linux (Bash)
+
+```bash
+#!/bin/bash
+
+SPEC_DIR="docs/specifications"
+mkdir -p "$SPEC_DIR"
+
+DATE=$(date +%Y-%m-%d)
+
+# Create INDEX.md
+if [ ! -f "$SPEC_DIR/INDEX.md" ]; then
+cat <<EOF > "$SPEC_DIR/INDEX.md"
+# Specifications Registry
+
+**Version:** 1.0.0
+**Status:** Active
+
+---
+
+## Overview
+
+This index serves as the central registry for all project specifications, detailing their relationships and current status.
+
+## Core Planning Files
+
+- [ROADMAP.md](ROADMAP.md) - Global project roadmap and prioritization strategy.
+
+## Domain Specifications
+
+<!-- Add your specifications here -->
+
+---
+
+## Meta Information
+
+- **Maintainer**: Core Team
+- **License**: MIT
+- **Last Updated**: $DATE
+EOF
+echo "Created INDEX.md"
+fi
+
+# Create ROADMAP.md
+if [ ! -f "$SPEC_DIR/ROADMAP.md" ]; then
+cat <<EOF > "$SPEC_DIR/ROADMAP.md"
+# Project Roadmap
+
+**Version:** 1.0.0
+**Status:** Active
+
+---
+
+## Overview
+
+Strategic development plan prioritizing core features, resilience, and user experience.
+
+## Phase 1: MVP & Core Features (P0)
+
+- **Feature A**: Core functionality implementation.
+
+## Phase 2: Scalability & Optimization (P1)
+
+- **Performance**: Caching layer implementation.
+
+---
+
+## Meta Information
+
+- **Last Updated**: $DATE
+- **Next Review**: TBD
+EOF
+echo "Created ROADMAP.md"
+fi
+```
+
+### Windows (PowerShell)
+
+```powershell
+$SpecDir = (Join-Path "docs" "specifications")
+if (!(Test-Path -Path $SpecDir)) {
+    New-Item -ItemType Directory -Force -Path $SpecDir | Out-Null
+}
+
+$Date = Get-Date -Format "yyyy-MM-dd"
+
+# Create INDEX.md
+$IndexPath = Join-Path $SpecDir "INDEX.md"
+if (!(Test-Path -Path $IndexPath)) {
+    $IndexContent = @"
+# Specifications Registry
+
+**Version:** 1.0.0
+**Status:** Active
+
+---
+
+## Overview
+
+This index serves as the central registry for all project specifications, detailing their relationships and current status.
+
+## Core Planning Files
+
+- [ROADMAP.md](ROADMAP.md) - Global project roadmap and prioritization strategy.
+
+## Domain Specifications
+
+<!-- Add your specifications here -->
+
+---
+
+## Meta Information
+
+- **Maintainer**: Core Team
+- **License**: MIT
+- **Last Updated**: $Date
+"@
+    Set-Content -Path $IndexPath -Value $IndexContent -Encoding UTF8
+    Write-Host "Created INDEX.md"
+}
+
+# Create ROADMAP.md
+$RoadmapPath = Join-Path $SpecDir "ROADMAP.md"
+if (!(Test-Path -Path $RoadmapPath)) {
+    $RoadmapContent = @"
+# Project Roadmap
+
+**Version:** 1.0.0
+**Status:** Active
+
+---
+
+## Overview
+
+Strategic development plan prioritizing core features, resilience, and user experience.
+
+## Phase 1: MVP & Core Features (P0)
+
+- **Feature A**: Core functionality implementation.
+
+## Phase 2: Scalability & Optimization (P1)
+
+- **Performance**: Caching layer implementation.
+
+---
+
+## Meta Information
+
+- **Last Updated**: $Date
+- **Next Review**: TBD
+"@
+    Set-Content -Path $RoadmapPath -Value $RoadmapContent -Encoding UTF8
+    Write-Host "Created ROADMAP.md"
+}
 ```
