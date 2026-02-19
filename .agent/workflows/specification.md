@@ -17,7 +17,8 @@ This workflow defines a universal, technology-agnostic process for creating and 
 5. **Linking**: Every new spec must be registered in `INDEX.md`. Every spec that depends on another must declare it in `Related Specifications`.
 6. **Status Discipline**: Always assign a valid status from the **Status Lifecycle** section. Never leave status blank.
 7. **Capture First**: When the user provides unstructured input (thoughts, notes, ideas), always follow the *Dispatching from Raw Input* workflow before writing anything.
-8. **Roadmap Is Live**: ROADMAP.md is not a static document. Update it deterministically on every defined trigger — never skip, never defer.
+8. **Review Always**: After every create or update operation, run *Post-Update Review* before closing the task. No operation is complete without it.
+9. **Roadmap Is Live**: ROADMAP.md is not a static document. Update it deterministically on every defined trigger — never skip, never defer.
 
 ## Directory Structure
 
@@ -49,6 +50,8 @@ graph LR
     RFC --> Draft
 ```
 
+---
+
 ## Workflow Steps
 
 ### Dispatching from Raw Input
@@ -62,7 +65,9 @@ graph TD
     C --> D[Confirm: show mapping to user]
     D -->|Approved| E[Dispatch: write to spec files]
     D -->|Rejected| B
-    E --> F[Sync INDEX.md and ROADMAP.md]
+    E --> F[Post-Update Review]
+    F --> G[Sync INDEX.md]
+    G --> H[Update ROADMAP.md via triggers]
 ```
 
 1. **Parse**: Read the input and extract all distinct topics, decisions, constraints, or preferences mentioned. A single message may contain material for multiple spec files.
@@ -85,13 +90,14 @@ graph TD
     ```
 
 4. **Dispatch**: Write each piece into the correct spec file following the Specification Template. Never mix topics from different domains in a single section.
-5. **Sync**: Update `INDEX.md` (add or update rows) and `ROADMAP.md` following the *Updating ROADMAP.md* workflow.
+5. **Post-Update Review**: Run the review checklist on every file that was modified (see *Post-Update Review*).
+6. **Sync**: Update `INDEX.md` (add or update rows), then update `ROADMAP.md` following the *Updating ROADMAP.md* workflow.
 
 **Edge cases:**
 
 - If intent is ambiguous — ask one clarifying question before mapping, do not guess.
 - If a topic doesn't fit any existing domain — propose a new spec file with a suggested name.
-- If the input contains contradictions with an existing stable spec — flag the conflict explicitly before dispatching.
+- If the input contains contradictions with an existing Stable spec — flag the conflict explicitly before dispatching.
 
 ---
 
@@ -108,6 +114,9 @@ graph TD
 5. **Registry Update**:
     - Add the new file as a row in the `INDEX.md` table with its status and version.
     - Trigger ROADMAP update: **new spec added** (see *Updating ROADMAP.md*).
+6. **Post-Update Review**: Run the review checklist on the newly created file.
+
+---
 
 ### Updating an Existing Specification
 
@@ -118,7 +127,40 @@ graph TD
 2. **Document History**: Append a new row to the `Document History` table inside the spec file.
 3. **Status Update**: If the status changes (e.g., `Draft → RFC`), update both the spec file header and the `INDEX.md` table entry.
 4. **INDEX.md Sync**: Update the `Version` and `Status` columns in `INDEX.md` to match the new state.
-5. **ROADMAP Trigger**: If the status changed or scope shifted, follow the *Updating ROADMAP.md* workflow.
+5. **Post-Update Review**: Run the review checklist on every file that was modified. This step is mandatory and must not be skipped.
+6. **ROADMAP Trigger**: If the status changed or scope shifted, follow the *Updating ROADMAP.md* workflow.
+
+---
+
+### Post-Update Review
+
+**Mandatory after every create or update operation, regardless of change size.**
+
+Run the following checks on every file that was modified before closing the task:
+
+#### Duplication Check
+
+- Are there any paragraphs, rules, or decisions that repeat content already stated elsewhere in this file?
+- Is any content duplicated across other spec files? If so, keep it in the most relevant file and replace the duplicate with a cross-reference link.
+
+#### Coherence Check
+
+- Does the document read as a single consistent whole, or does it feel like a patchwork of additions?
+- Are all sections still relevant to the file's stated purpose, or have any drifted out of scope?
+- Is the logical flow of sections still correct after the update, or does the new content break the narrative?
+
+#### Links & Relations Check
+
+- Are all links in `Related Specifications` still accurate and necessary?
+- Does the updated content introduce new dependencies on other specs that are not yet declared?
+
+#### Cleanup
+
+- Remove or consolidate any sections that have become redundant.
+- Rewrite any passages that have grown unclear due to successive edits.
+- If a major restructure is needed, treat it as a `major` version bump and note it in `Document History`.
+
+> If the review reveals significant issues beyond the original edit scope, inform the user and propose a dedicated refactoring pass rather than silently rewriting large portions.
 
 ---
 
@@ -133,7 +175,7 @@ Every trigger requires a specific action. No trigger should be ignored.
 | Trigger | Required Action |
 | :--- | :--- |
 | New spec created | Ask user which phase it belongs to; add an entry under that phase |
-| Spec status → `Stable` | Move the spec's entry to the active phase; mark it as ready for implementation |
+| Spec status → `Stable` | Update the spec's status marker in place within its phase |
 | Spec status → `Deprecated` | Move the spec's entry to the *Archived* section |
 | User signals reprioritization | Follow the *Reprioritization* procedure below |
 | All specs in a phase reach `Stable` | Follow the *Phase Completion* procedure below |
@@ -149,7 +191,6 @@ Which phase should "{spec-name}" belong to?
   2. Phase 2 — Scalability & Optimization (P1)
   3. New phase — I'll describe it
   4. Backlog — not prioritized yet
-
 ```
 
 Then add the spec as a line item under the chosen phase in ROADMAP.md:
@@ -160,7 +201,7 @@ Then add the spec as a line item under the chosen phase in ROADMAP.md:
 
 #### Status Change → Stable
 
-When any spec transitions to `Stable`, update its line in ROADMAP.md:
+When any spec transitions to `Stable`, update its line in ROADMAP.md in place — do not move it:
 
 ```markdown
 - **{Spec Name}** (`{spec-name}.md`): {one-line description}. Status: `Stable ✓`
@@ -200,7 +241,51 @@ Items not yet assigned to any phase live in a dedicated section:
 - **{Spec Name}** (`{spec-name}.md`): {one-line description}. Status: `Draft`
 ```
 
-Backlog items should be surfaced during Periodic Registry Audit (every 5 updates) with a prompt to assign them to a phase or discard.
+Backlog items are surfaced during *Periodic Registry Audit* with a prompt to assign them to a phase or discard.
+
+---
+
+### Periodic Registry Audit
+
+Run this audit when the user requests it, or proactively suggest it after every 5 updates across the registry.
+
+**Trigger phrase for user**: *"Audit specs"* or *"Review registry"*
+
+1. **Scope**: Read all files listed in `INDEX.md`.
+2. **Cross-file Duplication**: Identify any content that appears in more than one spec file. Propose consolidation.
+3. **Orphaned Content**: Flag sections that no longer connect to any feature in `ROADMAP.md`.
+4. **Stale Statuses**: Flag specs that have been in `Draft` or `RFC` without progress.
+5. **Backlog Review**: Surface all Backlog items and prompt to assign or discard each one.
+6. **Broken Relations**: Check that all links in every `Related Specifications` section point to existing files.
+7. **Report**: Present a structured summary to the user before making any changes:
+
+    ```
+    Registry Audit Report — {YYYY-MM-DD}
+
+    Duplication found:
+    - "Auth token format" appears in both architecture.md §3.1 and api.md §2.2
+      → Recommend: keep in architecture.md, replace api.md entry with a link
+
+    Orphaned content:
+    - ui-components.md §4 "Legacy Theme" — not referenced in ROADMAP.md
+      → Recommend: deprecate or remove
+
+    Stale statuses:
+    - database-schema.md — Draft since 2024-01-10, no updates in 90+ days
+      → Recommend: confirm if still active or mark Deprecated
+
+    Backlog items:
+    - analytics.md — unprioritized since creation
+      → Assign to a phase or discard?
+
+    Broken relations:
+    - api.md → links to auth.md which does not exist
+      → Recommend: create auth.md or update the link
+
+    Apply all recommendations? (yes / select / skip)
+    ```
+
+8. **Apply**: Only after user approval, apply the agreed changes. Update `INDEX.md` and `Document History` in affected files.
 
 ---
 
@@ -277,6 +362,10 @@ Strategic development plan prioritizing core features, resilience, and user expe
 ## Backlog (Unprioritized)
 
 - **Analytics** (`analytics.md`): Event tracking design. Status: `Draft`
+
+## Archived
+
+- **Legacy Auth** (`legacy-auth.md`): Deprecated in favour of auth.md. Status: `Deprecated`
 
 ---
 
@@ -364,6 +453,8 @@ Potential issues and alternative approaches considered.
 
 ```
 
+---
+
 ## Core Files Initialization Scripts
 
 Use these scripts to automatically generate the initial `INDEX.md` and `ROADMAP.md` if they are missing.
@@ -437,11 +528,15 @@ Strategic development plan prioritizing core features, resilience, and user expe
 
 ## Phase 1: MVP & Core Features (P0)
 
-<!-- Add spec entries here: - **Name** (`file.md`): Description. Status: `Draft` -->
+<!-- Add spec entries here: - **Name** (\`file.md\`): Description. Status: \`Draft\` -->
 
 ## Backlog (Unprioritized)
 
 <!-- Specs not yet assigned to a phase land here -->
+
+## Archived
+
+<!-- Deprecated specs move here -->
 
 ---
 
@@ -525,11 +620,15 @@ Strategic development plan prioritizing core features, resilience, and user expe
 
 ## Phase 1: MVP & Core Features (P0)
 
-<!-- Add spec entries here: - **Name** (``file.md``): Description. Status: ``Draft`` -->
+<!-- Add spec entries here: - **Name** (`file.md`): Description. Status: `Draft` -->
 
 ## Backlog (Unprioritized)
 
 <!-- Specs not yet assigned to a phase land here -->
+
+## Archived
+
+<!-- Deprecated specs move here -->
 
 ---
 
