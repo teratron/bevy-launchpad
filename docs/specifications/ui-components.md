@@ -1,45 +1,50 @@
 # UI & Experience Standards
 
-**Version:** 0.1.0
+**Version:** 0.2.0
 **Status:** Draft
 
 ---
 
 ## Overview
 
-Visual standards, UI hierarchy, and interaction principles for AAA-quality feel.
+General rules for building user interfaces, visual language, and interaction patterns for the Bevy Launchpad framework.
 
 ## Related Specifications
 
-- [architecture.md](architecture.md) - Layered model (L2 Infrastructure).
+- [architecture.md](architecture.md) - Section 6: UI Layer.
 
 ## 1. UI Principles
 
-- **Navigation Stack**: История переходов для работы кнопки "Back" и ESC.
+- **Responsiveness**: All elements must scale correctly across resolutions.
+- **Consistency**: Unified color palette and typography.
+- **Micro-interactions**: Subtle animations for all user actions.
+- **Navigation Stack**: История переходов для работы кнопки "Back" и ESC. Каждое подменю ОБЯЗАНО иметь кнопку "Назад" и поддержку закрытия по `Esc`.
 - **Settings Commitment**: Явное применение изменений (Apply/Reset).
 
-## 2. Detailed Design
+## 2. Layering (Z-Order)
 
-### 2.1 Layering & Z-Order
+| Layer | Priority | Usage |
+| :--- | :--- | :--- |
+| **Splash** | 1000 | Splash screens and logos. |
+| **Overlay** | 500  | Modals, settings overlays, pause menu. |
+| **HUD**     | 100  | In-game indicators. |
+| **Background** | 0 | Root menu or game world. |
 
-- **World (0-99)**: Игровые объекты.
-- **HUD (100-199)**: Интерфейс в игре.
-- **Menus (200-299)**: Основные экраны.
-- **Settings/Modals (300-499)**: Поверх всех меню.
-- **Error/Debug (500+)**: Высший приоритет.
+## 3. Transitions & Visual Polish
 
-### 2.2 Transitions & Visual Polish
+Все переходы между состояниями должны быть плавными.
 
-- **Effects**: Fade-in/Fade-out (затухание), Vignette, Blur. Плавная смена стейтов.
+- **Fade-in / Fade-out**: Рекомендуемое время перехода 200-500мс.
+- **Splash Screens**: Скипаемые (после 1 сек) через любую клавишу или клик.
+- **Progressive Loading**: Индикатор прогресса (%) с названиями групп загружаемых ассетов.
 - **Button Juiciness**:
-  - Анимация Hover: Масштабирование (1.05x) или изменение яркости.
-  - Анимация Click: Визуальное "нажатие" (0.95x).
-- **Audio Feedback**: Профессиональные звуковые эффекты (SFX) при наведении и клике на любой интерактивный объект.
+  - Hover: Увеличение масштаба (1.05x), смена цвета фона/бордера.
+  - Click: Сжатие (0.95x), воспроизведение SFX.
 
-### 2.3 Accessibility
+## 4. Accessibility
 
-- **High Contrast**: Режим повышенной контрастности.
-- **Font Scaling**: Динамическое изменение размера шрифта.
+- **High Contrast Mode**: Поддержка альтернативной цветовой схемы.
+- **Font Scaling**: Возможность увеличения шрифтов для доступности.
 
 ---
 
@@ -48,3 +53,4 @@ Visual standards, UI hierarchy, and interaction principles for AAA-quality feel.
 | Version | Date       | Author | Description   |
 | :---    | :---       | :---   | :---          |
 | 0.1.0   | 2026-02-19 | Agent  | Initial Draft |
+| 0.2.0   | 2026-02-19 | Agent  | Added Nav Safety (ESC/Back) requirements |

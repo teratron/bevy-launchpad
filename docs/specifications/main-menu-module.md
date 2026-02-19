@@ -1,6 +1,6 @@
 # Main Menu Module
 
-**Version:** 0.1.0
+**Version:** 0.3.0
 **Status:** Draft
 
 ---
@@ -46,10 +46,13 @@ graph TD
     MainMenu --> ExitConfirm[Exit Confirmation Modal]
 ```
 
+- **Settings Overlay**: Управляется через реактивный ресурс `SettingsOpen`. Это позволяет открывать/закрывать оверлей настроек поверх любого состояния (меню или пауза) без полной смены `AppState`.
+
 ### 2.2 Integration Points
 
 - **Events**: Генерация `StartGameEvent` при нажатии Play.
 - **Resources**: Использование `MenuTheme` для стилизации элементов.
+- **Asset Manifest**: Модуль получает текстуры (`splash_logo`, `background_menu`) и звуки (`click`, `hover`, `music_menu`) через ключи, определенные в `assets.ron`.
 
 ---
 
@@ -58,3 +61,5 @@ graph TD
 | Version | Date       | Author | Description   |
 | :---    | :---       | :---   | :---          |
 | 0.1.0   | 2026-02-19 | Agent  | Initial Draft |
+| 0.2.0   | 2026-02-19 | Agent  | Added SettingsOpen sub-state detail |
+| 0.3.0   | 2026-02-19 | Agent  | Integrated Asset Manifest requirements |

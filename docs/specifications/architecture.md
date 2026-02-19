@@ -1,6 +1,6 @@
 # Core Architecture
 
-**Version:** 0.1.0
+**Version:** 0.2.0
 **Status:** Draft
 
 ---
@@ -50,7 +50,11 @@ Launchpad (L2) предоставляет интерфейсы, L3 — серв�
 - **Scene Controller**: Каждое состояние управляет своим контейнером данных.
 - **Global Event Bus**: Децентрализованное общение через `SystemEvent`.
 
-### 3.2 Application Lifecycle
+### 3.2 Path Reliability
+
+Использование логики `std::env::current_exe()` для гарантированного поиска директории `assets/` при запуске приложения в любом окружении (Direct Run, Terminal, Bundle).
+
+### 3.3 Application Lifecycle
 
 ```mermaid
 graph TD
@@ -98,3 +102,4 @@ graph TD
 | Version | Date       | Author | Description   |
 | :---    | :---       | :---   | :---          |
 | 0.1.0   | 2026-02-19 | Agent  | Initial Draft |
+| 0.2.0   | 2026-02-19 | Agent  | Added Path Reliability (current_exe) details |

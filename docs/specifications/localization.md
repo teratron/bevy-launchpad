@@ -1,30 +1,43 @@
-# Localization System
+# Localization Specification
 
-**Version:** 0.1.0
+**Version:** 0.2.0
 **Status:** Draft
 
 ---
 
 ## Overview
 
-Localization-First: весь текст интерфейса и системных сообщений загружается из внешних файлов Fluent (.ftl). Поддержка динамической смены языка.
+Система локализации обеспечивает поддержку множества языков, форматов дат и региональных настроек. Использование **Localization-First** принципа означает, что весь пользовательский текст должен проходить через систему перевода.
 
 ## Related Specifications
 
-- [architecture.md](architecture.md) - Infrastructure context.
+- [ui-components.md](ui-components.md) - Text rendering standards.
+- [data-management.md](data-management.md) - Locale asset storage.
 
-## 1. Detailed Design
+## 1. Core Principles
 
 ### 1.1 Project Fluent Integration
 
-- **Grammar Support**: Нативная поддержка плюрализации.
-- **Key-based Access**: Уникальные ID (напр., `lp.menu.start`).
-- **Namespace Splitting**: Префиксы `lp.*` для либы и `game.*` для игры.
+Использование формата **Fluent (.ftl)** для поддержки сложной грамматики (роды, числа).
+
+- **Key-based access**: Доступ к строкам через уникальные идентификаторы.
+- **Namespace splitting**: Разделение файлов локализации (menu.ftl, gameplay.ftl).
 
 ### 1.2 Regional Assets
 
 - **Audio Locales**: Поддержка региональных аудиофайлов.
-- **Fallback**: Автоматический откат к English (en-US).
+- **Asset Fallback**: Если локализованный ресурс (строка или звук) отсутствует, система автоматически откатывается к English (en-US).
+
+## 2. Key Registry (Fluent)
+
+- **File Path**: `assets/locales/{lang}/text/menu.ftl`
+- **Standard Keys**:
+  - `menu-title`: Заголовок игры
+  - `menu-play`: Кнопка начала игры
+  - `menu-settings`: Кнопка настроек
+  - `menu-exit`: Кнопка выхода
+  - `settings-title`: Заголовок настроек
+  - `tab-graphics`, `tab-audio`: Названия вкладок настроек.
 
 ---
 
@@ -33,3 +46,4 @@ Localization-First: весь текст интерфейса и системны
 | Version | Date       | Author | Description   |
 | :---    | :---       | :---   | :---          |
 | 0.1.0   | 2026-02-19 | Agent  | Initial Draft |
+| 0.2.0   | 2026-02-19 | Agent  | Added Key Registry and Fallback details |

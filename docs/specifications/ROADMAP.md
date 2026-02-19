@@ -1,6 +1,6 @@
 # Project Roadmap
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Status:** Active
 
 ---
@@ -11,25 +11,29 @@ Strategic development plan prioritizing core features, resilience, and user expe
 
 ## Phase 1: MVP & Core Features (P0)
 
-- **LaunchpadBuilder**: Реализация публичного API контракта.
-- **Input System**: Переход на Action-based маппинги.
-- **Save System**: База сериализации и Version Guard.
+- **Core Architecture** (`architecture.md`): Core system design, layered model and path reliability. Status: `Draft`
+- **Launchpad API** (`api.md`): Public API contracts (LaunchpadBuilder). Status: `Stable ✓`
+- **Settings Schema** (`settings-schema.md`): Technical data structure (RON) for user preferences. Status: `Stable ✓`
+- **Data & Assets** (`data-management.md`): Assets orchestration, persistence and fallbacks. Status: `Draft`
+- **Input System** (`input-system.md`): Action-based input mapping foundation. Status: `Draft`
 
-## Phase 2: Scalability & Optimization (P1)
+## Phase 2: UI/UX & Shared Services (P1)
 
-- **Update Verification**: Подписи и контрольные суммы.
-- **Safe Haven Logic**: Отказоустойчивость стейтов.
-- **Graduated Error Handling**: Модалки, тосты и баннеры.
+- **Main Menu** (`main-menu-module.md`): Root interaction screen logic and settings overlay. Status: `Draft`
+- **Settings System** (`settings-module.md`): Reactive widgets and UI synchronization. Status: `Draft`
+- **Localization** (`localization.md`): Project Fluent integration and key registry. Status: `Draft`
+- **UI & Experience** (`ui-components.md`): UI standards, themes and navigation safety. Status: `Draft`
 
 ## Phase 3: Visual Polish & UX (P2)
 
-- **Transition Orchestrator**: Синхронизация ассетов и анимаций.
-- **Theme Engine**: Гибкая стилизация через RON.
-- **Accessibility**: Базовые инструменты доступности.
+- **Gameplay Config** (`gameplay-config.md`): Gameplay balance, physics constants and hot-reload. Status: `Draft`
+- **Transition Orchestrator**: Synchronizing asset loading with visual transitions. Status: `Backlog`
+- **Theme Engine**: Flexible UI styling via RON configuration. Status: `Backlog`
+- **Accessibility**: High contrast, font scaling and screen reader base. Status: `Backlog`
 
 ---
 
 ## Meta Information
 
 - **Last Updated**: 2026-02-19
-- **Next Review**: TBD
+- **Next Review**: 2026-03-19

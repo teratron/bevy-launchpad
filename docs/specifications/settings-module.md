@@ -1,6 +1,6 @@
 # Settings System Module (UI/UX)
 
-**Version:** 0.2.0
+**Version:** 0.3.0
 **Status:** Draft
 
 ---
@@ -43,7 +43,15 @@ graph TD
     UI -->|Click Apply| Persistence[Save to settings.ron]
 ```
 
-### 2.2 Rebinding Logic
+### 2.2 UI Synchronization & Data Flow
+
+- Интерфейс напрямую привязан к ресурсу `UserSettings`.
+- Любое изменение в UI генерирует событие `SettingChangedEvent`.
+- Фоновая система отслеживает эти события для:
+    1. Немедленного обновления состояния движка (окно, звук).
+    2. Асинхронной записи изменений в `settings.ron` (при нажатии Apply).
+
+### 2.3 Rebinding Logic
 
 - Ожидание нажатия любой клавиши после клика на действие.
 - Проверка конфликтов (одна клавиша на два действия).
@@ -57,3 +65,4 @@ graph TD
 | :---    | :---       | :---   | :---          |
 | 0.1.0   | 2026-02-19 | Agent  | Initial Draft |
 | 0.2.0   | 2026-02-19 | Agent  | Added UI/UX flow and widgets details |
+| 0.3.0   | 2026-02-19 | Agent  | Integrated SettingChangedEvent and UI Sync logic |
