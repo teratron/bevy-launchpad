@@ -42,6 +42,7 @@ General architectural concept of the Bevy Launchpad framework, guiding principle
 Launchpad (L2) предоставляет интерфейсы, L3 — сервисы, а L4 — реализацию.
 
 - **Infrastructure Configs (L2)**: `settings.ron` — настройки игрока (APPDATA).
+- **Asset Configuration (L2/L4)**: `assets.ron` — внешний манифест ресурсов (Assets).
 - **Gameplay Configs (L4)**: `gameplay.ron` — баланс и физика (Assets).
 
 ## 3. Detailed Design
