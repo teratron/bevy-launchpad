@@ -17,7 +17,7 @@ This workflow defines a universal, technology-agnostic process for creating and 
 5. **Linking**: Every new spec must be registered in `INDEX.md`. Every spec that depends on another must declare it in `Related Specifications`.
 6. **Status Discipline**: Always assign a valid status from the **Status Lifecycle** section. Never leave status blank.
 7. **Capture First**: When the user provides unstructured input (thoughts, notes, ideas), always follow the *Dispatching from Raw Input* workflow before writing anything.
-8. **Review Always**: After every update to any spec file, always perform the *Post-Update Review* before closing the task. No update is complete without it.
+8. **Roadmap Is Live**: ROADMAP.md is not a static document. Update it deterministically on every defined trigger — never skip, never defer.
 
 ## Directory Structure
 
@@ -62,8 +62,7 @@ graph TD
     C --> D[Confirm: show mapping to user]
     D -->|Approved| E[Dispatch: write to spec files]
     D -->|Rejected| B
-    E --> F[Post-Update Review]
-    F --> G[Sync INDEX.md and ROADMAP.md]
+    E --> F[Sync INDEX.md and ROADMAP.md]
 ```
 
 1. **Parse**: Read the input and extract all distinct topics, decisions, constraints, or preferences mentioned. A single message may contain material for multiple spec files.
@@ -86,8 +85,7 @@ graph TD
     ```
 
 4. **Dispatch**: Write each piece into the correct spec file following the Specification Template. Never mix topics from different domains in a single section.
-5. **Post-Update Review**: Run the review checklist (see below) on every file that was modified.
-6. **Sync**: Update `INDEX.md` (add or update rows) and `ROADMAP.md` if scope or timeline is affected.
+5. **Sync**: Update `INDEX.md` (add or update rows) and `ROADMAP.md` following the *Updating ROADMAP.md* workflow.
 
 **Edge cases:**
 
@@ -109,7 +107,7 @@ graph TD
     - Fill in `Related Specifications` with any dependencies on existing specs.
 5. **Registry Update**:
     - Add the new file as a row in the `INDEX.md` table with its status and version.
-    - Update `ROADMAP.md` if the specification impacts the timeline.
+    - Trigger ROADMAP update: **new spec added** (see *Updating ROADMAP.md*).
 
 ### Updating an Existing Specification
 
@@ -120,77 +118,91 @@ graph TD
 2. **Document History**: Append a new row to the `Document History` table inside the spec file.
 3. **Status Update**: If the status changes (e.g., `Draft → RFC`), update both the spec file header and the `INDEX.md` table entry.
 4. **INDEX.md Sync**: Update the `Version` and `Status` columns in `INDEX.md` to match the new state.
-5. **ROADMAP.md Review**: If the update shifts timeline or scope, reflect it in `ROADMAP.md`.
-6. **Post-Update Review**: Run the review checklist on every file that was modified. This step is mandatory and must not be skipped.
-
-### Post-Update Review
-
-**This step is mandatory after every update, regardless of change size.**
-
-After modifying any spec file, perform the following checks on the affected file before closing the task:
-
-#### Duplication Check
-
-- Are there any paragraphs, rules, or decisions that repeat content already stated elsewhere in this file?
-- Is any content duplicated across other spec files? If so, keep it in the most relevant file and replace the duplicate with a cross-reference link.
-
-#### Coherence Check
-
-- Does the document read as a single consistent whole, or does it feel like a patchwork of additions?
-- Are all sections still relevant to the file's stated purpose, or have any drifted out of scope?
-- Is the logical flow of sections still correct after the update, or does the new content break the narrative?
-
-#### Links & Relations Check
-
-- Are all links in `Related Specifications` still accurate and necessary?
-- Does the updated content introduce new dependencies on other specs that are not yet declared?
-
-#### Cleanup
-
-- Remove or consolidate any sections that have become redundant.
-- Rewrite any passages that have grown unclear due to successive edits.
-- If a major restructure is needed, treat it as a `major` version bump and note it in `Document History`.
-
-> If the review reveals significant issues beyond the original edit scope, inform the user and propose a dedicated refactoring pass rather than silently rewriting large portions.
+5. **ROADMAP Trigger**: If the status changed or scope shifted, follow the *Updating ROADMAP.md* workflow.
 
 ---
 
-### Periodic Registry Audit
+### Updating ROADMAP.md
 
-Run this audit when the user requests it, or proactively suggest it after every 5 updates across the registry.
+ROADMAP.md is a **live document** that reflects the current state of project priorities and progress. It must be updated deterministically — not based on judgment, but based on defined triggers below.
 
-**Trigger phrase for user**: *"Audit specs"* or *"Review registry"*
+#### Triggers
 
-1. **Scope**: Read all files listed in `INDEX.md`.
-2. **Cross-file Duplication**: Identify any content that appears in more than one spec file. Propose consolidation.
-3. **Orphaned Content**: Flag sections that no longer connect to any feature in `ROADMAP.md`.
-4. **Stale Statuses**: Flag specs that have been in `Draft` or `RFC` for a long time without progress.
-5. **Broken Relations**: Check that all links in every `Related Specifications` section point to existing files.
-6. **Report**: Present a structured summary to the user before making any changes:
+Every trigger requires a specific action. No trigger should be ignored.
 
+| Trigger | Required Action |
+| :--- | :--- |
+| New spec created | Ask user which phase it belongs to; add an entry under that phase |
+| Spec status → `Stable` | Move the spec's entry to the active phase; mark it as ready for implementation |
+| Spec status → `Deprecated` | Move the spec's entry to the *Archived* section |
+| User signals reprioritization | Follow the *Reprioritization* procedure below |
+| All specs in a phase reach `Stable` | Follow the *Phase Completion* procedure below |
+
+#### New Spec Added
+
+When a new spec is created, ask the user one question before closing the task:
+
+```
+Which phase should "{spec-name}" belong to?
+
+  1. Phase 1 — MVP & Core Features (P0)
+  2. Phase 2 — Scalability & Optimization (P1)
+  3. New phase — I'll describe it
+  4. Backlog — not prioritized yet
+
+```
+
+Then add the spec as a line item under the chosen phase in ROADMAP.md:
+
+```markdown
+- **{Spec Name}** (`{spec-name}.md`): {one-line description}. Status: `Draft`
+```
+
+#### Status Change → Stable
+
+When any spec transitions to `Stable`, update its line in ROADMAP.md:
+
+```markdown
+- **{Spec Name}** (`{spec-name}.md`): {one-line description}. Status: `Stable ✓`
+```
+
+This makes ROADMAP a real-time progress indicator: scanning it shows exactly what is done and what is not.
+
+#### Reprioritization
+
+Triggered when the user says something like: *"this is more important now"*, *"let's postpone X"*, *"change the order"*.
+
+1. Show the current phase structure as a summary.
+2. Propose the specific moves (item from Phase 2 → Phase 1, etc.).
+3. Wait for explicit confirmation before modifying anything.
+4. Apply changes and update `Last Updated` in ROADMAP meta.
+
+#### Phase Completion
+
+Triggered when all specs in a phase reach `Stable`.
+
+1. Rename the phase header to include a completion marker:
+
+    ```markdown
+    ## Phase 1: MVP & Core Features (P0) ✓ Completed {YYYY-MM-DD}
     ```
-    Registry Audit Report — {YYYY-MM-DD}
 
-    Duplication found:
-    - "Auth token format" appears in both architecture.md §3.1 and api.md §2.2
-      → Recommend: keep in architecture.md, replace api.md entry with a link
+2. Propose opening the next phase if not already active.
+3. Set `Next Review` in ROADMAP meta to a suggested date (default: +30 days).
 
-    Orphaned content:
-    - ui-components.md §4 "Legacy Theme" — not referenced in ROADMAP.md
-      → Recommend: deprecate or remove
+#### Backlog
 
-    Stale statuses:
-    - database-schema.md — Draft since 2024-01-10, no updates in 90+ days
-      → Recommend: confirm if still active or mark Deprecated
+Items not yet assigned to any phase live in a dedicated section:
 
-    Broken relations:
-    - api.md → links to auth.md which does not exist
-      → Recommend: create auth.md or update the link
+```markdown
+## Backlog (Unprioritized)
 
-    Apply all recommendations? (yes / select / skip)
-    ```
+- **{Spec Name}** (`{spec-name}.md`): {one-line description}. Status: `Draft`
+```
 
-7. **Apply**: Only after user approval, apply the agreed changes. Update `INDEX.md` and `Document History` in affected files.
+Backlog items should be surfaced during Periodic Registry Audit (every 5 updates) with a prompt to assign them to a phase or discard.
+
+---
 
 ## Templates
 
@@ -237,8 +249,8 @@ detailing their relationships and current status.
 
 ### 2. Planning File Template (ROADMAP.md)
 
-- **Purpose**: Defines development timeline and prioritization.
-- **Role**: Strategic alignment. All new specs should map to a roadmap phase.
+- **Purpose**: Live planning document. Tracks phases, priorities, and per-spec progress.
+- **Role**: Strategic alignment. Every spec must appear here under a phase or in Backlog.
 
 ```markdown
 # Project Roadmap
@@ -254,13 +266,17 @@ Strategic development plan prioritizing core features, resilience, and user expe
 
 ## Phase 1: MVP & Core Features (P0)
 
-- **Feature A**: Core functionality implementation.
-- **Feature B**: Basic infrastructure setup.
+- **Feature A** (`architecture.md`): Core system design. Status: `Stable ✓`
+- **Feature B** (`api.md`): API contracts and endpoints. Status: `RFC`
 
 ## Phase 2: Scalability & Optimization (P1)
 
-- **Performance**: Caching layer implementation.
-- **Security**: OAuth integration.
+- **Performance** (`caching.md`): Caching layer implementation. Status: `Draft`
+- **Security** (`auth.md`): OAuth integration. Status: `Draft`
+
+## Backlog (Unprioritized)
+
+- **Analytics** (`analytics.md`): Event tracking design. Status: `Draft`
 
 ---
 
@@ -288,6 +304,7 @@ Strategic development plan prioritizing core features, resilience, and user expe
 
 **Version:** {X.Y.Z}
 **Status:** {Draft | RFC | Stable | Deprecated}
+**Roadmap Phase:** {Phase 1 | Phase 2 | Backlog}
 
 ---
 
@@ -420,11 +437,11 @@ Strategic development plan prioritizing core features, resilience, and user expe
 
 ## Phase 1: MVP & Core Features (P0)
 
-- **Feature A**: Core functionality implementation.
+<!-- Add spec entries here: - **Name** (`file.md`): Description. Status: `Draft` -->
 
-## Phase 2: Scalability & Optimization (P1)
+## Backlog (Unprioritized)
 
-- **Performance**: Caching layer implementation.
+<!-- Specs not yet assigned to a phase land here -->
 
 ---
 
@@ -508,11 +525,11 @@ Strategic development plan prioritizing core features, resilience, and user expe
 
 ## Phase 1: MVP & Core Features (P0)
 
-- **Feature A**: Core functionality implementation.
+<!-- Add spec entries here: - **Name** (``file.md``): Description. Status: ``Draft`` -->
 
-## Phase 2: Scalability & Optimization (P1)
+## Backlog (Unprioritized)
 
-- **Performance**: Caching layer implementation.
+<!-- Specs not yet assigned to a phase land here -->
 
 ---
 
