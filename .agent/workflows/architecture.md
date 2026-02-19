@@ -19,7 +19,8 @@ This workflow is designed for architectural discussion and documentation. It str
 
 4. **Documentation**:
     - Document the agreed-upon architecture in `docs/architecture.md`.
-    - Use **English** for all technical documentation.
+    - Use **English** for technical terms, symbols, and core descriptions.
+    - **Russian Notes**: Use **Russian** for detailed explanations, notes, comments, and annotations within the documentation to provide clearer context for the Russian-speaking team.
     - **Folder Structures**: Include visual directory trees (e.g., using `plaintext` or `ascii` blocks) to describe the project layout and module organization.
     - Include **Mermaid diagrams** for visual representation of:
         - System components and their interactions.
