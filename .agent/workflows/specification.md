@@ -20,6 +20,7 @@ This workflow defines a universal, technology-agnostic process for creating and 
 8. **Review Always**: After every create or update operation, run *Post-Update Review* before closing the task. No operation is complete without it.
 9. **Roadmap Is Live**: ROADMAP.md is not a static document. Update it deterministically on every defined trigger — never skip, never defer.
 10. **Rules Are Constitution**: RULES.md is the source of truth for project conventions. Read it before every operation. Update it on every defined trigger. Never contradict it without proposing an explicit amendment.
+11. **Checklist Before Done**: Every task must end with the *Task Completion Checklist* shown to the user. A task is not complete until the checklist is presented and all items are confirmed.
 
 ## Directory Structure
 
@@ -79,6 +80,7 @@ graph TD
     F --> G[Check RULES.md triggers]
     G --> H[Sync INDEX.md]
     H --> I[Update ROADMAP.md via triggers]
+    I --> J[Task Completion Checklist]
 ```
 
 1. **Read RULES.md**: Before doing anything, read `RULES.md` to ensure all decisions align with established project conventions.
@@ -105,6 +107,7 @@ graph TD
 6. **Post-Update Review**: Run the review checklist on every file that was modified (see *Post-Update Review*).
 7. **Check RULES.md triggers**: After writing, evaluate whether any RULES.md update trigger was activated (see *Updating RULES.md*).
 8. **Sync**: Update `INDEX.md` (add or update rows), then update `ROADMAP.md` following the *Updating ROADMAP.md* workflow.
+9. **Task Completion Checklist**: Present the checklist to the user (see *Task Completion Checklist*).
 
 **Edge cases:**
 
@@ -131,6 +134,7 @@ graph TD
     - Trigger ROADMAP update: **new spec added** (see *Updating ROADMAP.md*).
 7. **Post-Update Review**: Run the review checklist on the newly created file.
 8. **Check RULES.md triggers**: Evaluate whether any RULES.md update trigger was activated.
+9. **Task Completion Checklist**: Present the checklist to the user.
 
 ---
 
@@ -147,6 +151,50 @@ graph TD
 6. **Post-Update Review**: Run the review checklist on every file that was modified. This step is mandatory and must not be skipped.
 7. **Check RULES.md triggers**: Evaluate whether any RULES.md update trigger was activated.
 8. **ROADMAP Trigger**: If the status changed or scope shifted, follow the *Updating ROADMAP.md* workflow.
+9. **Task Completion Checklist**: Present the checklist to the user.
+
+---
+
+### Task Completion Checklist
+
+**This checklist must be shown to the user at the end of every task — no exceptions.**
+The agent must evaluate each item honestly and mark it `✓` (done) or `✗` (skipped/failed) with a brief note if failed.
+A task with any `✗` item is not considered complete — the agent must explain what was skipped and why.
+
+```
+Task Completion Checklist — {task description}
+
+Code & Content
+  ☐ No implementation code in any created or modified spec file
+  ☐ Pseudo-code used where logic illustration was needed
+
+Structure
+  ☐ Roadmap Phase field present in all new or modified spec files
+  ☐ All required sections present (Overview, Motivation, Document History)
+  ☐ Related Specifications declared for all dependencies
+
+Status & Versioning
+  ☐ Status assigned from valid lifecycle (Draft / RFC / Stable / Deprecated)
+  ☐ Status changed only via valid transition (Draft→RFC→Stable, not shortcuts)
+  ☐ Version bumped correctly (patch / minor / major)
+  ☐ Document History row added
+
+System Files
+  ☐ INDEX.md updated (new row or version/status change)
+  ☐ ROADMAP.md trigger checked and applied if activated
+  ☐ RULES.md trigger checked and applied if activated
+
+Review
+  ☐ Post-Update Review performed (duplication, coherence, links, rules compliance)
+  ☐ No open contradictions with RULES.md left unresolved
+```
+
+**If any item is marked `✗`**, the agent must state:
+
+1. Which item failed and why.
+2. Whether it requires user input to resolve, or can be fixed immediately.
+
+> The checklist is a hard-stop, not a formality. Do not mark items `✓` speculatively.
 
 ---
 
