@@ -11,7 +11,7 @@ This workflow defines a universal, technology-agnostic process for creating and 
 **CRITICAL INSTRUCTIONS FOR AI:**
 
 1. **No Code in Specs**: Never generate implementation code (Rust, JS, Python, etc.) inside specification files. Use pseudo-code or logic flows if necessary.
-2. **Structure First**: Always verify `docs/specifications/INDEX.md` and `ROADMAP.md` exist before creating a new spec.
+2. **Structure First**: Always verify `docs/specifications/INDEX.md`, `ROADMAP.md`, and `RULES.md` exist before creating a new spec.
 3. **Universal Applicability**: This workflow is stack-agnostic. Adapt the content (APIs, DBs, UI) to the user's technology, but keep the *structure* rigid.
 4. **Automation**: If system files are missing, offer to run the **Initialization Scripts** immediately.
 5. **Linking**: Every new spec must be registered in `INDEX.md`. Every spec that depends on another must declare it in `Related Specifications`.
@@ -19,6 +19,7 @@ This workflow defines a universal, technology-agnostic process for creating and 
 7. **Capture First**: When the user provides unstructured input (thoughts, notes, ideas), always follow the *Dispatching from Raw Input* workflow before writing anything.
 8. **Review Always**: After every create or update operation, run *Post-Update Review* before closing the task. No operation is complete without it.
 9. **Roadmap Is Live**: ROADMAP.md is not a static document. Update it deterministically on every defined trigger — never skip, never defer.
+10. **Rules Are Constitution**: RULES.md is the source of truth for project conventions. Read it before every operation. Update it on every defined trigger. Never contradict it without proposing an explicit amendment.
 
 ## Directory Structure
 
@@ -27,11 +28,19 @@ The specification documentation follows this structure:
 ```plaintext
 docs/
 └── specifications/
-    ├── INDEX.md                  # Registry File: Dispatcher & Central Index
-    ├── ROADMAP.md                # Planning File: Project Roadmap & Prioritization
-    ├── {specification-name}.md   # Content File: Specific logic (e.g., architecture.md)
-    └── ...
+    ├── INDEX.md    # Registry: what exists
+    ├── ROADMAP.md  # Plan: what gets done and when
+    ├── RULES.md    # Constitution: how everything is governed
+    └── *.md        # Spec files
 ```
+
+**System files and their roles:**
+
+| File | Role | Updated by |
+| :--- | :--- | :--- |
+| `INDEX.md` | Central registry of all spec files | Every create/update |
+| `ROADMAP.md` | Live priority and phase tracker | Defined triggers |
+| `RULES.md` | Project constitution and conventions | Defined triggers |
 
 ## Status Lifecycle
 
@@ -60,24 +69,27 @@ Use this workflow when the user provides unstructured input: a thought, a note, 
 
 ```mermaid
 graph TD
-    A[Raw Input] --> B[Parse: identify distinct topics]
+    A[Raw Input] --> R[Read RULES.md]
+    R --> B[Parse: identify distinct topics]
     B --> C[Map: match topics to spec domains]
     C --> D[Confirm: show mapping to user]
     D -->|Approved| E[Dispatch: write to spec files]
     D -->|Rejected| B
     E --> F[Post-Update Review]
-    F --> G[Sync INDEX.md]
-    G --> H[Update ROADMAP.md via triggers]
+    F --> G[Check RULES.md triggers]
+    G --> H[Sync INDEX.md]
+    H --> I[Update ROADMAP.md via triggers]
 ```
 
-1. **Parse**: Read the input and extract all distinct topics, decisions, constraints, or preferences mentioned. A single message may contain material for multiple spec files.
-2. **Map**: Match each extracted topic to an existing spec file or propose a new one:
+1. **Read RULES.md**: Before doing anything, read `RULES.md` to ensure all decisions align with established project conventions.
+2. **Parse**: Read the input and extract all distinct topics, decisions, constraints, or preferences mentioned. A single message may contain material for multiple spec files.
+3. **Map**: Match each extracted topic to an existing spec file or propose a new one:
     - System design, modules, layers → `architecture.md`
     - Endpoints, contracts, protocols → `api.md`
     - Data models, storage, migrations → `database-schema.md`
     - Visual design, components, style → `ui-components.md`
     - Cross-cutting or unclassified → propose a new domain
-3. **Confirm**: Before writing anything, show the user the proposed mapping and wait for explicit approval. Example:
+4. **Confirm**: Before writing anything, show the user the proposed mapping and wait for explicit approval. Example:
 
     ```
     I found the following topics in your input:
@@ -89,46 +101,52 @@ graph TD
     Proceed with this mapping? (yes / adjust)
     ```
 
-4. **Dispatch**: Write each piece into the correct spec file following the Specification Template. Never mix topics from different domains in a single section.
-5. **Post-Update Review**: Run the review checklist on every file that was modified (see *Post-Update Review*).
-6. **Sync**: Update `INDEX.md` (add or update rows), then update `ROADMAP.md` following the *Updating ROADMAP.md* workflow.
+5. **Dispatch**: Write each piece into the correct spec file following the Specification Template. Never mix topics from different domains in a single section.
+6. **Post-Update Review**: Run the review checklist on every file that was modified (see *Post-Update Review*).
+7. **Check RULES.md triggers**: After writing, evaluate whether any RULES.md update trigger was activated (see *Updating RULES.md*).
+8. **Sync**: Update `INDEX.md` (add or update rows), then update `ROADMAP.md` following the *Updating ROADMAP.md* workflow.
 
 **Edge cases:**
 
 - If intent is ambiguous — ask one clarifying question before mapping, do not guess.
 - If a topic doesn't fit any existing domain — propose a new spec file with a suggested name.
-- If the input contains contradictions with an existing Stable spec — flag the conflict explicitly before dispatching.
+- If the input contradicts an existing rule in `RULES.md` — flag the conflict explicitly and ask whether to proceed or amend the rule first.
+- If the input contradicts an existing Stable spec — flag the conflict explicitly before dispatching.
 
 ---
 
 ### Creating a New Specification
 
-1. **Context Analysis**: Determine the domain of the new specification and the project's tech stack.
-2. **State Check**: Verify if `docs/specifications/` and its core files exist.
-3. **Initialization**:
-    - If `INDEX.md` or `ROADMAP.md` are missing, **STOP** and execute the *Core Files Initialization Script* for the user's OS.
-4. **Content Creation**:
+1. **Read RULES.md**: Check project conventions before creating anything.
+2. **Context Analysis**: Determine the domain of the new specification and the project's tech stack.
+3. **State Check**: Verify if `docs/specifications/` and its core files exist.
+4. **Initialization**:
+    - If `INDEX.md`, `ROADMAP.md`, or `RULES.md` are missing, **STOP** and execute the *Core Files Initialization Script* for the user's OS.
+5. **Content Creation**:
     - Create `{specification-name}.md` using the *Specification Template*.
     - Use `plaintext` for directory trees and `mermaid` for diagrams.
     - Fill in `Related Specifications` with any dependencies on existing specs.
-5. **Registry Update**:
+6. **Registry Update**:
     - Add the new file as a row in the `INDEX.md` table with its status and version.
     - Trigger ROADMAP update: **new spec added** (see *Updating ROADMAP.md*).
-6. **Post-Update Review**: Run the review checklist on the newly created file.
+7. **Post-Update Review**: Run the review checklist on the newly created file.
+8. **Check RULES.md triggers**: Evaluate whether any RULES.md update trigger was activated.
 
 ---
 
 ### Updating an Existing Specification
 
-1. **Version Bump**: Increment the version according to the change scope:
+1. **Read RULES.md**: Check project conventions before modifying anything.
+2. **Version Bump**: Increment the version according to the change scope:
     - `patch` (0.0.X) — typo fixes, clarifications, no structural change.
     - `minor` (0.X.0) — new section added or existing section extended.
     - `major` (X.0.0) — breaking restructure or significant design change.
-2. **Document History**: Append a new row to the `Document History` table inside the spec file.
-3. **Status Update**: If the status changes (e.g., `Draft → RFC`), update both the spec file header and the `INDEX.md` table entry.
-4. **INDEX.md Sync**: Update the `Version` and `Status` columns in `INDEX.md` to match the new state.
-5. **Post-Update Review**: Run the review checklist on every file that was modified. This step is mandatory and must not be skipped.
-6. **ROADMAP Trigger**: If the status changed or scope shifted, follow the *Updating ROADMAP.md* workflow.
+3. **Document History**: Append a new row to the `Document History` table inside the spec file.
+4. **Status Update**: If the status changes (e.g., `Draft → RFC`), update both the spec file header and the `INDEX.md` table entry.
+5. **INDEX.md Sync**: Update the `Version` and `Status` columns in `INDEX.md` to match the new state.
+6. **Post-Update Review**: Run the review checklist on every file that was modified. This step is mandatory and must not be skipped.
+7. **Check RULES.md triggers**: Evaluate whether any RULES.md update trigger was activated.
+8. **ROADMAP Trigger**: If the status changed or scope shifted, follow the *Updating ROADMAP.md* workflow.
 
 ---
 
@@ -154,6 +172,11 @@ Run the following checks on every file that was modified before closing the task
 - Are all links in `Related Specifications` still accurate and necessary?
 - Does the updated content introduce new dependencies on other specs that are not yet declared?
 
+#### Rules Compliance Check
+
+- Does any content in the modified file contradict a rule in `RULES.md`?
+- If a contradiction is found — flag it to the user before closing. Do not silently resolve it.
+
 #### Cleanup
 
 - Remove or consolidate any sections that have become redundant.
@@ -161,6 +184,57 @@ Run the following checks on every file that was modified before closing the task
 - If a major restructure is needed, treat it as a `major` version bump and note it in `Document History`.
 
 > If the review reveals significant issues beyond the original edit scope, inform the user and propose a dedicated refactoring pass rather than silently rewriting large portions.
+
+---
+
+### Updating RULES.md
+
+RULES.md is the **project constitution** — the authoritative source of standing decisions and conventions. It is distinct from the workflow (which describes procedures) and from spec files (which describe features). It governs how all spec work is done within this specific project.
+
+**Read RULES.md at the start of every operation. Update it only via defined triggers below.**
+
+#### Triggers
+
+| # | Trigger | Confirmation required |
+| :--- | :--- | :--- |
+| T1 | User uses universally-scoped language: *"always"*, *"never"*, *"in all specs"*, *"project-wide"* | Yes — propose, then wait |
+| T2 | Same pattern appears in 2+ spec files created in the same session | Yes — propose, then wait |
+| T3 | Periodic Audit reveals inconsistency that a standing rule would prevent | Yes — propose within audit report |
+| T4 | User explicitly declares a rule: *"remember that"*, *"from now on"*, *"project rule:"* | No — apply immediately |
+
+**T1–T3**: Before writing to RULES.md, show the user the proposed rule and wait for explicit approval:
+
+```
+I noticed a project-wide convention in your input:
+
+→ Proposed rule: "All APIs must follow REST. GraphQL is not permitted."
+→ Section: Project Conventions
+
+Add to RULES.md? (yes / no / adjust)
+```
+
+**T4**: Apply immediately, then confirm what was written:
+
+```
+Added to RULES.md → Project Conventions:
+"All APIs must follow REST. GraphQL is not permitted."
+```
+
+#### What Goes in RULES.md
+
+RULES.md has two layers:
+
+**Universal Rules** (sections 1–6) — pre-populated at initialization, govern all projects using this workflow. These are rarely changed and only via explicit user instruction.
+
+**Project Conventions** (section 7) — empty at initialization, accumulates project-specific decisions over time via triggers above. This is the living part of the constitution.
+
+#### Amending an Existing Rule
+
+If new input contradicts a rule already in RULES.md:
+
+1. Flag the contradiction explicitly — never silently override a rule.
+2. Ask the user whether to: (a) proceed as-is and amend the rule, (b) follow the existing rule instead, or (c) treat this as a one-time exception without changing the rule.
+3. If (a): update the rule, bump RULES.md version (`minor` for amendment, `major` for removal), and add a row to its Document History.
 
 ---
 
@@ -207,8 +281,6 @@ When any spec transitions to `Stable`, update its line in ROADMAP.md in place �
 - **{Spec Name}** (`{spec-name}.md`): {one-line description}. Status: `Stable ✓`
 ```
 
-This makes ROADMAP a real-time progress indicator: scanning it shows exactly what is done and what is not.
-
 #### Reprioritization
 
 Triggered when the user says something like: *"this is more important now"*, *"let's postpone X"*, *"change the order"*.
@@ -251,16 +323,22 @@ Run this audit when the user requests it, or proactively suggest it after every 
 
 **Trigger phrase for user**: *"Audit specs"* or *"Review registry"*
 
-1. **Scope**: Read all files listed in `INDEX.md`.
-2. **Cross-file Duplication**: Identify any content that appears in more than one spec file. Propose consolidation.
-3. **Orphaned Content**: Flag sections that no longer connect to any feature in `ROADMAP.md`.
-4. **Stale Statuses**: Flag specs that have been in `Draft` or `RFC` without progress.
-5. **Backlog Review**: Surface all Backlog items and prompt to assign or discard each one.
-6. **Broken Relations**: Check that all links in every `Related Specifications` section point to existing files.
-7. **Report**: Present a structured summary to the user before making any changes:
+1. **Scope**: Read all files listed in `INDEX.md` and `RULES.md`.
+2. **Rules Compliance**: Check all spec files against every rule in `RULES.md`. Flag violations.
+3. **Cross-file Duplication**: Identify any content that appears in more than one spec file. Propose consolidation.
+4. **Orphaned Content**: Flag sections that no longer connect to any feature in `ROADMAP.md`.
+5. **Stale Statuses**: Flag specs that have been in `Draft` or `RFC` without progress.
+6. **Backlog Review**: Surface all Backlog items and prompt to assign or discard each one.
+7. **Broken Relations**: Check that all links in every `Related Specifications` section point to existing files.
+8. **Pattern Detection**: If the same approach appears in 2+ specs, propose a Project Convention for RULES.md (T2 trigger).
+9. **Report**: Present a structured summary to the user before making any changes:
 
     ```
     Registry Audit Report — {YYYY-MM-DD}
+
+    Rules violations:
+    - api.md uses GraphQL schema — violates RULES.md §7: "REST only"
+      → Recommend: update api.md to align with the rule
 
     Duplication found:
     - "Auth token format" appears in both architecture.md §3.1 and api.md §2.2
@@ -282,21 +360,23 @@ Run this audit when the user requests it, or proactively suggest it after every 
     - api.md → links to auth.md which does not exist
       → Recommend: create auth.md or update the link
 
+    Pattern detected (T2 trigger):
+    - All specs define a "Single region only" constraint independently
+      → Propose adding to RULES.md §7 as a standing Project Convention?
+
     Apply all recommendations? (yes / select / skip)
     ```
 
-8. **Apply**: Only after user approval, apply the agreed changes. Update `INDEX.md` and `Document History` in affected files.
+10. **Apply**: Only after user approval, apply the agreed changes. Update `INDEX.md`, `RULES.md`, and `Document History` in affected files.
 
 ---
 
 ## Templates
 
-Use these templates to ensure consistency across all specification files.
-
 ### 1. Registry File Template (INDEX.md)
 
-- **Purpose**: Defines the project's specification registry and document hierarchy.
-- **Role**: CENTRAL DISPATCHER. Every new specification must be linked here.
+- **Purpose**: Central registry of all spec files and their current state.
+- **Role**: DISPATCHER. Every new specification must be linked here.
 
 ```markdown
 # Specifications Registry
@@ -311,9 +391,10 @@ Use these templates to ensure consistency across all specification files.
 This index serves as the central registry for all project specifications,
 detailing their relationships and current status.
 
-## Core Planning Files
+## System Files
 
-- [ROADMAP.md](ROADMAP.md) - Global project roadmap and prioritization strategy.
+- [ROADMAP.md](ROADMAP.md) - Live priority and phase tracker.
+- [RULES.md](RULES.md) - Project constitution and standing conventions.
 
 ## Domain Specifications
 
@@ -375,18 +456,85 @@ Strategic development plan prioritizing core features, resilience, and user expe
 - **Next Review**: {YYYY-MM-DD}
 ```
 
-### 3. Specification File Template ({name}.md)
+### 3. Constitution File Template (RULES.md)
 
-- **Naming**: Use lowercase, kebab-case. Examples:
-  - `architecture.md` (System Design)
-  - `api.md` (Interface Contracts)
-  - `database-schema.md` (Data Layer)
-  - `ui-components.md` (Frontend Design)
-- **Purpose**: Detailed specifications for specific logical domains.
-- **Rules**:
-  - **No Implementation Code**: Do not include actual code (Rust, TS, Python, etc.).
-  - **Structure**: Use `plaintext` blocks for directory trees.
-  - **Diagrams**: Use `mermaid` blocks for flows and architecture.
+- **Purpose**: Authoritative source of standing conventions for this project.
+- **Role**: Governs how all spec work is done. Read before every operation. Updated only via defined triggers.
+
+```markdown
+# Project Specification Rules
+
+**Version:** 1.0.0
+**Status:** Active
+
+---
+
+## Overview
+
+This file is the constitution of the specification system for this project.
+It defines standing rules and conventions that apply to all spec files.
+It is read by the agent before every operation and updated only via explicit triggers.
+
+---
+
+## 1. Naming Conventions
+
+- Spec files use lowercase kebab-case: `api.md`, `database-schema.md`, `ui-components.md`.
+- System files use uppercase: `INDEX.md`, `ROADMAP.md`, `RULES.md`.
+- Section names within specs are title-cased.
+
+## 2. Status Rules
+
+A spec may only change status when the following criteria are met:
+
+- **Draft → RFC**: the spec is complete enough for review; all required sections are filled.
+- **RFC → Stable**: the spec has been reviewed and approved; no open questions remain.
+- **Any → Deprecated**: the spec has been explicitly superseded; a replacement must be named.
+
+## 3. Versioning Rules
+
+- `patch` (0.0.X): typo fixes, wording clarifications — no structural or content change.
+- `minor` (0.X.0): new section added, or existing section meaningfully extended.
+- `major` (X.0.0): structural restructure, or a decision that changes the spec's scope.
+
+## 4. Formatting Rules
+
+- Use `plaintext` blocks for all directory trees.
+- Use `mermaid` blocks for all flow diagrams and architecture diagrams.
+- Do not use other diagram formats.
+
+## 5. Content Rules
+
+- No implementation code in spec files (no Rust, JS, Python, SQL, etc.).
+- Pseudo-code and logic flows are permitted where necessary.
+- Every spec must have an Overview, Motivation, and Document History section.
+
+## 6. Relations Rules
+
+- Every spec that depends on another must declare it in `Related Specifications`.
+- Cross-file content duplication is not permitted — use a link instead.
+- Circular dependencies between specs must be flagged and resolved.
+
+## 7. Project Conventions
+
+<!-- This section is populated automatically via RULES.md update triggers.    -->
+<!-- Do not edit manually. Propose changes through the agent using T1–T4.     -->
+
+*(No project-specific conventions defined yet.)*
+
+---
+
+## Document History
+
+| Version | Date       | Author | Description              |
+| :---    | :---       | :---   | :---                     |
+| 1.0.0   | YYYY-MM-DD | Agent  | Initial constitution     |
+```
+
+### 4. Specification File Template ({name}.md)
+
+- **Naming**: Use lowercase, kebab-case: `architecture.md`, `api.md`, `database-schema.md`.
+- **Rules**: No implementation code. `plaintext` for trees. `mermaid` for diagrams.
 
 ```markdown
 # {Specification Name}
@@ -457,7 +605,7 @@ Potential issues and alternative approaches considered.
 
 ## Core Files Initialization Scripts
 
-Use these scripts to automatically generate the initial `INDEX.md` and `ROADMAP.md` if they are missing.
+Use these scripts to automatically generate `INDEX.md`, `ROADMAP.md`, and `RULES.md` if they are missing.
 
 ### MacOS / Linux (Bash)
 
@@ -473,7 +621,6 @@ fi
 
 SPEC_DIR="docs/specifications"
 mkdir -p "$SPEC_DIR"
-
 DATE=$(date +%Y-%m-%d)
 
 # Create INDEX.md
@@ -491,9 +638,10 @@ cat <<EOF > "$SPEC_DIR/INDEX.md"
 This index serves as the central registry for all project specifications,
 detailing their relationships and current status.
 
-## Core Planning Files
+## System Files
 
-- [ROADMAP.md](ROADMAP.md) - Global project roadmap and prioritization strategy.
+- [ROADMAP.md](ROADMAP.md) - Live priority and phase tracker.
+- [RULES.md](RULES.md) - Project constitution and standing conventions.
 
 ## Domain Specifications
 
@@ -547,6 +695,80 @@ Strategic development plan prioritizing core features, resilience, and user expe
 EOF
 echo "Created ROADMAP.md"
 fi
+
+# Create RULES.md
+if [ ! -f "$SPEC_DIR/RULES.md" ]; then
+cat <<EOF > "$SPEC_DIR/RULES.md"
+# Project Specification Rules
+
+**Version:** 1.0.0
+**Status:** Active
+
+---
+
+## Overview
+
+This file is the constitution of the specification system for this project.
+It defines standing rules and conventions that apply to all spec files.
+It is read by the agent before every operation and updated only via explicit triggers.
+
+---
+
+## 1. Naming Conventions
+
+- Spec files use lowercase kebab-case: \`api.md\`, \`database-schema.md\`, \`ui-components.md\`.
+- System files use uppercase: \`INDEX.md\`, \`ROADMAP.md\`, \`RULES.md\`.
+- Section names within specs are title-cased.
+
+## 2. Status Rules
+
+A spec may only change status when the following criteria are met:
+
+- **Draft → RFC**: the spec is complete enough for review; all required sections are filled.
+- **RFC → Stable**: the spec has been reviewed and approved; no open questions remain.
+- **Any → Deprecated**: the spec has been explicitly superseded; a replacement must be named.
+
+## 3. Versioning Rules
+
+- \`patch\` (0.0.X): typo fixes, wording clarifications — no structural or content change.
+- \`minor\` (0.X.0): new section added, or existing section meaningfully extended.
+- \`major\` (X.0.0): structural restructure, or a decision that changes the spec's scope.
+
+## 4. Formatting Rules
+
+- Use \`plaintext\` blocks for all directory trees.
+- Use \`mermaid\` blocks for all flow diagrams and architecture diagrams.
+- Do not use other diagram formats.
+
+## 5. Content Rules
+
+- No implementation code in spec files (no Rust, JS, Python, SQL, etc.).
+- Pseudo-code and logic flows are permitted where necessary.
+- Every spec must have an Overview, Motivation, and Document History section.
+
+## 6. Relations Rules
+
+- Every spec that depends on another must declare it in \`Related Specifications\`.
+- Cross-file content duplication is not permitted — use a link instead.
+- Circular dependencies between specs must be flagged and resolved.
+
+## 7. Project Conventions
+
+<!-- This section is populated automatically via RULES.md update triggers.    -->
+<!-- Do not edit manually. Propose changes through the agent using T1-T4.     -->
+
+*(No project-specific conventions defined yet.)*
+
+---
+
+## Document History
+
+| Version | Date       | Author | Description          |
+| :---    | :---       | :---   | :---                 |
+| 1.0.0   | $DATE      | Agent  | Initial constitution |
+EOF
+echo "Created RULES.md"
+fi
 ```
 
 ### Windows (PowerShell)
@@ -581,9 +803,10 @@ if (!(Test-Path -Path $IndexPath)) {
 This index serves as the central registry for all project specifications,
 detailing their relationships and current status.
 
-## Core Planning Files
+## System Files
 
-- [ROADMAP.md](ROADMAP.md) - Global project roadmap and prioritization strategy.
+- [ROADMAP.md](ROADMAP.md) - Live priority and phase tracker.
+- [RULES.md](RULES.md) - Project constitution and standing conventions.
 
 ## Domain Specifications
 
@@ -639,5 +862,81 @@ Strategic development plan prioritizing core features, resilience, and user expe
 "@
     Set-Content -Path $RoadmapPath -Value $RoadmapContent -Encoding UTF8
     Write-Host "Created ROADMAP.md"
+}
+
+# Create RULES.md
+$RulesPath = Join-Path $SpecDir "RULES.md"
+if (!(Test-Path -Path $RulesPath)) {
+    $RulesContent = @"
+# Project Specification Rules
+
+**Version:** 1.0.0
+**Status:** Active
+
+---
+
+## Overview
+
+This file is the constitution of the specification system for this project.
+It defines standing rules and conventions that apply to all spec files.
+It is read by the agent before every operation and updated only via explicit triggers.
+
+---
+
+## 1. Naming Conventions
+
+- Spec files use lowercase kebab-case: `api.md`, `database-schema.md`, `ui-components.md`.
+- System files use uppercase: `INDEX.md`, `ROADMAP.md`, `RULES.md`.
+- Section names within specs are title-cased.
+
+## 2. Status Rules
+
+A spec may only change status when the following criteria are met:
+
+- **Draft -> RFC**: the spec is complete enough for review; all required sections are filled.
+- **RFC -> Stable**: the spec has been reviewed and approved; no open questions remain.
+- **Any -> Deprecated**: the spec has been explicitly superseded; a replacement must be named.
+
+## 3. Versioning Rules
+
+- patch (0.0.X): typo fixes, wording clarifications, no structural or content change.
+- minor (0.X.0): new section added, or existing section meaningfully extended.
+- major (X.0.0): structural restructure, or a decision that changes the spec's scope.
+
+## 4. Formatting Rules
+
+- Use plaintext blocks for all directory trees.
+- Use mermaid blocks for all flow diagrams and architecture diagrams.
+- Do not use other diagram formats.
+
+## 5. Content Rules
+
+- No implementation code in spec files (no Rust, JS, Python, SQL, etc.).
+- Pseudo-code and logic flows are permitted where necessary.
+- Every spec must have an Overview, Motivation, and Document History section.
+
+## 6. Relations Rules
+
+- Every spec that depends on another must declare it in Related Specifications.
+- Cross-file content duplication is not permitted — use a link instead.
+- Circular dependencies between specs must be flagged and resolved.
+
+## 7. Project Conventions
+
+<!-- This section is populated automatically via RULES.md update triggers.  -->
+<!-- Do not edit manually. Propose changes through the agent using T1-T4.   -->
+
+*(No project-specific conventions defined yet.)*
+
+---
+
+## Document History
+
+| Version | Date       | Author | Description          |
+| :---    | :---       | :---   | :---                 |
+| 1.0.0   | $Date      | Agent  | Initial constitution |
+"@
+    Set-Content -Path $RulesPath -Value $RulesContent -Encoding UTF8
+    Write-Host "Created RULES.md"
 }
 ```
