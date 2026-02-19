@@ -9,10 +9,17 @@ AssetManifest(
     audio: {
         "click": "audio/click.ogg",
         "hover": "audio/select.ogg",
+        "back": "audio/back.ogg",
+        "close": "audio/close.ogg",
+        "open": "audio/open.ogg",
+        "toggle": "audio/toggle.ogg",
+        "select": "audio/select.ogg",
+        "switch": "audio/switch.ogg",
+        "error": "audio/error.ogg",
         "music_menu": "audio/open.ogg",
     },
     branding: {
-        "splash_logo": "textures/logo_planetarium.png",
-        "background_menu": "textures/logo_planetarium.png",
+        "splash_logo": "textures/logo.png",
+        "background_menu": "textures/logo.png",
     },
 )
