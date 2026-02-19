@@ -19,32 +19,6 @@ docs/
     └── ...
 ```
 
-## System Files (UPPERCASE)
-
-System files are administrative and must always exist.
-
-### 1. INDEX.md
-
-- **Purpose**: Acts as a dispatcher/registry.
-- **Content**: Aggregates information about all `{specification-name}.md` files and defines their logical relationships.
-
-### 2. ROADMAP.md
-
-- **Purpose**: Defines the development plan and priorities.
-- **Content Examples**:
-  - **Phase 1: Core Foundation (P0)**
-  - **Phase 2: Resilience & Security (P1)**
-  - **Phase 3: Visual Polish & UX (P2)**
-
-## Content Files (lowercase)
-
-- **Naming**: Use lowercase, kebab-case. Examples:
-  - `architecture.md` (System Design)
-  - `api.md` (Interface Contracts)
-  - `database-schema.md` (Data Layer)
-  - `ui-components.md` (Frontend Design)
-- **Purpose**: Detailed specifications for specific logical domains.
-
 ## Workflow Steps
 
 1. **Context Analysis**: Determine the domain of the new specification.
@@ -62,36 +36,10 @@ System files are administrative and must always exist.
 
 Use these templates to ensure consistency across all specification files.
 
-### Standard File Structure (Universal)
-
-All files in `docs/specifications/` must follow this general structure:
-
-```markdown
-# {Title}
-
-**Version:** {X.Y.Z}
-**Status:** {Draft | Active | Stable | Deprecated}
-
----
-
-## Overview
-
-{Brief description of the file's purpose}
-
-## {Content}
-
-...
-
----
-
-## Meta Information
-
-- **Maintainer**: {Role/Team}
-- **License**: MIT
-- **Last Updated**: {YYYY-MM-DD}
-```
-
 ### 1. INDEX.md (System File)
+
+- **Purpose**: Acts as a dispatcher/registry.
+- **Content**: Aggregates information about all `{specification-name}.md` files and defines their logical relationships.
 
 ```markdown
 # Specifications Registry
@@ -111,8 +59,6 @@ This index serves as the central registry for all project specifications, detail
 
 ## Domain Specifications
 
-## Domain Specifications
-
 - [api-gateway.md](api-gateway.md) - API endpoints and authentication flow.
 - [database-schema.md](database-schema.md) - SQL structure and migrations.
 - [ui-system.md](ui-system.md) - Design system and component library.
@@ -127,6 +73,12 @@ This index serves as the central registry for all project specifications, detail
 ```
 
 ### 2. ROADMAP.md (System File)
+
+- **Purpose**: Defines the development plan and priorities.
+- **Content Examples**:
+  - **Phase 1: Core Foundation (P0)** (e.g. MVP, Basic Infrastructure)
+  - **Phase 2: Resilience & Security (P1)** (e.g. Error Handling, Auth, Validation)
+  - **Phase 3: Visual Polish & UX (P2)** (e.g. Optimizations, Animations)
 
 ```markdown
 # Project Roadmap
@@ -159,6 +111,13 @@ Strategic development plan prioritizing core features, resilience, and user expe
 ```
 
 ### 3. Specification File Template ({name}.md)
+
+- **Naming**: Use lowercase, kebab-case. Examples:
+  - `architecture.md` (System Design)
+  - `api.md` (Interface Contracts)
+  - `database-schema.md` (Data Layer)
+  - `ui-components.md` (Frontend Design)
+- **Purpose**: Detailed specifications for specific logical domains.
 
 ```markdown
 # {Specification Name}
