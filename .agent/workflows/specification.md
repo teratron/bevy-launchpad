@@ -15,6 +15,22 @@ This workflow defines a universal, technology-agnostic process for creating and 
 3. **Universal Applicability**: This workflow is stack-agnostic. Adapt the content (APIs, DBs, UI) to the user's technology, but keep the *structure* rigid.
 4. **Automation**: If system files are missing, offer to run the **Initialization Scripts** immediately.
 
+## Update Workflow
+
+When modifying an existing specification:
+
+1. **Versioning**: Increment version (patch = fix, minor = new section, major = breaking restructure).
+2. **History**: Append a row to the `Document History` table.
+3. **Registry**: Update `Last Updated` in `INDEX.md`.
+4. **Status**: If status changes (e.g., Draft → Stable), update the entry in `INDEX.md`.
+
+## Status Lifecycle
+
+- **Draft**: Work in progress, not ready for review.
+- **RFC**: (Request for Comments) Ready for team review, open for feedback.
+- **Stable**: Approved, implementation can begin.
+- **Deprecated**: Superseded by another spec, kept for history.
+
 ## Directory Structure
 
 The specification documentation follows this structure:
@@ -68,9 +84,11 @@ This index serves as the central registry for all project specifications, detail
 
 ## Domain Specifications
 
-- [api-gateway.md](api-gateway.md) - API endpoints and authentication flow.
-- [database-schema.md](database-schema.md) - SQL structure and migrations.
-- [ui-system.md](ui-system.md) - Design system and component library.
+| File | Description | Status | Version |
+| :--- | :--- | :--- | :--- |
+| [api-gateway.md](api-gateway.md) | API endpoints and authentication flow | Stable | 1.0.0 |
+| [database-schema.md](database-schema.md) | SQL structure and migrations | Draft | 0.1.0 |
+| [ui-system.md](ui-system.md) | Design system and component library | RFC | 0.8.0 |
 
 ---
 
@@ -141,6 +159,11 @@ Strategic development plan prioritizing core features, resilience, and user expe
 
 Brief summary of the specification's purpose and scope.
 
+## Related Specifications
+
+- [database-schema.md](database-schema.md) - Dependency
+- [auth.md](auth.md) - Context
+
 ## 1. Motivation
 
 Why is this specification needed? What problems does it solve?
@@ -172,6 +195,11 @@ graph TD;
 ## 3. Drawbacks & Alternatives
 
 Potential issues and alternative approaches considered.
+
+## 4. Constraints & Assumptions
+
+- **Constraints**: List of hard technical limitations (e.g., "Must run on 512MB RAM").
+- **Assumptions**: Key decisions made (e.g., "User is always authenticated").
 
 ---
 
@@ -217,7 +245,9 @@ This index serves as the central registry for all project specifications, detail
 
 ## Domain Specifications
 
-<!-- Add your specifications here -->
+| File | Description | Status | Version |
+| :--- | :--- | :--- | :--- |
+| <!-- [file.md](file.md) --> | <!-- Desc --> | <!-- Draft --> | <!-- 0.1.0 --> |
 
 ---
 
@@ -294,7 +324,9 @@ This index serves as the central registry for all project specifications, detail
 
 ## Domain Specifications
 
-<!-- Add your specifications here -->
+| File | Description | Status | Version |
+| :--- | :--- | :--- | :--- |
+| <!-- [file.md](file.md) --> | <!-- Desc --> | <!-- Draft --> | <!-- 0.1.0 --> |
 
 ---
 
