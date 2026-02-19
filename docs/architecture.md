@@ -25,26 +25,27 @@
 
 ---
 
-## 2. System Architecture (The "Split")
+## 2. System Architecture (The Layered Model)
 
-Архитектура строится на четком разделении ответственности между "ядром" (библиотекой) и "игровым наполнением".
+Архитектура строится на 4-уровневой модели, обеспечивающей максимальную изоляцию инфраструктуры от логики игры.
 
-### 2.1 Launchpad (Infrastructure Layer)
+### 2.1 Layered Structure
 
-Этот слой берет на себя все неигровые процессы:
+- **L1: Engine Foundation**: Bevy ECS, Рендеринг, Window Management.
+- **L2: Launchpad Infrastructure**: Управление состояниями (FSM), Orchestrator, Локализация, UI Core.
+- **L3: Game Services (Shared)**: Системы, специфичные для игр, но общие по логике: Save System, Input Map, Achievements, Analytics.
+- **L4: Game Logic (User)**: Gameplay Systems, Custom States, ассеты конкретного уровня.
 
-- **Bootstrapping**: Инициализация движка, конфигов и логирования.
-- **Service Integration**: Работа с сетью, проверка обновлений.
-- **Core UI**: Главное меню, экран настроек, меню паузы.
-- **Management**: Управление темами, локализацией и профилями.
+### 2.2 Responsibility Split & API Contract
 
-### 2.2 Game Logic (Feature Layer)
+Launchpad (L2) предоставляет *интерфейсы* и *движок*, L3 предоставляет *сервисы*, а L4 (Игра) — *реализацию* и контент.
 
-Слой, реализуемый разработчиком игры:
-
-- **Gameplay States**: Игровые состояния (InGame, LevelSelect).
-- **Core Loops**: Игровые системы (бой, перемещение).
-- **Custom Assets**: Ресурсы, специфичные для геймплея.
+| Категория | Launchpad Infrastructure (L2) | Game Services (L3) | Game Logic (L4) |
+| :--- | :--- | :--- | :--- |
+| **Boot** | Plugin Setup, Path Resolution. | Profile Loading. | Game Setup. |
+| **Logic** | AppState FSM. | Input Mapping, Save Management. | Systems, Loops. |
+| **UI** | Core Layouts, Themes. | HUD Widgets, Modals. | Level UI. |
+| **Assets** | Orchestration Logic. | Asset Manifests. | Custom Models/Textures. |
 
 ### 2.3 Resource & Config Ownership
 
@@ -66,18 +67,44 @@
 
 ---
 
-## 3. Technical Implementation Patterns
+## 3. Project Structure
 
-### 3.1 ECS & State Management
+Физическая организация проекта отражает его слоистую архитектуру:
+
+```plaintext
+bevy-launchpad/
+├── docs/                       # Документация и архитектурные схемы
+├── examples/                   # Примеры интеграции (от уровня 1 до уровня 3)
+├── src/                        # Исходный код основной библиотеки
+└── assets/                     # Стандартные ресурсы Launchpad
+    ├── locales/                # Система локализации
+    │   ├── en-US/              # Английский (США)
+    │   │   ├── text/
+    │   │   │   └── menu.ftl    # Файлы Fluent
+    │   │   └── audio/          # Региональная озвучка
+    │   └── ru-RU/              # Русский (Россия)
+    ├── configs/
+    │   └── default.ron         # Базовый конфиг (AppConfig)
+    ├── textures/
+    │   └── brand/              # Логотипы и заставки
+    └── manifests/
+        └── core.assets.ron     # Манифесты для оркестратора
+```
+
+---
+
+## 4. Technical Implementation Patterns
+
+### 4.1 ECS & State Management
 
 Управление сценами и данными в Launchpad полностью интегрировано в систему состояний Bevy.
 
-- **State-Driven FSM**: `AppState` контролирует жизненный цикл, очистку памяти и планирование систем.
-- **StateScoped Entities**: Использование компонентов для автоматического деспауна сущностей при выходе из состояния.
-- **Scene Controller**: Каждое состояние управляет своим контейнером данных (Сценой). При входе — асинхронная загрузка, при выходе — выгрузка для экономии RAM/VRAM.
-- **Global Event Bus**: Использование децентрализованной системы событий (напр., `SystemEvent`) для общения модулей без жестких связей (`AppExit`, `ConfigReload`, `SystemAlert`).
+- **Scene Controller**: Каждое состояние управляет своим контейнером данных (Сценой). При входе — асинхронная загрузка, при выходе — выгрузка.
+- **Global Event Bus**: Децентрализованное общение через `SystemEvent`.
+- **Save System Architecture**: Слой сериализации (Reflect/Serde) с поддержкой **Version Guard** (миграция данных) и проверкой целостности (Checksum).
+- **Input Management**: Анонимная система "Action-based" ввода, работающая через маппинги, а не прямые клавиши.
 
-### 3.2 Asset Orchestration (AAA Approach)
+### 4.2 Asset Orchestration (AAA Approach)
 
 Система управляет тысячами ассетов через манифесты и теги.
 
@@ -86,7 +113,7 @@
 - **Orchestrator**: Обрабатывает зависимости и обеспечивает оптимизированную загрузку (включая предварительную компиляцию шейдеров/текстур для GPU).
 - **Embedded Resources (In-binary)**: Критически важные ассеты (шрифт для ошибок, базовые иконки) вшиваются в бинарный файл (`include_bytes!`), чтобы система могла работать даже при повреждении папки `assets/`.
 
-### 3.3 Localization System
+### 4.3 Localization System
 
 Использование **Project Fluent** для масштабируемых переводов.
 
@@ -96,11 +123,20 @@
 - **Audio Locales**: Поддержка региональных аудиофайлов внутри структуры локали.
 - **Fallback**: Автоматический откат к English (en-US) при отсутствии перевода.
 
+### 4.4 API Contract: LaunchpadBuilder
+
+Ключевая точка входа для пользователя. Все взаимодействия с либой проходят через `LaunchpadBuilder`:
+
+- `register_states()`: Регистрация кастомных состояний игры.
+- `add_manifest()`: Подключение игровых ассетов.
+- `configure_ux()`: Настройка переходов и визуального стиля.
+Это обеспечивает явную зависимость и предсказуемую инициализацию.
+
 ---
 
-## 4. Application Lifecycle & Stages
+## 5. Application Lifecycle & Stages
 
-### 4.1 Launch Sequence Overview
+### 5.1 Launch Sequence Overview
 
 ```mermaid
 graph TD
@@ -142,34 +178,36 @@ graph TD
     Error -->|Восстановление| MainMenu
 ```
 
-### 4.2 Stage Descriptions
+### 5.2 Stage Descriptions
 
 1. **Initialization (Booting)**:
    - **First Launch Logic**: Проверка наличия конфигов в системных папках (`%APPDATA%`). Если файлов нет, система автоматически инициализирует окружение из шаблонов `assets/configs/`.
    - **Environment Setup**: Определение путей, считывание `AppMetadata` из `Cargo.toml`, проверка **Single Instance Lock**.
-2. **Branding (Splash)**: Последовательность заставок. Любая заставка может быть пропущена через 1 секунду после начала нажатием любой клавиши или кликом.
-3. **Interaction (MainMenu)**: Главный узел управления. Поддержка гибких фонов (2D/Video/3D).
-4. **Preparation (Loading)**: Процесс оркестрации. Прогресс-бар должен отображать числовой процент и название текущей группы загружаемых ассетов (напр., "Loading Shaders... 45%").
+2. **Branding (Splash)**: Последовательность заставок. Пропуск по времени или клику.
+3. **Interaction (MainMenu)**: "Safe Haven" стейт. Узел навигации и настроек.
+4. **Preparation (Loading)**: Асинхронная оркестрация. **ProgressReporter** агрегирует данные от систем и вычисляет взвешенный прогресс загрузки.
 5. **Active (InGame)**: Основной цикл. Включает подсостояние `Paused`.
+6. **Transitions (Cross-cutting)**: Слой переходов, который синхронизирует анимацию (Fade) с готовностью ассетов. Если загрузка завершена быстрее анимации — переход ждет завершения визуального эффекта.
 
-### 4.3 Auto-Update Workflow
+### 5.3 Auto-Update Workflow
 
-1. **Check**: Сравнение версии в `Cargo.toml` с удаленным манифестом.
-2. **Download**: Асинхронная загрузка патча.
-3. **Patch**: Замена файлов и перезапуск.
+1. **Check**: Сравнение версий.
+2. **Security**: Верификация криптографической подписи патча и контрольных сумм.
+3. **Atomic Patch**: Применение обновлений в изолированном каталоге с последующим атомарным переключением.
+4. **Rollback Strategy**: Автоматический откат к предыдущей стабильной версии при сбое верификации или патчинга.
 
 ---
 
-## 5. User Interface & Experience
+## 6. User Interface & Experience
 
-### 5.1 Menu Hierarchy & UI Principles
+### 6.1 Menu Hierarchy & UI Principles
 
 - **Navigation Stack**: Либа отслеживает историю переходов для работы кнопки "Back" и клавиши ESC.
 - **Confirmation Flow**: Критические действия (выход, удаление) требуют подтверждения.
 - **Settings Commitment**: Изменения применяются явно через "Apply" или сбрасываются через "Reset".
 - **Save/Load Logic**: Логика выбора слотов и отображение метаданных (время игры, дата, скриншот) реализуется внутри сервисов меню.
 
-### 5.2 Layering & Z-Order
+### 6.2 Layering & Z-Order
 
 Строгая иерархия слоев гарантирует корректное перекрытие элементов:
 
@@ -179,7 +217,7 @@ graph TD
 - **Settings/Modals (300-499)**: Поверх всех меню.
 - **Error/Debug (500+)**: Высший приоритет.
 
-### 5.3 Transitions & Visual Polish
+### 6.3 Transitions & Visual Polish
 
 - **Effects**: Fade (затухание), Vignette (виньетка), Blur (размытие при паузе).
 - **Seamless Flow**: Смена стейтов Bevy происходит в момент полного перекрытия экрана эффектом (Full Screen Black/White).
@@ -187,7 +225,7 @@ graph TD
 
 - **Camera Control**: Автоматическое переключение между Orthographic и Perspective камерами в зависимости от типа фона.
 
-### 5.5 UI Framework Tech Stack
+### 6.5 UI Framework Tech Stack
 
 Для максимальной совместимости и производительности Launchpad использует стандартный стек `bevy_ui`:
 
@@ -195,7 +233,7 @@ graph TD
 - **Interactivity**: Использование стандартных состояний Bevy `Interaction` (Pressed, Hovered, None) для всех элементов ввода.
 - **Data-Driven Styling**: Стилизация элементов (цвета, отступы, шрифты) вынесена в ресурсы тем.
 
-### 5.6 Interaction Standards (Juiciness)
+### 6.6 Interaction Standards (Juiciness)
 
 Для достижения "AAA feel" интерфейс должен быть отзывчивым и живым:
 
@@ -205,22 +243,22 @@ graph TD
 
 ---
 
-## 6. Infrastructure & Reliability
+## 7. Infrastructure & Reliability
 
-### 6.1 Error Recovery & Stability
+### 7.1 Error Recovery & Stability
 
 - **Global Error Overlay**: Только для критических непереносимых ошибок.
 - **Asset Fallback**: При отсутствии ресурса — заглушка (Pink Square) и запись в лог вместо падения.
 - **Transition Safety**: При сбое переключения состояний система делает запись `ERROR` и принудительно возвращает игрока в `MainMenu` вместо аварийного завершения.
 - **Crash Reporting**: Сбор Stack Trace и диагностика при `Panic`.
 
-### 6.2 Configuration & Metadata
+### 7.2 Configuration & Metadata
 
 - **AppConfig**: Системные параметры (заголовок окна, организация, запуск нескольких копий).
 - **AppMetadata**: Статическая информация (версия, авторы, репозиторий).
 - **Version Guard (Migration)**: Все файлы настроек содержат поле `version`. При обновлении библиотеки система выполняет «неразрушающее слияние», сохраняя пользовательские данные.
 
-### 6.3 Logging Standards & Diagnostics
+### 7.3 Logging Standards & Diagnostics
 
 Для прозрачности работы каждый модуль должен предоставлять четкую обратную связь через систему логирования Bevy.
 
@@ -234,16 +272,25 @@ graph TD
   - **Dev**: Включены все уровни логирования, статистика ECS, FPS.
   - **Prod**: Логирование ограничено только важными событиями (`info!`) и ошибками (`error!`).
 
-### 6.4 Live Configuration (Hot-Reloading)
+### 7.4 Live Configuration (Hot-Reloading)
 
 Launchpad поддерживает "живое" обновление параметров без перезапуска:
 
 - **File Watchers**: Постоянное наблюдение за изменениями в `default.ron` и манифестах ассетов.
 - **Reactive Updates**: При сохранении файла генерируется `ConfigChangedEvent`, который заставляет системы (аудио, видео, UI) немедленно применить новые значения.
 
+### 7.5 Accessibility (Доступность)
+
+AAA-стандарт требует поддержки альтернативных способов взаимодействия:
+
+- **High Contrast**: Режим повышенной контрастности для UI.
+- **Font Scaling**: Динамическое изменение размера шрифта без поломки верстки Taffy.
+- **Screen Reader Hooks**: Подготовка компонентов к интеграции с экранными дикторами.
+- **Color Blind Modes**: Палитры для людей с особенностями цветовосприятия.
+
 ---
 
-## 7. Developer Experience
+## 8. Developer Experience
 
 - **CLI Arguments**: Поддержка флагов `--skip-splash`, `--state=<StateName>` для ускорения разработки.
 - **Debug Overlay**: Диагностический слой (State-independent, вызывается по `F1` или `~`), отображающий FPS, память и логи поверх любого экрана.
@@ -251,7 +298,7 @@ Launchpad поддерживает "живое" обновление парам�
 
 ---
 
-## 8. AAA Quality Standards (Checklist)
+## 9. AAA Quality Standards (Checklist)
 
 Эти требования обязательны для реализации в рамках Launchpad для достижения "feel & polish" уровня AAA:
 
@@ -266,24 +313,26 @@ Launchpad поддерживает "живое" обновление парам�
 
 ---
 
-## 9. Appendix: Project Structure
+## 10. Roadmap & Prioritization
 
-```plaintext
-bevy-launchpad/
-├── docs/                       # Документация и архитектурные схемы
-├── examples/                   # Примеры интеграции (от уровня 1 до уровня 3)
-├── src/                        # Исходный код основной библиотеки
-└── assets/                     # Стандартные ресурсы Launchpad
-    ├── locales/                # Система локализации
-    │   ├── en-US/              # Английский (США)
-    │   │   ├── text/
-    │   │   │   └── menu.ftl    # Файлы Fluent
-    │   │   └── audio/          # Региональная озвучка
-    │   └── ru-RU/              # Русский (Россия)
-    ├── configs/
-    │   └── default.ron         # Базовый конфиг (AppConfig)
-    ├── textures/
-    │   └── brand/              # Логотипы и заставки
-    └── manifests/
-        └── core.assets.ron     # Манифесты для оркестратора
-```
+План развития фреймворка, основанный на критичности и сложности блоков:
+
+### Phase 1: Core Foundation (P0)
+
+- **LaunchpadBuilder**: Реализация публичного API контракта.
+- **Input System**: Переход на Action-based маппинги.
+- **Save System**: База сериализации и Version Guard.
+
+### Phase 2: Resilience & Security (P1)
+
+- **Update Verification**: Подписи и контрольные суммы.
+- **Safe Haven Logic**: Отказоустойчивость стейтов.
+- **Graduated Error Handling**: Модалки, тосты и баннеры.
+
+### Phase 3: Visual Polish & UX (P2)
+
+- **Transition Orchestrator**: Синхронизация ассетов и анимаций.
+- **Theme Engine**: Гибкая стилизация через RON.
+- **Accessibility**: Базовые инструменты доступности.
+
+---
