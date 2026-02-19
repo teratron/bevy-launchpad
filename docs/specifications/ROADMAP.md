@@ -1,6 +1,6 @@
 # Project Roadmap
 
-**Version:** 1.1.0
+**Version:** 1.2.0
 **Status:** Active
 
 ---
@@ -27,9 +27,12 @@ Strategic development plan prioritizing core features, resilience, and user expe
 ## Phase 3: Visual Polish & UX (P2)
 
 - **Gameplay Config** (`gameplay-config.md`): Gameplay balance, physics constants and hot-reload. Status: `Draft`
-- **Transition Orchestrator**: Synchronizing asset loading with visual transitions. Status: `Backlog`
-- **Theme Engine**: Flexible UI styling via RON configuration. Status: `Backlog`
-- **Accessibility**: High contrast, font scaling and screen reader base. Status: `Backlog`
+
+## Backlog (Unprioritized)
+
+- **Transition Orchestrator** *(no spec yet)*: Синхронизация загрузки ассетов с визуальными переходами.
+- **Theme Engine** *(no spec yet)*: Гибкая стилизация UI через RON-конфигурацию.
+- **Accessibility** *(no spec yet)*: Высокий контраст, масштабирование шрифтов, base screen reader.
 
 ---
 

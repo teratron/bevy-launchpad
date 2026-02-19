@@ -1,6 +1,6 @@
 # Specifications Registry
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Status:** Active
 
 ---
@@ -10,9 +10,10 @@
 This index serves as the central registry for all project specifications,
 detailing their relationships and current status.
 
-## Core Planning Files
+## System Files
 
-- [ROADMAP.md](ROADMAP.md) - Global project roadmap and prioritization strategy.
+- [ROADMAP.md](ROADMAP.md) - Live priority and phase tracker.
+- [RULES.md](RULES.md) - Project constitution and standing conventions.
 
 ## Domain Specifications
 

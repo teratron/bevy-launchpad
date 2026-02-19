@@ -1,7 +1,8 @@
 # Main Menu
 
-**Version:** 0.3.0
+**Version:** 0.3.1
 **Status:** Draft
+**Roadmap Phase:** Phase 2
 
 ---
 
@@ -63,3 +64,4 @@ graph TD
 | 0.1.0   | 2026-02-19 | Agent  | Initial Draft |
 | 0.2.0   | 2026-02-19 | Agent  | Added SettingsOpen sub-state detail |
 | 0.3.0   | 2026-02-19 | Agent  | Integrated Asset Manifest requirements |
+| 0.3.1   | 2026-02-19 | Agent  | Added Roadmap Phase field              |

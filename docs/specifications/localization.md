@@ -1,7 +1,8 @@
 # Localization Specification
 
-**Version:** 0.2.0
+**Version:** 0.2.1
 **Status:** Draft
+**Roadmap Phase:** Phase 2
 
 ---
 
@@ -47,3 +48,4 @@
 | :---    | :---       | :---   | :---          |
 | 0.1.0   | 2026-02-19 | Agent  | Initial Draft |
 | 0.2.0   | 2026-02-19 | Agent  | Added Key Registry and Fallback details |
+| 0.2.1   | 2026-02-19 | Agent  | Added Roadmap Phase field               |

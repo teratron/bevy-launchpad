@@ -1,7 +1,8 @@
 # Input System
 
-**Version:** 0.1.0
+**Version:** 0.1.1
 **Status:** Draft
+**Roadmap Phase:** Phase 1
 
 ---
 
@@ -35,3 +36,4 @@ Action-based input management system for Bevy Launchpad.
 | Version | Date       | Author | Description   |
 | :---    | :---       | :---   | :---          |
 | 0.1.0   | 2026-02-19 | Agent  | Initial Draft |
+| 0.1.1   | 2026-02-19 | Agent  | Added Roadmap Phase field |

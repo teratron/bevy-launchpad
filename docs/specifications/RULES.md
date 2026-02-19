@@ -1,6 +1,6 @@
 # Project Specification Rules
 
-**Version:** 1.0.0
+**Version:** 1.2.0
 **Status:** Active
 
 ---
@@ -43,7 +43,8 @@ A spec may only change status when the following criteria are met:
 
 - No implementation code in spec files (no Rust, JS, Python, SQL, etc.).
 - Pseudo-code and logic flows are permitted where necessary.
-- Every spec must have an Overview, Motivation, and Related Specifications section.
+- Every spec must have: Overview, Motivation, and Document History sections.
+- Related Specifications is required only if the spec depends on another spec.
 
 ## 6. Relations Rules
 
@@ -53,8 +54,14 @@ A spec may only change status when the following criteria are met:
 
 ## 7. Project Conventions
 
-- **Language**: All documentation must be in **English/Russian** mixed mode (Russian for content, English for structure/headers is acceptable as per current state).
-- **Paths**: Use `assets/` relative paths in documentation.
+- **Language**: Spec structure (headers, field names, status values) is always in **English**.
+  Content sections (descriptions, design rationale) may be written in **Russian**.
+  Both languages may coexist within the same file.
+- **Config Format**: RON (Rusty Object Notation) is the standard format
+  for all configuration files in this project (`settings.ron`, `gameplay.ron`, `assets.ron`).
+- **Asset Path Resolution**: Asset directory is always resolved at runtime
+  via the executable's location (`current_exe()`), not the working directory.
+  This must be documented in any spec that references file paths.
 
 ---
 
@@ -62,4 +69,6 @@ A spec may only change status when the following criteria are met:
 
 | Version | Date       | Author | Description              |
 | :---    | :---       | :---   | :---                     |
-| 1.0.0   | 2026-02-19 | Agent  | Initial constitution     |
+| 1.0.0 | 2026-02-19 | Agent | Initial constitution |
+| 1.1.0 | 2026-02-19 | Agent | Clarified Language Convention and Content Rules |
+| 1.2.0 | 2026-02-19 | Agent | Added RON and Path conventions (T2 trigger) |

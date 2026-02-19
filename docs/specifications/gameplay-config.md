@@ -1,7 +1,8 @@
 # Gameplay Configuration Pattern
 
-**Version:** 0.1.0
+**Version:** 0.2.1
 **Status:** Draft
+**Roadmap Phase:** Phase 3
 
 ---
 
@@ -34,15 +35,13 @@ AAA-проекты требуют выноса балансовых значен
 
 Библиотека предоставляет систему автоматической десериализации `gameplay.ron` в типизированный ресурс Bevy:
 
-```rust
-// Пример использования в Game Logic (L4)
-fn move_player(
-    config: Res<GameplayConfig>, // Автоматически загруженный ресурс
-    mut query: Query<&mut Velocity>,
-) {
-    let gravity = config.physics.gravitational_constant;
-    // ... логика
-}
+```
+ECS Integration — pseudo-logic:
+
+system move_player:
+  input:  GameplayConfig resource (physics.gravitational_constant)
+  input:  Query<Velocity> — all entities with velocity component
+  action: apply gravitational_constant to each entity's vertical velocity
 ```
 
 ### 2.3 Hot-Reloading
@@ -55,4 +54,6 @@ fn move_player(
 
 | Version | Date       | Author | Description   |
 | :---    | :---       | :---   | :---          |
-| 0.1.0   | 2026-02-19 | Agent  | Initial Draft |
+| 0.1.0 | 2026-02-19 | Agent | Initial Draft |
+| 0.2.0 | 2026-02-19 | Agent | Replaced Rust code with pseudo-logic (RULES §5) |
+| 0.2.1 | 2026-02-19 | Agent | Added Roadmap Phase field |

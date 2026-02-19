@@ -1,7 +1,8 @@
 # Settings Data Schema (RON)
 
-**Version:** 1.0.0
+**Version:** 1.0.1
 **Status:** Stable
+**Roadmap Phase:** Phase 1
 
 ---
 
@@ -65,3 +66,4 @@
 | Version | Date       | Author | Description   |
 | :---    | :---       | :---   | :---          |
 | 1.0.0   | 2026-02-19 | Agent  | Initial export from settings.toml |
+| 1.0.1   | 2026-02-19 | Agent  | Added Roadmap Phase field         |

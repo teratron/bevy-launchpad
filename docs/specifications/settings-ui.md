@@ -1,7 +1,8 @@
 # Settings System (UI/UX)
 
-**Version:** 0.3.0
+**Version:** 0.3.1
 **Status:** Draft
+**Roadmap Phase:** Phase 2
 
 ---
 
@@ -66,3 +67,4 @@ graph TD
 | 0.1.0   | 2026-02-19 | Agent  | Initial Draft |
 | 0.2.0   | 2026-02-19 | Agent  | Added UI/UX flow and widgets details |
 | 0.3.0   | 2026-02-19 | Agent  | Integrated SettingChangedEvent and UI Sync logic |
+| 0.3.1   | 2026-02-19 | Agent  | Added Roadmap Phase field                        |

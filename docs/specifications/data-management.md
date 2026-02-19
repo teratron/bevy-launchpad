@@ -1,7 +1,8 @@
 # Data Management & Assets
 
-**Version:** 0.3.0
+**Version:** 0.3.1
 **Status:** Draft
+**Roadmap Phase:** Phase 1
 
 ---
 
@@ -60,3 +61,4 @@ Specification for asset management, persistence, and application configuration.
 | 0.1.0   | 2026-02-19 | Agent  | Initial Draft |
 | 0.2.0   | 2026-02-19 | Agent  | Added Base Path and Fallbacks details |
 | 0.3.0   | 2026-02-19 | Agent  | Added Asset Manifest Schema from assets.ron |
+| 0.3.1   | 2026-02-19 | Agent  | Added Roadmap Phase field                   |
