@@ -14,22 +14,8 @@ This workflow defines a universal, technology-agnostic process for creating and 
 2. **Structure First**: Always verify `docs/specifications/INDEX.md` and `ROADMAP.md` exist before creating a new spec.
 3. **Universal Applicability**: This workflow is stack-agnostic. Adapt the content (APIs, DBs, UI) to the user's technology, but keep the *structure* rigid.
 4. **Automation**: If system files are missing, offer to run the **Initialization Scripts** immediately.
-
-## Update Workflow
-
-When modifying an existing specification:
-
-1. **Versioning**: Increment version (patch = fix, minor = new section, major = breaking restructure).
-2. **History**: Append a row to the `Document History` table.
-3. **Registry**: Update `Last Updated` in `INDEX.md`.
-4. **Status**: If status changes (e.g., Draft → Stable), update the entry in `INDEX.md`.
-
-## Status Lifecycle
-
-- **Draft**: Work in progress, not ready for review.
-- **RFC**: (Request for Comments) Ready for team review, open for feedback.
-- **Stable**: Approved, implementation can begin.
-- **Deprecated**: Superseded by another spec, kept for history.
+5. **Linking**: Every new spec must be registered in `INDEX.md`. Every spec that depends on another must declare it in `Related Specifications`.
+6. **Status Discipline**: Always assign a valid status from the **Status Lifecycle** section. Never leave status blank.
 
 ## Directory Structure
 
@@ -44,7 +30,26 @@ docs/
     └── ...
 ```
 
+## Status Lifecycle
+
+All specification files must use one of the following statuses:
+
+- **Draft** — work in progress, not ready for review.
+- **RFC** *(Request for Comments)* — complete enough for team review, open for feedback and discussion.
+- **Stable** — reviewed and approved; implementation can begin.
+- **Deprecated** — superseded by another spec; kept for historical reference only.
+
+Status transitions follow this flow:
+
+```mermaid
+graph LR
+    Draft --> RFC --> Stable --> Deprecated
+    RFC --> Draft
+```
+
 ## Workflow Steps
+
+### Creating a New Specification
 
 1. **Context Analysis**: Determine the domain of the new specification and the project's tech stack.
 2. **State Check**: Verify if `docs/specifications/` and its core files exist.
@@ -52,10 +57,22 @@ docs/
     - If `INDEX.md` or `ROADMAP.md` are missing, **STOP** and execute the *Core Files Initialization Script* for the user's OS.
 4. **Content Creation**:
     - Create `{specification-name}.md` using the *Specification Template*.
-    - **Remember**: Use `plaintext` for trees and `mermaid` for diagrams.
+    - Use `plaintext` for directory trees and `mermaid` for diagrams.
+    - Fill in `Related Specifications` with any dependencies on existing specs.
 5. **Registry Update**:
-    - Register the new file in `INDEX.md`.
-    - Update `ROADMAP.md` if the specificaiton impacts the timeline.
+    - Add the new file as a row in the `INDEX.md` table with its status and version.
+    - Update `ROADMAP.md` if the specification impacts the timeline.
+
+### Updating an Existing Specification
+
+1. **Version Bump**: Increment the version according to the change scope:
+    - `patch` (0.0.X) — typo fixes, clarifications, no structural change.
+    - `minor` (0.X.0) — new section added or existing section extended.
+    - `major` (X.0.0) — breaking restructure or significant design change.
+2. **Document History**: Append a new row to the `Document History` table inside the spec file.
+3. **Status Update**: If the status changes (e.g., `Draft → RFC`), update both the spec file header and the `INDEX.md` table entry.
+4. **INDEX.md Sync**: Update the `Version` and `Status` columns in `INDEX.md` to match the new state.
+5. **ROADMAP.md Review**: If the update shifts timeline or scope, reflect it in `ROADMAP.md`.
 
 ## Templates
 
@@ -70,13 +87,14 @@ Use these templates to ensure consistency across all specification files.
 # Specifications Registry
 
 **Version:** {X.Y.Z}
-**Status:** {Active}
+**Status:** Active
 
 ---
 
 ## Overview
 
-This index serves as the central registry for all project specifications, detailing their relationships and current status.
+This index serves as the central registry for all project specifications,
+detailing their relationships and current status.
 
 ## Core Planning Files
 
@@ -86,9 +104,9 @@ This index serves as the central registry for all project specifications, detail
 
 | File | Description | Status | Version |
 | :--- | :--- | :--- | :--- |
-| [api-gateway.md](api-gateway.md) | API endpoints and authentication flow | Stable | 1.0.0 |
+| [api.md](api.md) | API endpoints and authentication flow | Stable | 1.0.0 |
 | [database-schema.md](database-schema.md) | SQL structure and migrations | Draft | 0.1.0 |
-| [ui-system.md](ui-system.md) | Design system and component library | RFC | 0.8.0 |
+| [ui-system.md](ui-system.md) | Design system and component library | RFC | 0.3.0 |
 
 ---
 
@@ -108,7 +126,7 @@ This index serves as the central registry for all project specifications, detail
 # Project Roadmap
 
 **Version:** {X.Y.Z}
-**Status:** {Active}
+**Status:** Active
 
 ---
 
@@ -151,7 +169,7 @@ Strategic development plan prioritizing core features, resilience, and user expe
 # {Specification Name}
 
 **Version:** {X.Y.Z}
-**Status:** {Draft | RFC | Stable}
+**Status:** {Draft | RFC | Stable | Deprecated}
 
 ---
 
@@ -161,16 +179,21 @@ Brief summary of the specification's purpose and scope.
 
 ## Related Specifications
 
-- [database-schema.md](database-schema.md) - Dependency
-- [auth.md](auth.md) - Context
+- [other-spec.md](other-spec.md) - Short description of the dependency or relationship.
 
 ## 1. Motivation
 
 Why is this specification needed? What problems does it solve?
 
-## 2. Detailed Design
+## 2. Constraints & Assumptions
 
-### 2.1 Component A
+- List of hard technical constraints (e.g., "REST only, no GraphQL").
+- Key assumptions made during design (e.g., "single-region deployment for MVP").
+
+## 3. Detailed Design
+
+### 3.1 Component A
+
 Technical details, logic, and flows.
 
 **Project Structure:**
@@ -188,18 +211,13 @@ graph TD;
     A-->B;
 ```
 
-### 2.2 Component B
+### 3.2 Component B
 
 ...
 
-## 3. Drawbacks & Alternatives
+## 4. Drawbacks & Alternatives
 
 Potential issues and alternative approaches considered.
-
-## 4. Constraints & Assumptions
-
-- **Constraints**: List of hard technical limitations (e.g., "Must run on 512MB RAM").
-- **Assumptions**: Key decisions made (e.g., "User is always authenticated").
 
 ---
 
@@ -220,6 +238,13 @@ Use these scripts to automatically generate the initial `INDEX.md` and `ROADMAP.
 ```bash
 #!/bin/bash
 
+# Safety check: warn if not inside a git repository
+if [ ! -d ".git" ]; then
+  echo "Warning: not a git repository. Are you sure you want to initialize here? (y/n)"
+  read -r confirm
+  [[ "$confirm" != "y" ]] && echo "Aborted." && exit 1
+fi
+
 SPEC_DIR="docs/specifications"
 mkdir -p "$SPEC_DIR"
 
@@ -237,7 +262,8 @@ cat <<EOF > "$SPEC_DIR/INDEX.md"
 
 ## Overview
 
-This index serves as the central registry for all project specifications, detailing their relationships and current status.
+This index serves as the central registry for all project specifications,
+detailing their relationships and current status.
 
 ## Core Planning Files
 
@@ -247,7 +273,7 @@ This index serves as the central registry for all project specifications, detail
 
 | File | Description | Status | Version |
 | :--- | :--- | :--- | :--- |
-| <!-- [file.md](file.md) --> | <!-- Desc --> | <!-- Draft --> | <!-- 0.1.0 --> |
+<!-- Add your specifications here -->
 
 ---
 
@@ -296,6 +322,12 @@ fi
 ### Windows (PowerShell)
 
 ```powershell
+# Safety check: warn if not inside a git repository
+if (!(Test-Path -Path ".git")) {
+    $confirm = Read-Host "Warning: not a git repository. Are you sure you want to initialize here? (y/n)"
+    if ($confirm -ne "y") { Write-Host "Aborted."; exit 1 }
+}
+
 $SpecDir = (Join-Path "docs" "specifications")
 if (!(Test-Path -Path $SpecDir)) {
     New-Item -ItemType Directory -Force -Path $SpecDir | Out-Null
@@ -316,7 +348,8 @@ if (!(Test-Path -Path $IndexPath)) {
 
 ## Overview
 
-This index serves as the central registry for all project specifications, detailing their relationships and current status.
+This index serves as the central registry for all project specifications,
+detailing their relationships and current status.
 
 ## Core Planning Files
 
@@ -326,7 +359,7 @@ This index serves as the central registry for all project specifications, detail
 
 | File | Description | Status | Version |
 | :--- | :--- | :--- | :--- |
-| <!-- [file.md](file.md) --> | <!-- Desc --> | <!-- Draft --> | <!-- 0.1.0 --> |
+<!-- Add your specifications here -->
 
 ---
 
