@@ -1,4 +1,4 @@
-# Settings System Module (UI/UX)
+# Settings System (UI/UX)
 
 **Version:** 0.3.0
 **Status:** Draft

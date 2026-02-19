@@ -19,8 +19,8 @@ Strategic development plan prioritizing core features, resilience, and user expe
 
 ## Phase 2: UI/UX & Shared Services (P1)
 
-- **Main Menu** (`main-menu-module.md`): Root interaction screen logic and settings overlay. Status: `Draft`
-- **Settings System** (`settings-module.md`): Reactive widgets and UI synchronization. Status: `Draft`
+- **Main Menu** (`main-menu.md`): Root interaction screen logic and settings overlay. Status: `Draft`
+- **Settings System** (`settings-ui.md`): Reactive widgets and UI synchronization. Status: `Draft`
 - **Localization** (`localization.md`): Project Fluent integration and key registry. Status: `Draft`
 - **UI & Experience** (`ui-components.md`): UI standards, themes and navigation safety. Status: `Draft`
 

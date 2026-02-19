@@ -1,4 +1,4 @@
-# Main Menu Module
+# Main Menu
 
 **Version:** 0.3.0
 **Status:** Draft

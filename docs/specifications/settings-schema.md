@@ -12,7 +12,7 @@
 ## Related Specifications
 
 - [data-management.md](data-management.md) - Persistence layer and Version Guard.
-- [settings-module.md](settings-module.md) - UI interaction logic.
+- [settings-ui.md](settings-ui.md) - UI interaction logic.
 
 ## 1. Data Structure Analysis
 
