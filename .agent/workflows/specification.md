@@ -17,6 +17,7 @@ This workflow defines a universal, technology-agnostic process for creating and 
 5. **Linking**: Every new spec must be registered in `INDEX.md`. Every spec that depends on another must declare it in `Related Specifications`.
 6. **Status Discipline**: Always assign a valid status from the **Status Lifecycle** section. Never leave status blank.
 7. **Capture First**: When the user provides unstructured input (thoughts, notes, ideas), always follow the *Dispatching from Raw Input* workflow before writing anything.
+8. **Review Always**: After every update to any spec file, always perform the *Post-Update Review* before closing the task. No update is complete without it.
 
 ## Directory Structure
 
@@ -61,7 +62,8 @@ graph TD
     C --> D[Confirm: show mapping to user]
     D -->|Approved| E[Dispatch: write to spec files]
     D -->|Rejected| B
-    E --> F[Sync INDEX.md and ROADMAP.md]
+    E --> F[Post-Update Review]
+    F --> G[Sync INDEX.md and ROADMAP.md]
 ```
 
 1. **Parse**: Read the input and extract all distinct topics, decisions, constraints, or preferences mentioned. A single message may contain material for multiple spec files.
@@ -84,7 +86,8 @@ graph TD
     ```
 
 4. **Dispatch**: Write each piece into the correct spec file following the Specification Template. Never mix topics from different domains in a single section.
-5. **Sync**: Update `INDEX.md` (add or update rows) and `ROADMAP.md` if scope or timeline is affected.
+5. **Post-Update Review**: Run the review checklist (see below) on every file that was modified.
+6. **Sync**: Update `INDEX.md` (add or update rows) and `ROADMAP.md` if scope or timeline is affected.
 
 **Edge cases:**
 
@@ -118,6 +121,76 @@ graph TD
 3. **Status Update**: If the status changes (e.g., `Draft → RFC`), update both the spec file header and the `INDEX.md` table entry.
 4. **INDEX.md Sync**: Update the `Version` and `Status` columns in `INDEX.md` to match the new state.
 5. **ROADMAP.md Review**: If the update shifts timeline or scope, reflect it in `ROADMAP.md`.
+6. **Post-Update Review**: Run the review checklist on every file that was modified. This step is mandatory and must not be skipped.
+
+### Post-Update Review
+
+**This step is mandatory after every update, regardless of change size.**
+
+After modifying any spec file, perform the following checks on the affected file before closing the task:
+
+#### Duplication Check
+
+- Are there any paragraphs, rules, or decisions that repeat content already stated elsewhere in this file?
+- Is any content duplicated across other spec files? If so, keep it in the most relevant file and replace the duplicate with a cross-reference link.
+
+#### Coherence Check
+
+- Does the document read as a single consistent whole, or does it feel like a patchwork of additions?
+- Are all sections still relevant to the file's stated purpose, or have any drifted out of scope?
+- Is the logical flow of sections still correct after the update, or does the new content break the narrative?
+
+#### Links & Relations Check
+
+- Are all links in `Related Specifications` still accurate and necessary?
+- Does the updated content introduce new dependencies on other specs that are not yet declared?
+
+#### Cleanup
+
+- Remove or consolidate any sections that have become redundant.
+- Rewrite any passages that have grown unclear due to successive edits.
+- If a major restructure is needed, treat it as a `major` version bump and note it in `Document History`.
+
+> If the review reveals significant issues beyond the original edit scope, inform the user and propose a dedicated refactoring pass rather than silently rewriting large portions.
+
+---
+
+### Periodic Registry Audit
+
+Run this audit when the user requests it, or proactively suggest it after every 5 updates across the registry.
+
+**Trigger phrase for user**: *"Audit specs"* or *"Review registry"*
+
+1. **Scope**: Read all files listed in `INDEX.md`.
+2. **Cross-file Duplication**: Identify any content that appears in more than one spec file. Propose consolidation.
+3. **Orphaned Content**: Flag sections that no longer connect to any feature in `ROADMAP.md`.
+4. **Stale Statuses**: Flag specs that have been in `Draft` or `RFC` for a long time without progress.
+5. **Broken Relations**: Check that all links in every `Related Specifications` section point to existing files.
+6. **Report**: Present a structured summary to the user before making any changes:
+
+    ```
+    Registry Audit Report — {YYYY-MM-DD}
+
+    Duplication found:
+    - "Auth token format" appears in both architecture.md §3.1 and api.md §2.2
+      → Recommend: keep in architecture.md, replace api.md entry with a link
+
+    Orphaned content:
+    - ui-components.md §4 "Legacy Theme" — not referenced in ROADMAP.md
+      → Recommend: deprecate or remove
+
+    Stale statuses:
+    - database-schema.md — Draft since 2024-01-10, no updates in 90+ days
+      → Recommend: confirm if still active or mark Deprecated
+
+    Broken relations:
+    - api.md → links to auth.md which does not exist
+      → Recommend: create auth.md or update the link
+
+    Apply all recommendations? (yes / select / skip)
+    ```
+
+7. **Apply**: Only after user approval, apply the agreed changes. Update `INDEX.md` and `Document History` in affected files.
 
 ## Templates
 

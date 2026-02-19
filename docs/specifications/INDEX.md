@@ -27,6 +27,7 @@ detailing their relationships and current status.
 | [main-menu-module.md](main-menu-module.md) | Root interaction screen logic | Draft | 0.1.0 |
 | [settings-module.md](settings-module.md) | Advanced settings and persistence | Draft | 0.2.0 |
 | [settings-schema.md](settings-schema.md) | Technical data structure (RON) | Stable | 1.0.0 |
+| [gameplay-config.md](gameplay-config.md) | Gameplay balance & physics constants | Draft | 0.1.0 |
 
 ---
 
