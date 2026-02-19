@@ -18,6 +18,7 @@ This workflow is designed for architectural discussion and documentation. It str
     - Ask clarifying questions about system requirements, integration points, and high-level design.
 
 4. **Documentation**:
+    - **Intelligent Updates**: Before modifying `docs/architecture.md`, thoroughly analyze the current content. Integrate new information logically: decide if it should be an addition, an update to an existing part, or a complete replacement of outdated sections to ensure document integrity.
     - Document the agreed-upon architecture in `docs/architecture.md`.
     - Use **English** for technical terms, symbols, and core descriptions.
     - **Russian Notes**: Use **Russian** for detailed explanations, notes, comments, and annotations within the documentation to provide clearer context for the Russian-speaking team.
