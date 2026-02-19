@@ -30,8 +30,11 @@ Visual standards, UI hierarchy, and interaction principles for AAA-quality feel.
 
 ### 2.2 Transitions & Visual Polish
 
-- **Effects**: Fade (затухание), Vignette, Blur.
-- **Juiciness**: Анимации кнопок (hover/click) и звуковой отклик.
+- **Effects**: Fade-in/Fade-out (затухание), Vignette, Blur. Плавная смена стейтов.
+- **Button Juiciness**:
+  - Анимация Hover: Масштабирование (1.05x) или изменение яркости.
+  - Анимация Click: Визуальное "нажатие" (0.95x).
+- **Audio Feedback**: Профессиональные звуковые эффекты (SFX) при наведении и клике на любой интерактивный объект.
 
 ### 2.3 Accessibility
 

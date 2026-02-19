@@ -7,7 +7,7 @@
 
 ## Overview
 
-Scalable localization system using Project Fluent.
+Localization-First: весь текст интерфейса и системных сообщений загружается из внешних файлов Fluent (.ftl). Поддержка динамической смены языка.
 
 ## Related Specifications
 
