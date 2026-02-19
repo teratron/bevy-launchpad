@@ -16,6 +16,7 @@ This workflow defines a universal, technology-agnostic process for creating and 
 4. **Automation**: If system files are missing, offer to run the **Initialization Scripts** immediately.
 5. **Linking**: Every new spec must be registered in `INDEX.md`. Every spec that depends on another must declare it in `Related Specifications`.
 6. **Status Discipline**: Always assign a valid status from the **Status Lifecycle** section. Never leave status blank.
+7. **Capture First**: When the user provides unstructured input (thoughts, notes, ideas), always follow the *Dispatching from Raw Input* workflow before writing anything.
 
 ## Directory Structure
 
@@ -48,6 +49,50 @@ graph LR
 ```
 
 ## Workflow Steps
+
+### Dispatching from Raw Input
+
+Use this workflow when the user provides unstructured input: a thought, a note, a wish, a comment, or any free-form text that contains specification-relevant information.
+
+```mermaid
+graph TD
+    A[Raw Input] --> B[Parse: identify distinct topics]
+    B --> C[Map: match topics to spec domains]
+    C --> D[Confirm: show mapping to user]
+    D -->|Approved| E[Dispatch: write to spec files]
+    D -->|Rejected| B
+    E --> F[Sync INDEX.md and ROADMAP.md]
+```
+
+1. **Parse**: Read the input and extract all distinct topics, decisions, constraints, or preferences mentioned. A single message may contain material for multiple spec files.
+2. **Map**: Match each extracted topic to an existing spec file or propose a new one:
+    - System design, modules, layers → `architecture.md`
+    - Endpoints, contracts, protocols → `api.md`
+    - Data models, storage, migrations → `database-schema.md`
+    - Visual design, components, style → `ui-components.md`
+    - Cross-cutting or unclassified → propose a new domain
+3. **Confirm**: Before writing anything, show the user the proposed mapping and wait for explicit approval. Example:
+
+    ```
+    I found the following topics in your input:
+
+    - JWT + Redis auth flow       → architecture.md (section 3: Auth Design)
+    - REST-only constraint        → architecture.md (section 2: Constraints)
+    - shadcn-based design system  → ui-components.md (new file, Draft)
+
+    Proceed with this mapping? (yes / adjust)
+    ```
+
+4. **Dispatch**: Write each piece into the correct spec file following the Specification Template. Never mix topics from different domains in a single section.
+5. **Sync**: Update `INDEX.md` (add or update rows) and `ROADMAP.md` if scope or timeline is affected.
+
+**Edge cases:**
+
+- If intent is ambiguous — ask one clarifying question before mapping, do not guess.
+- If a topic doesn't fit any existing domain — propose a new spec file with a suggested name.
+- If the input contains contradictions with an existing stable spec — flag the conflict explicitly before dispatching.
+
+---
 
 ### Creating a New Specification
 
