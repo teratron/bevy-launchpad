@@ -28,22 +28,22 @@ This workflow defines a universal, technology-agnostic process for creating and 
 
 ```plaintext
 .design/
-├── INDEX.md              # Registry: what specs exist and their status
-├── RULES.md              # Constitution: how spec work is governed
-├── PLAN.md               # Implementation plan (managed by Plan Workflow)
-├── specifications/       # Spec files
+├── INDEX.md # Registry: what specs exist and their status
+├── RULES.md # Constitution: how spec work is governed
+├── PLAN.md # Implementation plan (managed by Plan Workflow)
+├── specifications/ # Spec files
 │   └── *.md
-└── tasks/                # Task files (managed by Task Workflow)
-    ├── TASKS.md          # Master task index
-    └── phase-{n}.md      # Per-phase task files
+└── tasks/ # Task files (managed by Task Workflow)
+    ├── TASKS.md # Master task index
+    └── phase-{n}.md # Per-phase task files
 ```
 
 **System files and their roles:**
 
-| File | Role | Updated by |
-| :--- | :--- | :--- |
-| `INDEX.md` | Central registry of all spec files | Every create/update |
-| `RULES.md` | Project constitution and conventions | Defined triggers |
+|File|Role|Updated by|
+|:---|:---|:---|
+|`INDEX.md`|Central registry of all spec files|Every create/update|
+|`RULES.md`|Project constitution and conventions|Defined triggers|
 
 ## Status Lifecycle
 
@@ -186,12 +186,12 @@ RULES.md is the **project constitution** — the authoritative source of standin
 
 #### Triggers
 
-| # | Trigger | Confirmation required |
-| :--- | :--- | :--- |
-| T1 | User uses universally-scoped language: *"always"*, *"never"*, *"in all specs"*, *"project-wide"* | Yes — propose, then wait |
-| T2 | Same pattern appears in 2+ spec files created in the same session | Yes — propose, then wait |
-| T3 | Periodic Audit reveals inconsistency that a standing rule would prevent | Yes — propose within audit report |
-| T4 | User explicitly declares a rule: *"remember that"*, *"from now on"*, *"project rule:"* | No — apply immediately |
+|#|Trigger|Confirmation required|
+|:---|:---|:---|
+|T1|User uses universally-scoped language: *"always"*, *"never"*, *"in all specs"*, *"project-wide"*|Yes — propose, then wait|
+|T2|Same pattern appears in 2+ spec files created in the same session|Yes — propose, then wait|
+|T3|Periodic Audit reveals inconsistency that a standing rule would prevent|Yes — propose within audit report|
+|T4|User explicitly declares a rule: *"remember that"*, *"from now on"*, *"project rule:"*|No — apply immediately|
 
 **T1–T3** — propose before writing:
 

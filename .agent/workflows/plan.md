@@ -25,12 +25,12 @@ It operates **after** the Spec Workflow — specifications are its input, not it
 
 ```plaintext
 .design/
-├── INDEX.md              # Input: registry of all specs
-├── RULES.md              # Input: project conventions
-├── PLAN.md               # Output: implementation plan (managed by Plan Workflow)
-├── specifications/       # Input: spec files (managed by Spec Workflow)
+├── INDEX.md # Input: registry of all specs
+├── RULES.md # Input: project conventions
+├── PLAN.md # Output: implementation plan (managed by Plan Workflow)
+├── specifications/ # Input: spec files (managed by Spec Workflow)
 │   └── *.md
-└── tasks/                # Output: task files (managed by Task Workflow)
+└── tasks/ # Output: task files (managed by Task Workflow)
     ├── TASKS.md
     └── phase-{n}.md
 ```

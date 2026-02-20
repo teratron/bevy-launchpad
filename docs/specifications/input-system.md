@@ -22,14 +22,14 @@ Action-based input management system for Bevy Launchpad.
 
 Анонимная система "Action-based" ввода, работающая через маппинги.
 
-| Feature | Description |
-| :--- | :--- |
-| **Input Remapping** | Поддержка клавиатуры/мыши/геймпада с возможностью смены биндов. |
-| **Juiciness** | Сглаживание ввода (deadzones) для геймпадов. |
+|Feature|Description|
+|:---|:---|
+|**Input Remapping**|Поддержка клавиатуры/мыши/геймпада с возможностью смены биндов.|
+|**Juiciness**|Сглаживание ввода (deadzones) для геймпадов.|
 
 ## Document History
 
-| Version | Date       | Author | Description   |
-| :---    | :---       | :---   | :---          |
-| 0.1.0   | 2026-02-19 | Agent  | Initial Draft |
-| 0.1.1   | 2026-02-19 | Agent  | Added Roadmap Phase field |
+|Version|Date|Author|Description|
+|:---|:---|:---|:---|
+|0.1.0|2026-02-19|Agent|Initial Draft|
+|0.1.1|2026-02-19|Agent|Added Roadmap Phase field|

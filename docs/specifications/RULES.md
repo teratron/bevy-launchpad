@@ -61,8 +61,8 @@ A spec may only change status when the following criteria are met:
 
 ## Document History
 
-| Version | Date       | Author | Description              |
-| :---    | :---       | :---   | :---                     |
-| 1.0.0 | 2026-02-19 | Agent | Initial constitution |
-| 1.1.0 | 2026-02-19 | Agent | Clarified Language Convention and Content Rules |
-| 1.2.0 | 2026-02-19 | Agent | Added RON and Path conventions (T2 trigger) |
+|Version|Date|Author|Description|
+|:---|:---|:---|:---|
+|1.0.0|2026-02-19|Agent|Initial constitution|
+|1.1.0|2026-02-19|Agent|Clarified Language Convention and Content Rules|
+|1.2.0|2026-02-19|Agent|Added RON and Path conventions (T2 trigger)|

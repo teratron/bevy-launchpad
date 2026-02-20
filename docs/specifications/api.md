@@ -40,8 +40,8 @@ graph LR
 
 ## Document History
 
-| Version | Date       | Author | Description   |
-| :---    | :---       | :---   | :---          |
-| 0.1.0 | 2026-02-19 | Agent | Initial Draft |
-| 0.2.0 | 2026-02-19 | Agent | Promoted to RFC for review (lifecycle fix) |
-| 0.2.1 | 2026-02-19 | Agent | Added Roadmap Phase field |
+|Version|Date|Author|Description|
+|:---|:---|:---|:---|
+|0.1.0|2026-02-19|Agent|Initial Draft|
+|0.2.0|2026-02-19|Agent|Promoted to RFC for review (lifecycle fix)|
+|0.2.1|2026-02-19|Agent|Added Roadmap Phase field|

@@ -59,7 +59,7 @@
 
 ## Document History
 
-| Version | Date       | Author | Description   |
-| :---    | :---       | :---   | :---          |
-| 1.0.0   | 2026-02-19 | Agent  | Initial export from settings.toml |
-| 1.0.1   | 2026-02-19 | Agent  | Added Roadmap Phase field         |
+|Version|Date|Author|Description|
+|:---|:---|:---|:---|
+|1.0.0|2026-02-19|Agent|Initial export from settings.toml|
+|1.0.1|2026-02-19|Agent|Added Roadmap Phase field|

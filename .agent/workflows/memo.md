@@ -1,6 +1,8 @@
-
+---
 description: Memorize a new project rule or guideline.
+---
 
+# Memorize Workflow
 
 1. **Analyze the Request**:
     - Extract the `<rule for memorization>` from the user's input.
@@ -27,4 +29,3 @@ description: Memorize a new project rule or guideline.
 5. **Confirmation**:
     - Respond to the user confirming that the rule has been memorized.
     - Mention the full path of the file where the rule was saved.
-

@@ -52,9 +52,9 @@ Specification for asset management, persistence, and application configuration.
 
 ## Document History
 
-| Version | Date       | Author | Description   |
-| :---    | :---       | :---   | :---          |
-| 0.1.0   | 2026-02-19 | Agent  | Initial Draft |
-| 0.2.0   | 2026-02-19 | Agent  | Added Base Path and Fallbacks details |
-| 0.3.0   | 2026-02-19 | Agent  | Added Asset Manifest Schema from assets.ron |
-| 0.3.1   | 2026-02-19 | Agent  | Added Roadmap Phase field                   |
+|Version|Date|Author|Description|
+|:---|:---|:---|:---|
+|0.1.0|2026-02-19|Agent|Initial Draft|
+|0.2.0|2026-02-19|Agent|Added Base Path and Fallbacks details|
+|0.3.0|2026-02-19|Agent|Added Asset Manifest Schema from assets.ron|
+|0.3.1|2026-02-19|Agent|Added Roadmap Phase field|

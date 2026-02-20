@@ -27,11 +27,11 @@ It operates **after** the Plan Workflow — the plan is its input, not its conce
 .design/
 ├── INDEX.md
 ├── RULES.md
-├── PLAN.md               # Input: implementation plan
+├── PLAN.md # Input: implementation plan
 ├── specifications/
-└── tasks/                # Output: task files
-    ├── TASKS.md          # Master index: all tasks, all phases, all statuses
-    └── phase-{n}.md      # Per-phase task breakdown with tracks
+└── tasks/ # Output: task files
+    ├── TASKS.md # Master index: all tasks, all phases, all statuses
+    └── phase-{n}.md # Per-phase task breakdown with tracks
 ```
 
 ## Task Anatomy
