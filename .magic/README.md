@@ -156,6 +156,23 @@ The Retrospective detects these issues **before they compound**.
 | 3 | Remove "No code in specs" checklist item — zero signal | .magic/specification.md |
 ```
 
+### How Recommendations Are Applied
+
+The retrospective is **read-only** — it diagnoses, but never self-modifies. All changes to `.magic/` files require explicit user approval:
+
+```mermaid
+graph TD
+    R[Retrospective generates recommendations] --> P[Present table to user]
+    P --> D{User decides per item}
+    D -->|"Accept R1"| A1["Agent edits target .magic/ file"]
+    D -->|"Skip R2"| S["No change"]
+    D -->|"Accept all"| A2["Agent edits all target files"]
+    A1 --> DOC["Update README.md + README.ru.md"]
+    A2 --> DOC
+```
+
+> **Rule:** Any accepted recommendation that modifies a `.magic/` workflow file **must** also update `.magic/README.md` and `.magic/README.ru.md` to keep documentation in sync.
+
 ## 🚀 Usage
 
 Simply instruct your AI agent (Cursor, Claude, Gemini, or any terminal agent):
