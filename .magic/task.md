@@ -63,11 +63,11 @@ Within each phase, tasks are grouped into **Execution Tracks**. Tasks in differe
 
 ```
 Phase 2
-  Track A: [T-2A01] → [T-2A02] → [T-2A03]  ══╗
-                                             ║ (parallel)
-  Track B: [T-2B01] → [T-2B02]             ══╣
-                                             ║
-  Track C: [T-2C01]  (depends on A + B)    ══╝ (after A and B complete)
+  Track A: [T-2A01] → [T-2A02] → [T-2A03]   ══╗
+                                               ║ (parallel)
+  Track B: [T-2B01] → [T-2B02]               ══╣
+                                               ║
+  Track C: [T-2C01]  (depends on A + B)      ══╝ (after A and B complete)
 ```
 
 Track assignment is derived from the dependency graph in PLAN.md — specs that don't depend on each other can be different tracks.
