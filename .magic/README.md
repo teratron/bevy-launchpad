@@ -90,6 +90,19 @@ Each checklist item must be marked `✓` (done) or `✗` (skipped/failed). Any `
 
 The Retrospective workflow is Magic's **self-improvement mechanism**. It closes the feedback loop by analyzing actual SDD usage data and producing actionable recommendations.
 
+### Two-Level System
+
+The retrospective operates on two levels to balance thoroughness with efficiency:
+
+| Level | Name | Trigger | Cost | Output |
+|---|---|---|---|---|
+| **Level 1** | Auto-snapshot | Automatic after phase completion | ~10s | One row in Snapshots table |
+| **Level 2** | Full retrospective | Manual or auto after entire plan completes | ~2–5 min | Full analysis + recommendations |
+
+**Level 1** collects numbers silently — no analysis, no user interruption. It creates a trail of metrics for trend analysis.
+
+**Level 2** performs deep analysis and generates actionable recommendations. It uses Level 1 snapshots for trend comparison.
+
 ### Why It Exists
 
 Without a feedback loop, the SDD system can accumulate:
@@ -101,39 +114,28 @@ Without a feedback loop, the SDD system can accumulate:
 
 The Retrospective detects these issues **before they compound**.
 
-### What It Tracks
+### When It Runs
 
-| Category | Key Metrics |
-|---|---|
-| 📊 **Workflow Efficiency** | Spec status transitions, revisions before Stable, plan stability |
-| 🎯 **Dispatch Accuracy** | INDEX ↔ PLAN ↔ TASKS cross-reference mismatches, orphaned specs |
-| ⚡ **Task Execution** | Done/Blocked ratio, common blocking reasons, tasks-per-spec granularity |
-| 📜 **Constitution Health** | Rule accumulation rate, T1–T3 vs T4 trigger distribution |
-| ✅ **Checklist Effectiveness** | Zero-signal items (always ✓), high-failure items (frequently ✗) |
+| Trigger | Level | Behaviour |
+|---|---|---|
+| 🏁 Phase complete | **Level 1** | Auto-snapshot: silent, no interruption |
+| 🎯 Entire plan complete | **Level 2** | Full retro: auto-runs, presents report |
+| 📝 Every 5th spec update | — | Suggests: *"Run retrospective?"* |
+| 🗺️ Plan restructure | — | Suggests: *"Run retrospective?"* |
+| 💬 Manual command | **Level 2** | Full retro: runs on demand |
 
-### How It Works
+### Snapshot Example (Level 1)
 
-1. **Reads** — Scans `.design/` artifacts (INDEX.md, RULES.md, PLAN.md, TASKS.md, and all spec Document History tables). Lightweight: reads headers and tables, not full spec bodies.
-2. **Analyzes** — Cross-references data, identifies patterns, calculates metrics.
-3. **Classifies** — Assigns severity to each observation:
-    - 🔴 **Critical** — broken references, missing files, contradictions
-    - 🟡 **Medium** — inefficiencies, recurring patterns
-    - 🟢 **Low** — minor improvements, cosmetic
-    - ✨ **Positive** — things working well (positive reinforcement)
-4. **Recommends** — For each observation, produces a concrete, actionable recommendation referencing a specific `.magic/` file.
-5. **Writes** — Appends a new session entry to `.design/RETROSPECTIVE.md` (never overwrites history).
+```markdown
+## Snapshots
 
-### When to Run It
+| Date       | Phase   | Specs (D/R/S) | Tasks (Done/Blocked) | Rules | Signal |
+|------------|---------|---------------|----------------------|-------|--------|
+| 2026-02-20 | Phase 1 | 2/1/4         | 8/0                  | 12    | 🟢     |
+| 2026-02-25 | Phase 2 | 0/0/7         | 5/3                  | 14    | 🟡     |
+```
 
-The Retrospective is manual by default. Other workflows auto-suggest it:
-
-| Trigger | When |
-|---|---|
-| 🏁 Phase complete | All tasks in a phase are `Done` |
-| 📝 Every 5th spec update | Cumulative updates across the registry |
-| 🗺️ Plan major restructure | `PLAN.md` gets a major version bump |
-
-### Example Output
+### Full Analysis Example (Level 2)
 
 ```markdown
 📊 Observations

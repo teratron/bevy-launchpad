@@ -9,6 +9,19 @@ Analyzes the usage history of the Magic SDD system and generates actionable reco
 > **Scope**: SDD self-diagnosis only. Does not modify specs, plans, or tasks.
 > Outputs observations and recommendations to `.design/RETROSPECTIVE.md`.
 
+## Two-Level System
+
+The retrospective operates on two levels to balance thoroughness with efficiency:
+
+| Level | Name | Trigger | Context Cost | Output |
+| :--- | :--- | :--- | :--- | :--- |
+| **Level 1** | Auto-snapshot | Automatic after phase completion | Minimal (~10s) | One row in Snapshots table |
+| **Level 2** | Full retrospective | Manual or auto after entire plan completes | Moderate (~2–5 min) | Full analysis + recommendations |
+
+**Level 1 — Auto-snapshot** collects numbers silently. No analysis, no recommendations, no user interruption. It creates a trail of metrics for trend analysis.
+
+**Level 2 — Full retrospective** performs deep analysis, cross-referencing, and generates actionable recommendations. It uses snapshot history for trend comparison.
+
 ## Agent Guidelines
 
 **CRITICAL INSTRUCTIONS FOR AI:**
@@ -18,6 +31,7 @@ Analyzes the usage history of the Magic SDD system and generates actionable reco
 3. **Actionable Output**: Every recommendation must be concrete and implementable (e.g., "Remove checklist item X" or "Add example Y to specification.md"). Abstract advice ("improve quality") is forbidden.
 4. **Lightweight Execution**: This workflow must not consume excessive context. Read file headers and Document History tables — do not re-read entire spec bodies unless investigating a specific issue.
 5. **No Self-Modification**: This workflow recommends changes to `.magic/` files — it does not apply them. Changes to the SDD engine require explicit user approval and manual editing.
+6. **Level Awareness**: Always know which level you are executing. Level 1 (auto-snapshot) is silent and fast — no analysis, no recommendations. Level 2 (full) is thorough and interactive.
 
 ## Directory Structure
 
@@ -80,9 +94,50 @@ The retrospective analyzes the following metric categories:
 
 ## Workflow Steps
 
-### Running a Retrospective
+### Level 1: Auto-Snapshot
+
+**Trigger**: Automatic — called by `task.md` when a phase completes (all tasks `Done`).
+
+The agent does NOT ask the user for permission — it runs silently as part of the phase completion flow.
+
+```mermaid
+graph TD
+    A["Phase complete (all tasks Done)"] --> B[Read INDEX.md — count specs by status]
+    B --> C[Read TASKS.md — count Done/Blocked per phase]
+    C --> D[Read RULES.md — count §7 entries]
+    D --> E[Calculate signal: 🟢 / 🟡 / 🔴]
+    E --> F{RETROSPECTIVE.md exists?}
+    F -->|Yes| G[Append row to Snapshots table]
+    F -->|No| H[Create RETROSPECTIVE.md with Snapshots table]
+    G & H --> I[Continue working — no user interruption]
+```
+
+**Steps:**
+
+1. **Read INDEX.md**: Count specs by status (Draft / RFC / Stable).
+2. **Read TASKS.md**: Extract Done and Blocked counts for the completed phase.
+3. **Read RULES.md**: Count §7 entries.
+4. **Calculate signal**:
+    - 🟢 — 0 Blocked tasks, no orphaned specs
+    - 🟡 — ≤20% tasks Blocked, or minor mismatches
+    - 🔴 — >20% tasks Blocked, or critical mismatches
+5. **Append row** to the `## Snapshots` table in `RETROSPECTIVE.md`.
+
+**Snapshot row format:**
+
+```markdown
+| {YYYY-MM-DD} | Phase {N} | {D}/{R}/{S} | {Done}/{Blocked} | {count} | {🟢/🟡/🔴} |
+```
+
+Where `D/R/S` = Draft/RFC/Stable spec counts.
+
+---
+
+### Level 2: Full Retrospective
 
 **Trigger phrase**: *"Run retrospective"*, *"Analyze SDD"*, *"SDD health check"*
+
+**Auto-trigger**: Runs automatically when the **entire plan** is complete (all phases, all tasks `Done`). This is the only case where a full retrospective runs without a manual command.
 
 ```mermaid
 graph TD
@@ -95,11 +150,14 @@ graph TD
     G --> H[Compile observations]
     H --> I[Generate recommendations]
     I --> J[Assign severity: 🔴 Critical / 🟡 Medium / 🟢 Low / ✨ Positive]
-    J --> K{RETROSPECTIVE.md exists?}
-    K -->|Yes| L[Append new session]
-    K -->|No| M[Create RETROSPECTIVE.md]
-    L & M --> N[Present report to user]
+    J --> K[Read Snapshots table for trend analysis]
+    K --> L{RETROSPECTIVE.md exists?}
+    L -->|Yes| M[Append new session]
+    L -->|No| N[Create RETROSPECTIVE.md]
+    M & N --> O[Present report to user]
 ```
+
+**Steps:**
 
 1. **Read INDEX.md**: Count specs, note statuses, identify any without a status or version.
 2. **Read RULES.md**: Count §7 entries, scan Document History for rule additions/amendments/removals.
@@ -113,18 +171,19 @@ graph TD
     - 🟢 **Low** — minor improvements, cosmetic suggestions
     - ✨ **Positive** — things working well (reinforcement matters too)
 8. **Generate recommendations**: For each non-positive observation, propose a specific action.
-9. **Write RETROSPECTIVE.md**: Append a new session entry (never overwrite previous sessions).
-10. **Present report**: Show the user the full session output.
+9. **Analyze trends**: Compare current metrics against the Snapshots table. Calculate deltas.
+10. **Write RETROSPECTIVE.md**: Append a new session entry (never overwrite previous sessions).
+11. **Present report**: Show the user the full session output.
 
-### Auto-Suggest Triggers
+### Trigger Summary
 
-The retrospective is manual by default, but other workflows should **suggest** it in these cases:
-
-| Workflow | Trigger Condition | Suggested Message |
+| Trigger | Level | Behaviour |
 | :--- | :--- | :--- |
-| `task.md` | Phase completed (all tasks Done) | *"Phase {N} complete. Run retrospective? (`Run retrospective`)"* |
-| `specification.md` | Every 5th spec update across the registry | *"5 spec updates since last retrospective. Run one? (`Run retrospective`)"* |
-| `plan.md` | Plan major version bump | *"Plan restructured. Good time for a retrospective? (`Run retrospective`)"* |
+| Phase completed (all tasks Done) | **Level 1** | Auto-snapshot: silent, no interruption |
+| Entire plan completed (all phases Done) | **Level 2** | Full retro: auto-runs, presents report |
+| Every 5th spec update | — | Suggests: *"Run retrospective?"* |
+| Plan minor version bump | — | Suggests: *"Run retrospective?"* |
+| Manual command | **Level 2** | Full retro: runs on demand |
 
 ### Task Completion Checklist
 
@@ -157,8 +216,20 @@ Output
 ```markdown
 # SDD Retrospective
 
-**Last Run:** {YYYY-MM-DD}
-**Sessions:** {N}
+**Last Full Run:** {YYYY-MM-DD}
+**Full Sessions:** {N}
+**Snapshots:** {N}
+
+## Snapshots
+
+Auto-collected after each phase completion. Lightweight metrics only — no analysis.
+
+| Date | Phase | Specs (D/R/S) | Tasks (Done/Blocked) | Rules | Signal |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 2026-02-20 | Phase 1 | 2/1/4 | 8/0 | 12 | 🟢 |
+| 2026-02-25 | Phase 2 | 0/0/7 | 5/3 | 14 | 🟡 |
+
+---
 
 ## Session {N} — {YYYY-MM-DD}
 
@@ -187,13 +258,13 @@ Output
 | R3 | #3 | Consider simplifying T1–T3 triggers or adding examples to make them more discoverable | `.magic/specification.md` |
 | R4 | #4 | Remove "No code in specs" from checklist — zero-signal item consuming agent context | `.magic/specification.md` |
 
-### 📈 Trends (vs Previous Session)
+### 📈 Trends (from Snapshots)
 
-| Metric | Previous | Current | Δ |
+| Metric | Previous Snapshot | Current | Δ |
 | :--- | :--- | :--- | :--- |
-| Specs in registry | — | {N} | — |
-| Blocked task rate | — | {N}% | — |
-| Avg spec revisions to Stable | — | {N} | — |
+| Specs in registry | {N} | {N} | +{N} |
+| Blocked task rate | {N}% | {N}% | {±N}% |
+| Signal | 🟢 | 🟡 | ↓ |
 
 ---
 

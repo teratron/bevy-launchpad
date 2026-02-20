@@ -198,15 +198,22 @@ graph TD
     G -->|Done| H[Mark Done in TASKS.md + phase file]
     G -->|Blocked| I[Mark Blocked, state reason in Notes]
     H --> J[Check if phase complete]
-    J -->|Phase done| K[Report phase complete, propose next phase]
+    J -->|Phase done| K[Auto-snapshot: run retrospective Level 1]
+    K --> L{Entire plan complete?}
+    L -->|Yes| M[Auto-run: full retrospective Level 2]
+    L -->|No| N[Report phase complete, propose next phase]
     J -->|More tasks| C
-    I --> L[Escalate to user]
+    I --> O[Escalate to user]
 ```
 
 1. **Find next available task**: The task with status `Todo` whose all dependencies are `Done`. In sequential mode: pick the first one in track order.
 2. **Execute**: Perform the implementation work described by the task. Stay within the task's spec section — do not expand scope.
 3. **Update status**: Mark `In Progress` when starting, `Done` when complete, `Blocked` if a blocker is encountered.
 4. **Report**: After each task, briefly state what was done and what is next.
+5. **On phase completion**:
+    - Run **retrospective Level 1 (auto-snapshot)**: read INDEX.md, TASKS.md, RULES.md → count stats → append one row to `.design/RETROSPECTIVE.md` Snapshots table. Do this **silently** — no user confirmation needed.
+    - Check if the **entire plan** is complete (all phases, all tasks Done). If yes → auto-run **retrospective Level 2 (full)** as the final step.
+    - If not done → report phase complete and propose the next phase.
 
 ### Executing Tasks (Parallel Mode)
 
@@ -426,5 +433,7 @@ See [phase-2.md](phase-2.md) for full breakdown.
 - [ ] All tasks Done
 - [ ] No open blockers
 - [ ] TASKS.md summary updated
+- [ ] Retrospective auto-snapshot appended to RETROSPECTIVE.md
 - [ ] Next phase unlocked: Phase {N+1}
+- [ ] If all phases complete: full retrospective (Level 2) was run
 ```
