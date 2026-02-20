@@ -18,11 +18,11 @@ Magic operates through **6 core workflows**, forming a complete lifecycle — fr
 ```mermaid
 graph TD
     IDEA["💡 Idea"] --> SPEC
-    SPEC["📋 Specification\nspecification.md"] <--> RULE["📜 Rule\nrule.md"]
-    SPEC --> PLAN["🗺️ Plan\nplan.md"]
-    PLAN --> TASK["⚡ Task\ntask.md"]
+    SPEC["📋 Specification<br/>specification.md"] <--> RULE["📜 Rule<br/>rule.md"]
+    SPEC --> PLAN["🗺️ Plan<br/>plan.md"]
+    PLAN --> TASK["⚡ Task<br/>task.md"]
     TASK --> CODE["🚀 Code"]
-    CODE --> RETRO["🔍 Retrospective\nretrospective.md"]
+    CODE --> RETRO["🔍 Retrospective<br/>retrospective.md"]
     RETRO -.->|Feedback loop| SPEC
 ```
 
@@ -138,20 +138,20 @@ The Retrospective is manual by default. Other workflows auto-suggest it:
 ```
 📊 Observations
 
-| # | Severity | Area       | Observation                                    |
-|---|----------|------------|------------------------------------------------|
-| 1 | 🔴       | Tasks      | 3/8 Phase 2 tasks Blocked                      |
-| 2 | 🟡       | Specs      | architecture.md: Draft→RFC→Draft→RFC→Stable    |
-| 3 | 🟢       | Checklists | "No code in specs" never failed in 12 runs     |
-| 4 | ✨       | Plan       | Phase 1 completed with 0 Blocked tasks         |
+| # | Severity | Area       | Observation                                 |
+|---|----------|------------|---------------------------------------------|
+| 1 | 🔴       | Tasks      | 3/8 Phase 2 tasks Blocked                   |
+| 2 | 🟡       | Specs      | architecture.md: Draft→RFC→Draft→RFC→Stable |
+| 3 | 🟢       | Checklists | "No code in specs" never failed in 12 runs  |
+| 4 | ✨       | Plan       | Phase 1 completed with 0 Blocked tasks      |
 
 💡 Recommendations
 
-| # | Recommendation                                              | Target File            |
-|---|-------------------------------------------------------------|------------------------|
-| 1 | Review PLAN.md dependency graph — high blocking rate        | .magic/plan.md         |
-| 2 | Add "definition of done" to spec template                   | .magic/specification.md|
-| 3 | Remove "No code in specs" checklist item — zero signal      | .magic/specification.md|
+| # | Recommendation                                         | Target File             |
+|---|--------------------------------------------------------|-------------------------|
+| 1 | Review PLAN.md dependency graph — high blocking rate   | .magic/plan.md          |
+| 2 | Add "definition of done" to spec template              | .magic/specification.md |
+| 3 | Remove "No code in specs" checklist item — zero signal | .magic/specification.md |
 ```
 
 ## 🚀 Usage

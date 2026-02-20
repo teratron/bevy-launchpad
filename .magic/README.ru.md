@@ -18,11 +18,11 @@ Magic работает через **6 основных воркфлоу**, фо�
 ```mermaid
 graph TD
     IDEA["💡 Идея"] --> SPEC
-    SPEC["📋 Specification\nspecification.md"] <--> RULE["📜 Rule\nrule.md"]
-    SPEC --> PLAN["🗺️ Plan\nplan.md"]
-    PLAN --> TASK["⚡ Task\ntask.md"]
+    SPEC["📋 Specification<br/>specification.md"] <--> RULE["📜 Rule<br/>rule.md"]
+    SPEC --> PLAN["🗺️ Plan<br/>plan.md"]
+    PLAN --> TASK["⚡ Task<br/>task.md"]
     TASK --> CODE["🚀 Код"]
-    CODE --> RETRO["🔍 Retrospective\nretrospective.md"]
+    CODE --> RETRO["🔍 Retrospective<br/>retrospective.md"]
     RETRO -.->|Петля обратной связи| SPEC
 ```
 
@@ -138,20 +138,20 @@ project-root/
 ```
 📊 Наблюдения
 
-| # | Серьёзность | Область | Наблюдение |
-|---|---|---|---|
-| 1 | 🔴 | Задачи | 3 из 8 задач Фазы 2 заблокированы |
-| 2 | 🟡 | Спеки | architecture.md: Draft→RFC→Draft→RFC→Stable |
-| 3 | 🟢 | Чек-листы | «No code in specs» ни разу не провалился за 12 запусков |
-| 4 | ✨ | План | Фаза 1 завершена с 0 заблокированных задач |
+| # | Серьёзность | Область   | Наблюдение                                              |
+|---|-------------|-----------|---------------------------------------------------------|
+| 1 | 🔴          | Задачи    | 3 из 8 задач Фазы 2 заблокированы                       |
+| 2 | 🟡          | Спеки     | architecture.md: Draft→RFC→Draft→RFC→Stable             |
+| 3 | 🟢          | Чек-листы | «No code in specs» ни разу не провалился за 12 запусков |
+| 4 | ✨          | План      | Фаза 1 завершена с 0 заблокированных задач              |
 
 💡 Рекомендации
 
-| # | Рекомендация | Целевой Файл |
-|---|---|---|
-| 1 | Пересмотреть граф зависимостей в PLAN.md — высокий % блокировок | .magic/plan.md |
-| 2 | Добавить «definition of done» в шаблон спецификации | .magic/specification.md|
-| 3 | Убрать «No code in specs» из чек-листа — нулевой сигнал | .magic/specification.md|
+| # | Рекомендация                                                    | Целевой Файл            |
+|---|-----------------------------------------------------------------|-------------------------|
+| 1 | Пересмотреть граф зависимостей в PLAN.md — высокий % блокировок | .magic/plan.md          |
+| 2 | Добавить «definition of done» в шаблон спецификации             | .magic/specification.md |
+| 3 | Убрать «No code in specs» из чек-листа — нулевой сигнал         | .magic/specification.md |
 ```
 
 ## 🚀 Использование
