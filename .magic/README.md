@@ -135,7 +135,7 @@ The Retrospective is manual by default. Other workflows auto-suggest it:
 
 ### Example Output
 
-```
+```markdown
 📊 Observations
 
 | # | Severity | Area       | Observation                                 |
