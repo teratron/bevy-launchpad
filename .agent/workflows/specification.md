@@ -30,12 +30,12 @@ This workflow defines a universal, technology-agnostic process for creating and 
 .design/
 ├── INDEX.md              # Registry: what specs exist and their status
 ├── RULES.md              # Constitution: how spec work is governed
+├── PLAN.md               # Implementation plan (managed by Plan Workflow)
 ├── specifications/       # Spec files
 │   └── *.md
-├── plan/                 # Implementation plan (managed by Plan Workflow)
-│   └── PLAN.md
-└── tasks/                # Task lists (managed by Task Workflow)
-    └── TASKS.md
+└── tasks/                # Task files (managed by Task Workflow)
+    ├── TASKS.md          # Master task index
+    └── phase-{n}.md      # Per-phase task files
 ```
 
 **System files and their roles:**
@@ -516,7 +516,6 @@ fi
 DESIGN_DIR=".design"
 SPEC_DIR="$DESIGN_DIR/specifications"
 mkdir -p "$SPEC_DIR"
-mkdir -p "$DESIGN_DIR/plan"
 mkdir -p "$DESIGN_DIR/tasks"
 DATE=$(date +%Y-%m-%d)
 
@@ -634,7 +633,7 @@ if (!(Test-Path -Path ".git")) {
 
 $DesignDir = ".design"
 $SpecDir = Join-Path $DesignDir "specifications"
-foreach ($dir in @($DesignDir, $SpecDir, (Join-Path $DesignDir "plan"), (Join-Path $DesignDir "tasks"))) {
+foreach ($dir in @($DesignDir, $SpecDir, (Join-Path $DesignDir "tasks"))) {
     if (!(Test-Path -Path $dir)) {
         New-Item -ItemType Directory -Force -Path $dir | Out-Null
     }

@@ -4,7 +4,7 @@ description: Workflow for creating and managing the implementation plan from exi
 
 # Plan Workflow
 
-This workflow reads finalized specifications and produces a structured implementation plan (`.design/plan/PLAN.md`).
+This workflow reads finalized specifications and produces a structured implementation plan (`.design/PLAN.md`).
 It operates **after** the Spec Workflow — specifications are its input, not its concern.
 
 > **Scope**: Prioritization, phasing, dependency analysis, and implementation order.
@@ -27,10 +27,12 @@ It operates **after** the Spec Workflow — specifications are its input, not it
 .design/
 ├── INDEX.md              # Input: registry of all specs
 ├── RULES.md              # Input: project conventions
+├── PLAN.md               # Output: implementation plan (managed by Plan Workflow)
 ├── specifications/       # Input: spec files (managed by Spec Workflow)
 │   └── *.md
-└── plan/                 # Output: plan files (managed by Plan Workflow)
-    └── PLAN.md
+└── tasks/                # Output: task files (managed by Task Workflow)
+    ├── TASKS.md
+    └── phase-{n}.md
 ```
 
 ---
@@ -39,7 +41,7 @@ It operates **after** the Spec Workflow — specifications are its input, not it
 
 ### Creating a New Plan
 
-Use when `.design/plan/PLAN.md` does not exist or needs to be built from scratch.
+Use when `.design/PLAN.md` does not exist or needs to be built from scratch.
 
 **Trigger phrase**: *"Create plan"* or *"Generate plan"*
 
@@ -109,7 +111,7 @@ graph TD
     Adjust phases or proceed? (yes / adjust)
     ```
 
-6. **Write PLAN.md**: After user approval, create `.design/plan/PLAN.md` using the *PLAN.md Template*.
+6. **Write PLAN.md**: After user approval, create `.design/PLAN.md` using the *PLAN.md Template*.
 7. **Task Completion Checklist**: Present the checklist to the user.
 
 ---
@@ -157,7 +159,7 @@ Assign to:
 When a spec transitions to `Stable`, update its marker in PLAN.md in place:
 
 ```markdown
-- **{Spec Name}** ([{spec-name}.md](../specifications/{spec-name}.md)) — `Stable ✓`
+- **{Spec Name}** ([{spec-name}.md](specifications/{spec-name}.md)) — `Stable ✓`
 ```
 
 When a spec transitions to `Deprecated`, move its entry to the `Archived` section.
@@ -214,7 +216,7 @@ Status Accuracy
   ☐ Draft/RFC specs flagged as not yet implementation-ready
 
 Structure
-  ☐ PLAN.md written to .design/plan/ (not inside .design/specifications/)
+  ☐ PLAN.md written to .design/ root (not inside subdirectory)
   ☐ Critical path identified and documented
   ☐ Archived section present for deprecated specs
 
@@ -275,15 +277,15 @@ Estimated minimum phases before UI work can begin: **2**
 
 *Specs with no dependencies or only external dependencies. Start here.*
 
-- **Core Architecture** ([architecture.md](../specifications/architecture.md)) — `Draft`
+- **Core Architecture** ([architecture.md](specifications/architecture.md)) — `Draft`
   - Dependencies: none (root)
   - Notes: 4-layer model must be stable before L2+ work begins
 
-- **Public API** ([api.md](../specifications/api.md)) — `Stable ✓`
+- **Public API** ([api.md](specifications/api.md)) — `Stable ✓`
   - Dependencies: architecture.md
   - Notes: LaunchpadBuilder contract is frozen
 
-- **Settings Schema** ([settings-schema.md](../specifications/settings-schema.md)) — `Stable ✓`
+- **Settings Schema** ([settings-schema.md](specifications/settings-schema.md)) — `Stable ✓`
   - Dependencies: data-management.md
   - Notes: RON structure is stable; ready for implementation
 
@@ -293,11 +295,11 @@ Estimated minimum phases before UI work can begin: **2**
 
 *Core services that UI and gameplay layers depend on.*
 
-- **Data Management** ([data-management.md](../specifications/data-management.md)) — `Draft`
+- **Data Management** ([data-management.md](specifications/data-management.md)) — `Draft`
   - Dependencies: architecture.md
   - Notes: Asset orchestration and persistence layer
 
-- **Input System** ([input-system.md](../specifications/input-system.md)) — `Draft`
+- **Input System** ([input-system.md](specifications/input-system.md)) — `Draft`
   - Dependencies: architecture.md
 
 ---
@@ -306,16 +308,16 @@ Estimated minimum phases before UI work can begin: **2**
 
 *UI layer. Requires Phase 2 to be Stable.*
 
-- **UI Components** ([ui-components.md](../specifications/ui-components.md)) — `Draft`
+- **UI Components** ([ui-components.md](specifications/ui-components.md)) — `Draft`
   - Dependencies: architecture.md
 
-- **Main Menu** ([main-menu.md](../specifications/main-menu.md)) — `Draft`
+- **Main Menu** ([main-menu.md](specifications/main-menu.md)) — `Draft`
   - Dependencies: ui-components.md, localization.md
 
-- **Settings UI** ([settings-ui.md](../specifications/settings-ui.md)) — `Draft`
+- **Settings UI** ([settings-ui.md](specifications/settings-ui.md)) — `Draft`
   - Dependencies: settings-schema.md, ui-components.md
 
-- **Localization** ([localization.md](../specifications/localization.md)) — `Draft`
+- **Localization** ([localization.md](specifications/localization.md)) — `Draft`
   - Dependencies: ui-components.md, data-management.md
 
 ---
@@ -324,7 +326,7 @@ Estimated minimum phases before UI work can begin: **2**
 
 *Non-critical features. Can begin in parallel with Phase 3.*
 
-- **Gameplay Config** ([gameplay-config.md](../specifications/gameplay-config.md)) — `Draft`
+- **Gameplay Config** ([gameplay-config.md](specifications/gameplay-config.md)) — `Draft`
   - Dependencies: data-management.md
 
 ---
@@ -354,8 +356,8 @@ Estimated minimum phases before UI work can begin: **2**
 
 ## Plan History
 
-| Version | Date       | Author | Description            |
-| :---    | :---       | :---   | :---                   |
-| 1.0.0   | YYYY-MM-DD | Agent  | Initial plan generated |
+| Version | Date       | Author | Description              |
+| :---    | :---       | :---   | :---                     |
+| 1.0.0   | YYYY-MM-DD | Agent  | Initial plan generated   |
 
 ```
