@@ -1,46 +1,54 @@
 ---
-description: One-time initialization of the .design/ directory structure.
+description: Automatic pre-flight check for .design/ directory initialization.
 ---
 
-# Init Workflow
+# Init — Automatic Pre-Flight Check
 
-Initializes the `.design/` directory with all required system files.
-Run once at project start. Safe to re-run — skips files that already exist.
+Verifies that `.design/` exists and contains all required system files. If anything is missing — creates it automatically.
+
+> **This is NOT a user-facing workflow.** It is called automatically by every other workflow on first invocation. No manual command needed.
 
 ## Agent Guidelines
 
-1. **Check First**: Verify `.design/` state before running any script.
-2. **Report**: After init, list every file created or skipped.
-3. **Proceed**: After successful init, offer to run the Spec Workflow to create the first specification.
+1. **Silent by Default**: When called automatically by another workflow, do not interrupt the user. Report init results briefly and continue with the original workflow.
+2. **Safe to Re-Run**: Skips files that already exist. Never overwrites existing `.design/` content.
+3. **First Run Only**: After successful initialization, suggest running the Spec Workflow to create the first specification.
+
+## When It Runs
+
+This check is embedded as **Step 0** in every workflow (`specification.md`, `plan.md`, `task.md`, `rule.md`, `retrospective.md`). The agent executes it before any workflow-specific logic.
+
+```mermaid
+graph TD
+    A["Any workflow triggered"] --> B{".design/ exists?"}
+    B -->|Yes| C{INDEX.md + RULES.md exist?}
+    B -->|No| D["Run init scripts"]
+    C -->|Yes| E["Continue with workflow"]
+    C -->|No| D
+    D --> F["Report: SDD initialized"]
+    F --> E
+```
 
 ## Steps
 
-1. **Detect OS**: Determine whether to run `init.sh` (macOS/Linux) or `init.ps1` (Windows).
-2. **Check state**: List any files that already exist in `.design/` — they will be skipped.
-3. **Run script**: Execute the appropriate script from `.magic/scripts/`.
-4. **Report result**:
-
-    ```
-    Init complete — {YYYY-MM-DD}
-
-    Created:
-      ✓ .design/INDEX.md
-      ✓ .design/RULES.md
-      ✓ .design/specifications/
-      ✓ .design/tasks/
-
-    Skipped (already exist):
-      — .design/PLAN.md
-
-    Ready. Run "Create spec" to add your first specification.
-    ```
-
-## Scripts
+1. **Check `.design/`**: Verify directory exists.
+2. **Check system files**: Verify `INDEX.md` and `RULES.md` exist inside `.design/`.
+3. **If anything missing**: Detect OS and run the appropriate script:
 
 | OS | Script | Run with |
 | :--- | :--- | :--- |
 | macOS / Linux | `.magic/scripts/init.sh` | `bash .magic/scripts/init.sh` |
 | Windows | `.magic/scripts/init.ps1` | `pwsh .magic/scripts/init.ps1` |
+
+1. **Report result** (brief, inline with the calling workflow):
+
+    ```
+    SDD initialized — {YYYY-MM-DD}
+    Created: .design/INDEX.md, .design/RULES.md, .design/specifications/, .design/tasks/
+    Continuing with {workflow name}...
+    ```
+
+2. **If already initialized**: Skip silently. No output needed.
 
 ## Directory Structure Created
 
@@ -52,4 +60,4 @@ Run once at project start. Safe to re-run — skips files that already exist.
 └── tasks/           # Task files go here
 ```
 
-`PLAN.md` and `TASKS.md` are created by the Plan and Task workflows respectively — not by init.
+`PLAN.md`, `TASKS.md`, and `RETROSPECTIVE.md` are created by their respective workflows — not by init.

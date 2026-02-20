@@ -1,6 +1,5 @@
 if (!(Test-Path -Path ".git")) {
-    $confirm = Read-Host "Warning: not a git repository. Continue? (y/n)"
-    if ($confirm -ne "y") { Write-Host "Aborted."; exit 1 }
+    Write-Host "Note: not a git repository. Proceeding with SDD initialization anyway."
 }
 
 $D = ".design"

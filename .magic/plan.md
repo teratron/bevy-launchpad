@@ -16,10 +16,11 @@ It operates **after** the Spec Workflow — specifications are its input, not it
 
 1. **Specs First**: Never generate a plan without reading all spec files listed in `INDEX.md`. The plan reflects specs — it does not invent content.
 2. **Read Before Write**: Always read `.design/INDEX.md`, `.design/RULES.md`, and all spec files in `.design/specifications/` before producing any plan output.
-3. **Confirm Before Commit**: Always show the proposed phase structure and dependency analysis to the user before writing `PLAN.md`.
-4. **No Duplication**: PLAN.md summarizes specs — it does not copy their content. Use references, not reproduction.
-5. **Dependency Integrity**: Never assign a spec to an earlier phase than its declared dependencies.
-6. **Checklist Before Done**: Every task must end with the *Task Completion Checklist*. A task is not complete until the checklist is presented.
+3. **Auto-Init**: If `.design/` or its system files are missing, automatically trigger the Init pre-flight check (`.magic/init.md`) before proceeding.
+4. **Confirm Before Commit**: Always show the proposed phase structure and dependency analysis to the user before writing `PLAN.md`.
+5. **No Duplication**: PLAN.md summarizes specs — it does not copy their content. Use references, not reproduction.
+6. **Dependency Integrity**: Never assign a spec to an earlier phase than its declared dependencies.
+7. **Checklist Before Done**: Every task must end with the *Task Completion Checklist*. A task is not complete until the checklist is presented.
 
 ## Directory Structure
 

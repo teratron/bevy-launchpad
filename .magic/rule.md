@@ -13,9 +13,10 @@ Use when you want to declare a convention without going through the Spec Workflo
 ## Agent Guidelines
 
 1. **Read First**: Always read `.design/RULES.md` in full before any operation.
-2. **Scope**: Only §7 Project Conventions is modified here. Sections 1–6 are the universal constitution — amend them only if the user explicitly targets them.
-3. **No Silent Changes**: Always show the proposed change before writing.
-4. **Version Discipline**: Every change to RULES.md requires a version bump and a Document History row.
+2. **Auto-Init**: If `.design/` or `RULES.md` is missing, automatically trigger the Init pre-flight check (`.magic/init.md`) before proceeding.
+3. **Scope**: Only §7 Project Conventions is modified here. Sections 1–6 are the universal constitution — amend them only if the user explicitly targets them.
+4. **No Silent Changes**: Always show the proposed change before writing.
+5. **Version Discipline**: Every change to RULES.md requires a version bump and a Document History row.
 
 ## Workflow Steps
 

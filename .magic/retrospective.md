@@ -27,12 +27,13 @@ The retrospective operates on two levels to balance thoroughness with efficiency
 **CRITICAL INSTRUCTIONS FOR AI:**
 
 1. **Read-Only Analysis**: This workflow reads `.design/` artifacts to gather data. It does NOT modify specs, plans, tasks, or RULES.md. The only file it writes to is `.design/RETROSPECTIVE.md`.
-2. **Evidence-Based**: Every observation must reference a specific file, date, or event. No speculative claims.
-3. **Actionable Output**: Every recommendation must be concrete and implementable (e.g., "Remove checklist item X" or "Add example Y to specification.md"). Abstract advice ("improve quality") is forbidden.
-4. **Lightweight Execution**: This workflow must not consume excessive context. Read file headers and Document History tables — do not re-read entire spec bodies unless investigating a specific issue.
-5. **No Self-Modification**: This workflow recommends changes to `.magic/` files — it does not apply them. Changes to the SDD engine require explicit user approval and manual editing.
-6. **Level Awareness**: Always know which level you are executing. Level 1 (auto-snapshot) is silent and fast — no analysis, no recommendations. Level 2 (full) is thorough and interactive.
-7. **Documentation Sync**: When a recommendation is accepted and a `.magic/` workflow file is modified, you MUST also update `.magic/README.md` and `.magic/README.ru.md` to reflect the change. Documentation must always stay in sync with the engine.
+2. **Auto-Init**: If `.design/` or its system files are missing, automatically trigger the Init pre-flight check (`.magic/init.md`) before proceeding.
+3. **Evidence-Based**: Every observation must reference a specific file, date, or event. No speculative claims.
+4. **Actionable Output**: Every recommendation must be concrete and implementable (e.g., "Remove checklist item X" or "Add example Y to specification.md"). Abstract advice ("improve quality") is forbidden.
+5. **Lightweight Execution**: This workflow must not consume excessive context. Read file headers and Document History tables — do not re-read entire spec bodies unless investigating a specific issue.
+6. **No Self-Modification**: This workflow recommends changes to `.magic/` files — it does not apply them. Changes to the SDD engine require explicit user approval and manual editing.
+7. **Level Awareness**: Always know which level you are executing. Level 1 (auto-snapshot) is silent and fast — no analysis, no recommendations. Level 2 (full) is thorough and interactive.
+8. **Documentation Sync**: When a recommendation is accepted and a `.magic/` workflow file is modified, you MUST also update `.magic/README.md` and `.magic/README.ru.md` to reflect the change. Documentation must always stay in sync with the engine.
 
 ## Directory Structure
 

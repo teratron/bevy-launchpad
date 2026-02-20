@@ -1,8 +1,6 @@
 #!/bin/bash
 if [ ! -d ".git" ]; then
-  echo "Warning: not a git repository. Continue? (y/n)"
-  read -r confirm
-  [[ "$confirm" != "y" ]] && echo "Aborted." && exit 1
+  echo "Note: not a git repository. Proceeding with SDD initialization anyway."
 fi
 
 DESIGN_DIR=".design"
