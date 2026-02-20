@@ -13,27 +13,45 @@ It consists of a set of markdown-based workflow instructions for AI agents, effe
 
 ## 🔗 The Pipeline
 
-Magic operates through **6 core workflows**, forming a complete lifecycle — from raw idea to implemented code, and back to self-analysis:
+Magic operates through **3 core workflows** and **2 auxiliary workflows**, forming a complete lifecycle — from raw idea to implemented code, and back to self-analysis. Initialization is automatic and requires no manual command.
 
 ```mermaid
 graph TD
-    IDEA["💡 Idea"] --> SPEC
+    IDEA["💡 Idea"] --> INIT{"🏗️ Auto-Init<br/>init.md"}
+    INIT -->|.design/ exists| SPEC
+    INIT -->|.design/ missing| CREATE["Create .design/ structure"] --> SPEC
     SPEC["📋 Specification<br/>specification.md"] <--> RULE["📜 Rule<br/>rule.md"]
     SPEC --> PLAN["🗺️ Plan<br/>plan.md"]
     PLAN --> TASK["⚡ Task<br/>task.md"]
     TASK --> CODE["🚀 Code"]
     CODE --> RETRO["🔍 Retrospective<br/>retrospective.md"]
     RETRO -.->|Feedback loop| SPEC
+
+    style INIT fill:#2d333b,stroke:#f0883e,stroke-dasharray: 5 5
+    style RULE fill:#2d333b,stroke:#8b949e,stroke-dasharray: 3 3
+    style RETRO fill:#2d333b,stroke:#8b949e,stroke-dasharray: 3 3
 ```
+
+### Core Workflows
 
 | # | Workflow | File | Purpose |
 |---|---|---|---|
-| 1 | **Init** | `init.md` | 🏗️ One-time setup of `.design/` directory, `INDEX.md`, and `RULES.md` |
-| 2 | **Specification** | `specification.md` | 📋 Converts raw thoughts into structured specs. Manages statuses (Draft → RFC → Stable → Deprecated) |
-| 3 | **Rule** | `rule.md` | 📜 Manages the project constitution (`RULES.md §7`). Add / Amend / Remove / List conventions |
-| 4 | **Plan** | `plan.md` | 🗺️ Reads Stable specs, builds dependency graph, extracts critical path, produces phased `PLAN.md` |
-| 5 | **Task** | `task.md` | ⚡ Decomposes Plan into atomic tasks with execution tracks. Sequential & Parallel modes |
-| 6 | **Retrospective** | `retrospective.md` | 🔍 Analyzes SDD usage, collects metrics, generates improvement recommendations |
+| 1 | **Specification** | `specification.md` | 📋 Converts raw thoughts into structured specs. Manages statuses (Draft → RFC → Stable → Deprecated) |
+| 2 | **Plan** | `plan.md` | 🗺️ Reads Stable specs, builds dependency graph, extracts critical path, produces phased `PLAN.md` |
+| 3 | **Task** | `task.md` | ⚡ Decomposes Plan into atomic tasks with execution tracks. Sequential & Parallel modes |
+
+### Auxiliary Workflows
+
+| Workflow | File | Purpose |
+|---|---|---|
+| **Rule** | `rule.md` | 📜 Manages the project constitution (`RULES.md §7`). Add / Amend / Remove / List conventions |
+| **Retrospective** | `retrospective.md` | 🔍 Analyzes SDD usage, collects metrics, generates improvement recommendations |
+
+### Auto-Init
+
+| | File | Purpose |
+|---|---|---|
+| **Init** | `init.md` + `scripts/` | 🏗️ Automatic pre-flight check. On first invocation of any workflow, verifies `.design/` exists. If not — creates the directory structure, `INDEX.md`, and `RULES.md`. No manual command needed |
 
 ## 🏗️ Architecture & Directory Structure
 
@@ -58,13 +76,13 @@ project-root/
 ├── .magic/                     # ⚙️ SDD Engine (workflow logic)
 │   ├── README.md               #    Documentation (EN)
 │   ├── README.ru.md            #    Documentation (RU)
-│   ├── init.md                 #    Initialization workflow
+│   ├── init.md                 #    Auto-init logic (pre-flight check)
 │   ├── plan.md                 #    Planning workflow + templates
-│   ├── retrospective.md        #    Self-analysis workflow + templates
-│   ├── rule.md                 #    Constitution management workflow
+│   ├── retrospective.md        #    Self-analysis workflow + templates (auxiliary)
+│   ├── rule.md                 #    Constitution management workflow (auxiliary)
 │   ├── specification.md        #    Specification authoring workflow + templates
 │   ├── task.md                 #    Task decomposition & execution workflow
-│   └── scripts/                #    Init scripts
+│   └── scripts/                #    Init scripts (auto-run on first use)
 │       ├── init.sh             #       macOS / Linux
 │       └── init.ps1            #       Windows
 │
@@ -175,16 +193,24 @@ graph TD
 
 ## 🚀 Usage
 
-Simply instruct your AI agent (Cursor, Claude, Gemini, or any terminal agent):
+Simply instruct your AI agent (Cursor, Claude, Gemini, or any terminal agent). Initialization is automatic — no setup command required.
+
+### Core Commands
 
 | Command | What Happens |
 |---|---|
-| *"Initialize the project"* | Runs Init → creates `.design/` structure |
 | *"Dispatch this thought into specs..."* | Runs Specification → parses, maps, and writes spec files |
-| *"Add rule: always use RON format"* | Runs Rule → adds convention to RULES.md §7 |
 | *"Create an implementation plan"* | Runs Plan → builds phased plan with dependency graph |
 | *"Generate tasks for Phase 1"* | Runs Task → decomposes plan into atomic tasks with tracks |
 | *"Execute the next task"* | Runs Task → picks and implements the next available task |
+
+### Auxiliary Commands (optional)
+
+| Command | What Happens |
+|---|---|
+| *"Add rule: always use snake_case naming"* | Runs Rule → adds convention to RULES.md §7 |
 | *"Run retrospective"* | Runs Retrospective → analyzes usage, generates recommendations |
+
+> **Auto-Init:** On first invocation of any command, the system automatically checks for `.design/` and creates it if missing. No manual initialization needed.
 
 The AI will automatically read the corresponding `.magic/*.md` workflow file and execute the request within the bounds of the SDD system. No code escapes the pipeline. ✨
