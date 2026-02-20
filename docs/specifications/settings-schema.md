@@ -4,8 +4,6 @@
 **Status:** Stable
 **Roadmap Phase:** Phase 1
 
----
-
 ## Overview
 
 Техническая спецификация структуры файла `settings.ron`, используемого для хранения пользовательских предпочтений.
@@ -58,8 +56,6 @@
   - **Windows**: `%APPDATA%/{Org}/{App}/settings.ron`
   - **Linux**: `~/.config/{app}/settings.ron`
   - **macOS**: `~/Library/Application Support/{org}.{app}/settings.ron`
-
----
 
 ## Document History
 

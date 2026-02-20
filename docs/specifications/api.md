@@ -4,8 +4,6 @@
 **Status:** RFC
 **Roadmap Phase:** Phase 1
 
----
-
 ## Overview
 
 Specification of the public-facing API for Bevy Launchpad, primarily through `LaunchpadBuilder`.
@@ -39,8 +37,6 @@ graph LR
     C --> D[build]
     D --> E[add_plugins]
 ```
-
----
 
 ## Document History
 

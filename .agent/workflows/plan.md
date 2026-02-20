@@ -1,5 +1,5 @@
 ---
-description: Workflow for creating and managing the implementation plan from existing specifications.
+description: Workflow for creating and managing the implementation plan from existing specifications
 ---
 
 # Plan Workflow
@@ -34,8 +34,6 @@ It operates **after** the Spec Workflow — specifications are its input, not it
     ├── TASKS.md
     └── phase-{n}.md
 ```
-
----
 
 ## Workflow Steps
 
@@ -114,8 +112,6 @@ graph TD
 6. **Write PLAN.md**: After user approval, create `.design/PLAN.md` using the *PLAN.md Template*.
 7. **Task Completion Checklist**: Present the checklist to the user.
 
----
-
 ### Updating an Existing Plan
 
 Use when specs have changed, new specs were added, or the user wants to reprioritize.
@@ -193,8 +189,6 @@ When all specs in a phase reach `Stable`:
 
 Propose activating the next phase if not already open.
 
----
-
 ### Task Completion Checklist
 
 **Must be shown at the end of every plan operation — no exceptions.**
@@ -225,8 +219,6 @@ Confirmation
   ☐ Any dependency warnings surfaced and resolved
 ```
 
----
-
 ## Templates
 
 ### PLAN.md Template
@@ -239,7 +231,6 @@ Confirmation
 **Based on:** .design/INDEX.md v{X.Y.Z}
 **Status:** Active
 
----
 
 ## Overview
 
@@ -247,7 +238,6 @@ Implementation plan derived from project specifications.
 Specs are the source of truth — this plan reflects their current state.
 To update this plan, use the Plan Workflow trigger: *"Update plan"*.
 
----
 
 ## Dependency Graph
 
@@ -271,8 +261,6 @@ graph TD
 
 Estimated minimum phases before UI work can begin: **2**
 
----
-
 ## Phase 1 — Foundation
 
 *Specs with no dependencies or only external dependencies. Start here.*
@@ -289,8 +277,6 @@ Estimated minimum phases before UI work can begin: **2**
   - Dependencies: data-management.md
   - Notes: RON structure is stable; ready for implementation
 
----
-
 ## Phase 2 — Services & Data
 
 *Core services that UI and gameplay layers depend on.*
@@ -301,8 +287,6 @@ Estimated minimum phases before UI work can begin: **2**
 
 - **Input System** ([input-system.md](specifications/input-system.md)) — `Draft`
   - Dependencies: architecture.md
-
----
 
 ## Phase 3 — UI & Experience
 
@@ -320,16 +304,12 @@ Estimated minimum phases before UI work can begin: **2**
 - **Localization** ([localization.md](specifications/localization.md)) — `Draft`
   - Dependencies: ui-components.md, data-management.md
 
----
-
 ## Phase 4 — Polish
 
 *Non-critical features. Can begin in parallel with Phase 3.*
 
 - **Gameplay Config** ([gameplay-config.md](specifications/gameplay-config.md)) — `Draft`
   - Dependencies: data-management.md
-
----
 
 ## Unassigned (No Spec File Yet)
 
@@ -339,15 +319,11 @@ Estimated minimum phases before UI work can begin: **2**
 - **Theme Engine** — referenced in ui-components.md
 - **Accessibility** — referenced in ui-components.md
 
----
-
 ## Archived
 
 *Deprecated specs kept for historical reference.*
 
 <!-- Deprecated specs appear here when moved from active phases -->
-
----
 
 ## Meta Information
 
@@ -356,8 +332,8 @@ Estimated minimum phases before UI work can begin: **2**
 
 ## Plan History
 
-| Version | Date       | Author | Description              |
-| :---    | :---       | :---   | :---                     |
-| 1.0.0   | YYYY-MM-DD | Agent  | Initial plan generated   |
+| Version | Date | Author | Description |
+| :--- | :--- | :--- | :--- |
+| 1.0.0 | YYYY-MM-DD | Agent | Initial plan generated |
 
 ```

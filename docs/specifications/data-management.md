@@ -4,8 +4,6 @@
 **Status:** Draft
 **Roadmap Phase:** Phase 1
 
----
-
 ## Overview
 
 Specification for asset management, persistence, and application configuration.
@@ -51,8 +49,6 @@ Specification for asset management, persistence, and application configuration.
 2. **Security**: Верификация подписи.
 3. **Atomic Patch**: Применение в изолированном каталоге.
 4. **Rollback**: Откат при сбое.
-
----
 
 ## Document History
 

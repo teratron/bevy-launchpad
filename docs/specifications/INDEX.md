@@ -3,8 +3,6 @@
 **Version:** 1.1.0
 **Status:** Active
 
----
-
 ## Overview
 
 This index serves as the central registry for all project specifications,
@@ -29,8 +27,6 @@ detailing their relationships and current status.
 | [settings-ui.md](settings-ui.md) | Advanced settings and persistence | Draft | 0.3.0 |
 | [settings-schema.md](settings-schema.md) | Technical data structure (RON) | Stable | 1.0.0 |
 | [gameplay-config.md](gameplay-config.md) | Gameplay balance & physics constants | Draft | 0.1.0 |
-
----
 
 ## Meta Information
 

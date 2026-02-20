@@ -4,8 +4,6 @@
 **Status:** Draft
 **Roadmap Phase:** Phase 2
 
----
-
 ## Overview
 
 Главное меню — это основной интерактивный интерфейс игры. Оно обеспечивает доступ к игровому процессу, настройкам конфигурации и выходу из приложения.
@@ -32,8 +30,6 @@
 - **Keyboard/Gamepad Navigation**: Полная поддержка выбора элементов без мыши.
 - **Back Action**: Клавиша ESC или кнопка "Назад" всегда возвращает на предыдущий уровень в Navigation Stack.
 
----
-
 ## 2. Detailed Design
 
 ### 2.1 State Flow
@@ -54,8 +50,6 @@ graph TD
 - **Events**: Генерация `StartGameEvent` при нажатии Play.
 - **Resources**: Использование `MenuTheme` для стилизации элементов.
 - **Asset Manifest**: Модуль получает текстуры (`splash_logo`, `background_menu`) и звуки (`click`, `hover`, `music_menu`) через ключи, определенные в `assets.ron`.
-
----
 
 ## Document History
 

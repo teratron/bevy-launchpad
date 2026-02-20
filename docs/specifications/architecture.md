@@ -4,8 +4,6 @@
 **Status:** Draft
 **Roadmap Phase:** Phase 1
 
----
-
 ## Overview
 
 General architectural concept of the Bevy Launchpad framework, guiding principles, and 4-layer model.
@@ -96,8 +94,6 @@ graph TD
 | **No Hardcoded Paths** | Пути разрешаются через AssetServer. |
 | **Visual Feedback** | Все изменения UI имеют визуальный отклик. |
 | **Save Integrity** | Валидация данных до загрузки. |
-
----
 
 ## Document History
 

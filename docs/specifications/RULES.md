@@ -3,15 +3,11 @@
 **Version:** 1.2.0
 **Status:** Active
 
----
-
 ## Overview
 
 This file is the constitution of the specification system for this project.
 It defines standing rules and conventions that apply to all spec files.
 It is read by the agent before every operation and updated only via explicit triggers.
-
----
 
 ## 1. Naming Conventions
 
@@ -62,8 +58,6 @@ A spec may only change status when the following criteria are met:
 - **Asset Path Resolution**: Asset directory is always resolved at runtime
   via the executable's location (`current_exe()`), not the working directory.
   This must be documented in any spec that references file paths.
-
----
 
 ## Document History
 

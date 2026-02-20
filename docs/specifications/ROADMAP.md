@@ -3,8 +3,6 @@
 **Version:** 1.2.0
 **Status:** Active
 
----
-
 ## Overview
 
 Strategic development plan prioritizing core features, resilience, and user experience.
@@ -33,8 +31,6 @@ Strategic development plan prioritizing core features, resilience, and user expe
 - **Transition Orchestrator** *(no spec yet)*: Синхронизация загрузки ассетов с визуальными переходами.
 - **Theme Engine** *(no spec yet)*: Гибкая стилизация UI через RON-конфигурацию.
 - **Accessibility** *(no spec yet)*: Высокий контраст, масштабирование шрифтов, base screen reader.
-
----
 
 ## Meta Information
 

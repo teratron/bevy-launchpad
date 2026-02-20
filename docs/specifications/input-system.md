@@ -4,8 +4,6 @@
 **Status:** Draft
 **Roadmap Phase:** Phase 1
 
----
-
 ## Overview
 
 Action-based input management system for Bevy Launchpad.
@@ -28,8 +26,6 @@ Action-based input management system for Bevy Launchpad.
 | :--- | :--- |
 | **Input Remapping** | Поддержка клавиатуры/мыши/геймпада с возможностью смены биндов. |
 | **Juiciness** | Сглаживание ввода (deadzones) для геймпадов. |
-
----
 
 ## Document History
 

@@ -63,11 +63,11 @@ Within each phase, tasks are grouped into **Execution Tracks**. Tasks in differe
 
 ```
 Phase 2
-  Track A: [T-2A01] → [T-2A02] → [T-2A03]   ══╗
-                                               ║ (parallel)
-  Track B: [T-2B01] → [T-2B02]               ══╣
-                                               ║
-  Track C: [T-2C01]  (depends on A + B)      ══╝ (after A and B complete)
+  Track A: [T-2A01] → [T-2A02] → [T-2A03] ══╗
+                                            ║ (parallel)
+  Track B: [T-2B01] → [T-2B02]            ══╣
+                                            ║
+  Track C: [T-2C01]  (depends on A + B)   ══╝ (after A and B complete)
 ```
 
 Track assignment is derived from the dependency graph in PLAN.md — specs that don't depend on each other can be different tracks.
@@ -93,8 +93,6 @@ Developer Agent B: owns Track B → executes T-xB01, T-xB02... → reports Done/
 ```
 
 The execution mode is stored in `RULES.md §7` as a Project Convention and does not need to be re-asked on subsequent runs.
-
----
 
 ## Workflow Steps
 
@@ -185,8 +183,6 @@ graph TD
 7. **Write files**: Create `TASKS.md` (master index) and `phase-1.md`, `phase-2.md`... using the templates below.
 8. **Task Completion Checklist**: Present the checklist.
 
----
-
 ### Executing Tasks (Sequential Mode)
 
 **Trigger phrase**: *"Start tasks"*, *"Next task"*, *"Continue"*
@@ -211,8 +207,6 @@ graph TD
 2. **Execute**: Perform the implementation work described by the task. Stay within the task's spec section — do not expand scope.
 3. **Update status**: Mark `In Progress` when starting, `Done` when complete, `Blocked` if a blocker is encountered.
 4. **Report**: After each task, briefly state what was done and what is next.
-
----
 
 ### Executing Tasks (Parallel Mode)
 
@@ -264,8 +258,6 @@ Each Developer Agent owns one track for the duration of a phase:
 - Do not touch files outside the assigned track's scope without Manager approval.
 - Do not start the next task until the current one is `Done`.
 
----
-
 ### Updating Tasks
 
 **Trigger phrase**: *"Update tasks"*, *"Sync tasks"*
@@ -292,8 +284,6 @@ Use when specs or the plan have changed after tasks were generated.
 
     Apply? (yes / select / skip)
     ```
-
----
 
 ### Task Completion Checklist
 
@@ -327,8 +317,6 @@ Status
   ☐ All Blocked tasks have a reason stated in Notes
 ```
 
----
-
 ## Templates
 
 ### TASKS.md — Master Index
@@ -342,26 +330,23 @@ Status
 **Execution Mode:** {Sequential | Parallel}
 **Status:** Active
 
----
 
 ## Overview
 
 Master index of all implementation tasks across all phases.
 Tasks are organized by phase and track. Detailed breakdowns: see `phase-{n}.md` files.
 
----
 
 ## Summary
 
 | Phase | Total | Todo | In Progress | Done | Blocked |
 | :---- | ----: | ---: | ----------: | ---: | ------: |
-| Phase 1 — Foundation      | 5 | 3 | 1 | 1 | 0 |
+| Phase 1 — Foundation | 5 | 3 | 1 | 1 | 0 |
 | Phase 2 — Services & Data | 8 | 8 | 0 | 0 | 0 |
 | Phase 3 — UI & Experience | 12| 12| 0 | 0 | 0 |
-| Phase 4 — Polish          | 3 | 3 | 0 | 0 | 0 |
-| **Total**                 |**28**|**26**|**1**|**1**|**0**|
+| Phase 4 — Polish | 3 | 3 | 0 | 0 | 0 |
+| **Total** | **28** | **26** | **1** | **1** | **0** |
 
----
 
 ## Phase 1 — Foundation
 
@@ -385,7 +370,6 @@ See [phase-2.md](phase-2.md) for full breakdown.
 | T-2A02 | Implement Embedded Fallbacks | A | Todo |
 | ... | | | |
 
----
 
 ## Archived / Cancelled
 
@@ -393,7 +377,6 @@ See [phase-2.md](phase-2.md) for full breakdown.
 | :- | :---- | :----- |
 <!-- Tasks cancelled due to spec deprecation appear here -->
 
----
 
 ## Task History
 
@@ -411,7 +394,6 @@ See [phase-2.md](phase-2.md) for full breakdown.
 **Execution Mode:** {Sequential | Parallel}
 **Tracks:** {A, B, C...}
 
----
 
 ## Track A — {Track Name}
 
@@ -431,7 +413,6 @@ See [phase-2.md](phase-2.md) for full breakdown.
 - **Assignee:** unassigned
 - **Notes:** —
 
----
 
 ## Track B — {Track Name}
 
@@ -445,7 +426,6 @@ See [phase-2.md](phase-2.md) for full breakdown.
 - **Assignee:** unassigned
 - **Notes:** —
 
----
 
 ## Track C — {Track Name}
 
@@ -459,7 +439,6 @@ See [phase-2.md](phase-2.md) for full breakdown.
 - **Assignee:** unassigned
 - **Notes:** —
 
----
 
 ## Phase Completion
 

@@ -4,8 +4,6 @@
 **Status:** Draft
 **Roadmap Phase:** Phase 2
 
----
-
 ## Overview
 
 General rules for building user interfaces, visual language, and interaction patterns for the Bevy Launchpad framework.
@@ -46,8 +44,6 @@ General rules for building user interfaces, visual language, and interaction pat
 
 - **High Contrast Mode**: Поддержка альтернативной цветовой схемы.
 - **Font Scaling**: Возможность увеличения шрифтов для доступности.
-
----
 
 ## Document History
 

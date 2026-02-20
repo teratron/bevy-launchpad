@@ -62,8 +62,6 @@ graph LR
     RFC --> Draft
 ```
 
----
-
 ## Workflow Steps
 
 ### Dispatching from Raw Input
@@ -117,8 +115,6 @@ graph TD
 - If the input contradicts an existing rule in `RULES.md` — flag the conflict explicitly and ask whether to proceed or amend the rule first.
 - If the input contradicts an existing Stable spec — flag the conflict explicitly before dispatching.
 
----
-
 ### Creating a New Specification
 
 1. **Read RULES.md**: Check project conventions before creating anything.
@@ -135,8 +131,6 @@ graph TD
 8. **Check RULES.md triggers**: Evaluate whether any RULES.md update trigger was activated.
 9. **Task Completion Checklist**: Present the checklist to the user.
 
----
-
 ### Updating an Existing Specification
 
 1. **Read RULES.md**: Check project conventions before modifying anything.
@@ -150,8 +144,6 @@ graph TD
 6. **Post-Update Review**: Run the review checklist on every file that was modified. This step is mandatory and must not be skipped.
 7. **Check RULES.md triggers**: Evaluate whether any RULES.md update trigger was activated.
 8. **Task Completion Checklist**: Present the checklist to the user.
-
----
 
 ### Post-Update Review
 
@@ -185,8 +177,6 @@ graph TD
 - If a major restructure is needed, treat it as a `major` version bump and note it in `Document History`.
 
 > If the review reveals significant issues beyond the original edit scope, inform the user and propose a dedicated refactoring pass rather than silently rewriting large portions.
-
----
 
 ### Updating RULES.md
 
@@ -234,8 +224,6 @@ If new input contradicts a rule already in RULES.md:
 2. Ask the user: (a) amend the rule, (b) follow the existing rule, or (c) treat as a one-time exception.
 3. If (a): update the rule, bump RULES.md version (`minor` for amendment, `major` for removal), add a Document History row.
 
----
-
 ### Periodic Registry Audit
 
 Run when the user requests it, or proactively suggest after every 5 updates across the registry.
@@ -279,8 +267,6 @@ Run when the user requests it, or proactively suggest after every 5 updates acro
 
 9. **Apply**: Only after user approval. Update `INDEX.md`, `RULES.md`, and `Document History` in affected files.
 
----
-
 ### Task Completion Checklist
 
 **Must be shown to the user at the end of every task — no exceptions.**
@@ -316,8 +302,6 @@ Review
 
 > Do not mark items `✓` speculatively. The checklist is a hard-stop, not a formality.
 
----
-
 ## Templates
 
 ### 1. Registry File Template (INDEX.md)
@@ -328,7 +312,6 @@ Review
 **Version:** {X.Y.Z}
 **Status:** Active
 
----
 
 ## Overview
 
@@ -345,7 +328,6 @@ Central registry of all project specifications and their current state.
 | [architecture.md](architecture.md) | System design and layered model | Draft | 0.1.0 |
 | [api.md](api.md) | Public API contracts | Stable | 1.0.0 |
 
----
 
 ## Meta Information
 
@@ -362,14 +344,12 @@ Central registry of all project specifications and their current state.
 **Version:** 1.0.0
 **Status:** Active
 
----
 
 ## Overview
 
 Constitution of the specification system for this project.
 Read by the agent before every operation. Updated only via explicit triggers.
 
----
 
 ## 1. Naming Conventions
 
@@ -413,7 +393,6 @@ Read by the agent before every operation. Updated only via explicit triggers.
 
 *(No project-specific conventions defined yet.)*
 
----
 
 ## Document History
 
@@ -430,7 +409,6 @@ Read by the agent before every operation. Updated only via explicit triggers.
 **Version:** {X.Y.Z}
 **Status:** {Draft | RFC | Stable | Deprecated}
 
----
 
 ## Overview
 
@@ -488,8 +466,6 @@ Recommended implementation order:
 
 Potential issues and alternative approaches considered.
 
----
-
 ## Document History
 
 | Version | Date       | Author | Description   |
@@ -498,7 +474,6 @@ Potential issues and alternative approaches considered.
 
 ```
 
----
 
 ## Initialization Scripts
 
@@ -526,7 +501,6 @@ cat <<EOF > "$DESIGN_DIR/INDEX.md"
 **Version:** 1.0.0
 **Status:** Active
 
----
 
 ## Overview
 
@@ -542,7 +516,6 @@ Central registry of all project specifications and their current state.
 | :--- | :--- | :--- | :--- |
 <!-- Add your specifications here -->
 
----
 
 ## Meta Information
 
@@ -560,14 +533,12 @@ cat <<EOF > "$DESIGN_DIR/RULES.md"
 **Version:** 1.0.0
 **Status:** Active
 
----
 
 ## Overview
 
 Constitution of the specification system for this project.
 Read by the agent before every operation. Updated only via explicit triggers.
 
----
 
 ## 1. Naming Conventions
 
@@ -611,7 +582,6 @@ Read by the agent before every operation. Updated only via explicit triggers.
 
 *(No project-specific conventions defined yet.)*
 
----
 
 ## Document History
 
@@ -649,7 +619,6 @@ if (!(Test-Path -Path $IndexPath)) {
 **Version:** 1.0.0
 **Status:** Active
 
----
 
 ## Overview
 
@@ -665,7 +634,6 @@ Central registry of all project specifications and their current state.
 | :--- | :--- | :--- | :--- |
 <!-- Add your specifications here -->
 
----
 
 ## Meta Information
 
@@ -685,14 +653,12 @@ if (!(Test-Path -Path $RulesPath)) {
 **Version:** 1.0.0
 **Status:** Active
 
----
 
 ## Overview
 
 Constitution of the specification system for this project.
 Read by the agent before every operation. Updated only via explicit triggers.
 
----
 
 ## 1. Naming Conventions
 
@@ -736,7 +702,6 @@ Read by the agent before every operation. Updated only via explicit triggers.
 
 *(No project-specific conventions defined yet.)*
 
----
 
 ## Document History
 
