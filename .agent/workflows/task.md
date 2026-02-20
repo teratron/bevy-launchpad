@@ -63,11 +63,11 @@ Within each phase, tasks are grouped into **Execution Tracks**. Tasks in differe
 
 ```
 Phase 2
-  Track A: [T-2A01] → [T-2A02] → [T-2A03] ══╗
-                                            ║ (parallel)
-  Track B: [T-2B01] → [T-2B02]            ══╣
-                                            ║
-  Track C: [T-2C01]  (depends on A + B)   ══╝ (after A and B complete)
+  Track A: [T-2A01] → [T-2A02] → [T-2A03]  ══╗
+                                             ║ (parallel)
+  Track B: [T-2B01] → [T-2B02]             ══╣
+                                             ║
+  Track C: [T-2C01]  (depends on A + B)    ══╝ (after A and B complete)
 ```
 
 Track assignment is derived from the dependency graph in PLAN.md — specs that don't depend on each other can be different tracks.
@@ -330,12 +330,9 @@ Status
 **Execution Mode:** {Sequential | Parallel}
 **Status:** Active
 
-
 ## Overview
 
-Master index of all implementation tasks across all phases.
-Tasks are organized by phase and track. Detailed breakdowns: see `phase-{n}.md` files.
-
+Master index of all implementation tasks. Detailed breakdowns: see `phase-{n}.md` files.
 
 ## Summary
 
@@ -343,10 +340,7 @@ Tasks are organized by phase and track. Detailed breakdowns: see `phase-{n}.md` 
 | :---- | ----: | ---: | ----------: | ---: | ------: |
 | Phase 1 — Foundation | 5 | 3 | 1 | 1 | 0 |
 | Phase 2 — Services & Data | 8 | 8 | 0 | 0 | 0 |
-| Phase 3 — UI & Experience | 12| 12| 0 | 0 | 0 |
-| Phase 4 — Polish | 3 | 3 | 0 | 0 | 0 |
-| **Total** | **28** | **26** | **1** | **1** | **0** |
-
+| **Total** | **13** | **11** | **1** | **1** | **0** |
 
 ## Phase 1 — Foundation
 
@@ -358,7 +352,6 @@ See [phase-1.md](phase-1.md) for full breakdown.
 | T-1A02 | Implement Path Reliability | A | In Progress |
 | T-1B01 | Define LaunchpadBuilder interface | B | Todo |
 | T-1C01 | Define RON schema root structure | C | Todo |
-| T-1C02 | Define Graphics and Audio blocks | C | Todo |
 
 ## Phase 2 — Services & Data
 
@@ -367,9 +360,6 @@ See [phase-2.md](phase-2.md) for full breakdown.
 | ID | Title | Track | Status |
 | :- | :---- | :---- | :----- |
 | T-2A01 | Implement Asset Manifest loader | A | Todo |
-| T-2A02 | Implement Embedded Fallbacks | A | Todo |
-| ... | | | |
-
 
 ## Archived / Cancelled
 
@@ -377,12 +367,11 @@ See [phase-2.md](phase-2.md) for full breakdown.
 | :- | :---- | :----- |
 <!-- Tasks cancelled due to spec deprecation appear here -->
 
-
 ## Task History
 
-| Version | Date       | Author  | Description               |
-| :---    | :---       | :---    | :---                      |
-| 1.0.0   | YYYY-MM-DD | Agent   | Initial task generation   |
+| Version | Date | Author | Description |
+| :--- | :--- | :--- | :--- |
+| 1.0.0 | YYYY-MM-DD | Agent | Initial task generation |
 ```
 
 ### phase-{n}.md — Per-Phase Task File
@@ -393,7 +382,6 @@ See [phase-2.md](phase-2.md) for full breakdown.
 **Status:** {Active | Completed}
 **Execution Mode:** {Sequential | Parallel}
 **Tracks:** {A, B, C...}
-
 
 ## Track A — {Track Name}
 
@@ -413,10 +401,7 @@ See [phase-2.md](phase-2.md) for full breakdown.
 - **Assignee:** unassigned
 - **Notes:** —
 
-
-## Track B — {Track Name}
-
-*(runs in parallel with Track A)*
+## Track B — {Track Name} *(parallel with A)*
 
 ### [T-{N}B01] {Task Title}
 
@@ -426,10 +411,7 @@ See [phase-2.md](phase-2.md) for full breakdown.
 - **Assignee:** unassigned
 - **Notes:** —
 
-
-## Track C — {Track Name}
-
-*(begins after Track A and Track B complete)*
+## Track C — {Track Name} *(after A + B)*
 
 ### [T-{N}C01] {Task Title}
 
@@ -439,11 +421,10 @@ See [phase-2.md](phase-2.md) for full breakdown.
 - **Assignee:** unassigned
 - **Notes:** —
 
-
 ## Phase Completion
 
-- [ ] All tasks in all tracks are `Done`
-- [ ] Manager Agent confirmed no open blockers
+- [ ] All tasks Done
+- [ ] No open blockers
 - [ ] TASKS.md summary updated
 - [ ] Next phase unlocked: Phase {N+1}
 ```

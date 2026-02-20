@@ -1,5 +1,5 @@
 ---
-description: Workflow for creating and managing the implementation plan from existing specifications
+description: Workflow for creating and managing the implementation plan from existing specifications.
 ---
 
 # Plan Workflow
@@ -231,13 +231,10 @@ Confirmation
 **Based on:** .design/INDEX.md v{X.Y.Z}
 **Status:** Active
 
-
 ## Overview
 
 Implementation plan derived from project specifications.
-Specs are the source of truth — this plan reflects their current state.
-To update this plan, use the Plan Workflow trigger: *"Update plan"*.
-
+Specs are the source of truth. To update: *"Update plan"*.
 
 ## Dependency Graph
 
@@ -247,93 +244,45 @@ graph TD
     architecture --> data-management
     architecture --> ui-components
     data-management --> settings-schema
-    ui-components --> main-menu
     ui-components --> settings-ui
     settings-schema --> settings-ui
-    ui-components --> localization
-    data-management --> localization
-    data-management --> gameplay-config
 ```
 
 ## Critical Path
 
 `architecture.md` → `data-management.md` → `settings-schema.md` → `settings-ui.md`
 
-Estimated minimum phases before UI work can begin: **2**
-
 ## Phase 1 — Foundation
 
-*Specs with no dependencies or only external dependencies. Start here.*
+*Specs with no dependencies. Start here.*
 
 - **Core Architecture** ([architecture.md](specifications/architecture.md)) — `Draft`
   - Dependencies: none (root)
-  - Notes: 4-layer model must be stable before L2+ work begins
+  - Notes: must be stable before Phase 2
 
 - **Public API** ([api.md](specifications/api.md)) — `Stable ✓`
   - Dependencies: architecture.md
-  - Notes: LaunchpadBuilder contract is frozen
 
-- **Settings Schema** ([settings-schema.md](specifications/settings-schema.md)) — `Stable ✓`
-  - Dependencies: data-management.md
-  - Notes: RON structure is stable; ready for implementation
+## Phase 2 — {Phase Name}
 
-## Phase 2 — Services & Data
+*...*
 
-*Core services that UI and gameplay layers depend on.*
-
-- **Data Management** ([data-management.md](specifications/data-management.md)) — `Draft`
-  - Dependencies: architecture.md
-  - Notes: Asset orchestration and persistence layer
-
-- **Input System** ([input-system.md](specifications/input-system.md)) — `Draft`
-  - Dependencies: architecture.md
-
-## Phase 3 — UI & Experience
-
-*UI layer. Requires Phase 2 to be Stable.*
-
-- **UI Components** ([ui-components.md](specifications/ui-components.md)) — `Draft`
-  - Dependencies: architecture.md
-
-- **Main Menu** ([main-menu.md](specifications/main-menu.md)) — `Draft`
-  - Dependencies: ui-components.md, localization.md
-
-- **Settings UI** ([settings-ui.md](specifications/settings-ui.md)) — `Draft`
-  - Dependencies: settings-schema.md, ui-components.md
-
-- **Localization** ([localization.md](specifications/localization.md)) — `Draft`
-  - Dependencies: ui-components.md, data-management.md
-
-## Phase 4 — Polish
-
-*Non-critical features. Can begin in parallel with Phase 3.*
-
-- **Gameplay Config** ([gameplay-config.md](specifications/gameplay-config.md)) — `Draft`
-  - Dependencies: data-management.md
+- **{Spec Name}** ([{spec}.md](specifications/{spec}.md)) — `{Status}`
+  - Dependencies: {spec}.md
+  - Notes: {optional}
 
 ## Unassigned (No Spec File Yet)
 
-*Referenced in specs but not yet formalized. Create specs before assigning to a phase.*
-
-- **Transition Orchestrator** — referenced in architecture.md
-- **Theme Engine** — referenced in ui-components.md
-- **Accessibility** — referenced in ui-components.md
+- **{Name}** — referenced in {spec}.md
 
 ## Archived
 
-*Deprecated specs kept for historical reference.*
-
-<!-- Deprecated specs appear here when moved from active phases -->
-
-## Meta Information
-
-- **Last Updated**: {YYYY-MM-DD}
-- **Next Review**: {YYYY-MM-DD}
+<!-- Deprecated specs moved here -->
 
 ## Plan History
 
 | Version | Date | Author | Description |
 | :--- | :--- | :--- | :--- |
-| 1.0.0 | YYYY-MM-DD | Agent | Initial plan generated |
+| 1.0.0 | YYYY-MM-DD | Agent | Initial plan |
 
 ```
